@@ -1,0 +1,289 @@
+
+	/* Hide the submit button and other buttons when printing */
+@media print {
+    button, .submit-btn, search-container {
+        display: none !important; /* Hide buttons */
+    }
+
+    /* Make the invoice number visible without background and text white */
+.invoice-input {
+    background: none !important; /* Remove background */
+    color: white !important; /* Set text color to white */
+    border: none !important; /* Remove border */
+}
+
+		
+}
+/* Common styles for all buttons */
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    border-radius: 25px; /* Curved edges */
+    margin: 10px; /* Space between buttons */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Add Item button */
+button.add-item {
+    background: linear-gradient(45deg, #4CAF50, #2C6B27); /* Gradient from green */
+    color: white;
+}
+
+button.add-item:hover {
+    background: linear-gradient(45deg, #45a049, #2A5A2A);
+    transform: scale(1.05);
+}
+
+/* Remove Item button */
+button.remove-item {
+    background: linear-gradient(45deg, #f44336, #D32F2F); /* Gradient from red */
+    color: white;
+}
+
+button.remove-item:hover {
+    background: linear-gradient(45deg, #e53935, #B71C1C);
+    transform: scale(1.05);
+}
+
+/* Save button */
+button.save {
+    background: linear-gradient(45deg, #2196F3, #1976D2); /* Gradient from blue */
+    color: white;
+}
+
+button.save:hover {
+    background: linear-gradient(45deg, #1976D2, #1565C0);
+    transform: scale(1.05);
+}
+
+/* Clear All button */
+button.clear-all {
+    background: linear-gradient(45deg, #FF9800, #FB8C00); /* Gradient from orange */
+    color: white;
+}
+
+button.clear-all:hover {
+    background: linear-gradient(45deg, #FB8C00, #F57C00);
+    transform: scale(1.05);
+}
+
+/* Previous button */
+button.prev {
+    background: linear-gradient(45deg, #9E9E9E, #757575); /* Gradient from grey */
+    color: white;
+}
+
+button.prev:hover {
+    background: linear-gradient(45deg, #757575, #616161);
+    transform: scale(1.05);
+}
+
+/* Next button */
+button.next {
+    background: linear-gradient(45deg, #8BC34A, #7CB342); /* Gradient from light green */
+    color: white;
+}
+
+button.next:hover {
+    background: linear-gradient(45deg, #7CB342, #689F38);
+    transform: scale(1.05);
+}
+
+/* Table Container */
+.table-container {
+    background-color: #2196F3; /* Blue background for the area around the table */
+    padding: 20px; /* Add some padding around the table */
+    border-radius: 15px; /* Optional: Rounded corners for the container */
+    margin: 20px auto; /* Center the container and add space around it */
+    max-width: 80%; /* Limit the width */
+}
+
+/* Table Styles */
+table {
+    width: 80%; /* Full width */
+    border-collapse: collapse; /* Collapses the table borders */
+    background-color: white; /* White background for the table */
+    overflow: hidden; /* Prevents the table content from overflowing */
+}
+
+/* Table Header */
+th {
+    background-color: #2196F3; /* Blue background for table header */
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+/* Table Body */
+td {
+    border: 1px solid black;
+}
+
+/* Hover Effect for Table Rows */
+tr:hover {
+    background-color: #f1f1f1; /* Light grey background when hovering over rows */
+	
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #0968E5, #87CEEB, #FFFFFF); /* Dark blue, light blue, and white */
+    height: 100vh; /* Full screen height */
+    margin: 0; /* Remove default margin */
+}
+
+        h1,h2 {
+			color: white;
+            font-family: cursive;
+			display: inline-block;
+    margin-right: 10px; /* Space between h2 and invoice number */
+    vertical-align: middle;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        th{
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+		
+        input {
+    width: 100%; /* Full width of the container */
+    margin: 10px auto; /* Centers the input horizontally and adds vertical spacing */
+    display: block; /* Makes the input a block-level element */
+    padding: 10px; /* Adds some padding inside the input for better visual */
+    border-radius: 5px; /* Optional: Rounds the corners of the input */
+    border: 1px solid #ccc; /* Light border color for the input */
+    box-sizing: border-box; /* Ensures padding and border are included in the width */
+}
+
+.invalid {
+  border-color: red; 
+}
+
+.invoice-input {
+    display: inline-block;
+    font-size: 26px;
+    font-weight: bold;
+    color: #333;
+	width: 120px;
+    vertical-align: middle;
+}
+
+.submit-btn {
+    background: linear-gradient(to right, #6a11cb, #2575fc); /* Purple gradient */
+    border: none;
+	width: 150px;
+    padding: 12px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+    transform: scale(1.05);
+}
+
+/* Styling the Monthly Statements button with a blue-green gradient */
+.monthly-statements-btn {
+    background: linear-gradient(to right, #11998e, #38ef7d); /* Green-Blue Gradient */
+    border: none;
+    padding: 12px 20px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.monthly-statements-btn:hover {
+    background: linear-gradient(to right, #38ef7d, #11998e);
+    transform: scale(1.05);
+}
+
+.custom-item {
+    background: linear-gradient(45deg, #fff, #e0e0e0);
+    border: none;
+    color: black; /* Ensure text color is black */
+    padding: 11px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1; /* Ensure text stays on top of the pseudo-element */
+    overflow: hidden;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.custom-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, #fff, #e0e0e0);
+    transition: transform 0.3s ease;
+    transform: rotate(45deg);
+    z-index: -1; /* Ensure the pseudo-element stays behind the text */
+}
+
+.custom-item:hover {
+    background: linear-gradient(45deg, #f0f0f0, #d0d0d0); /* Lighter background on hover */
+    transform: scale(1.1);
+}
+
+.custom-item:hover::before {
+    transform: rotate(45deg) scale(1.2);
+}
+
+.search-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 5px 10px;
+    border-radius: 25px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-container input {
+	
+	background: transparent;
+	cursor: pointer;
+    border: none;
+    padding: 8px;
+    outline: none;
+    font-size: 14px;
+    width: 100px;
+    border-radius: 25px;
+}
+
+.search-container {
+	
+	background: transparent;
+	cursor: pointer;
+    border: none;
+    padding: 8px;
+    outline: none;
+    font-size: 14px;
+    width: 300px;
+    border-radius: 25px;
+}
