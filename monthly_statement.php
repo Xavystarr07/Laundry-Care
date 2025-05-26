@@ -16,43 +16,74 @@ if ($conn->connect_error) {
 }
 
 // Handle hotel selection form submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hotelName'])) {
-    // Store the selected hotel and dates in session
-    $_SESSION['hotelName'] = $_POST['hotelName'];
-    $_SESSION['startDate'] = $_POST['startDate'];
-    $_SESSION['endDate'] = $_POST['endDate'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['hotelName'])) {
+        // Store the selected hotel in session
+        $_SESSION['hotelName'] = $_POST['hotelName'];
+        $_SESSION['action'] = $_POST['action'];  // To distinguish between views
+    } else {
+        // Action for monthly statement without hotel selection
+        $_SESSION['action'] = $_POST['action'];
+    }
 
     // Redirect to the same page to display the selected hotel's statement
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
-// Check if hotel and dates are selected
-if (isset($_SESSION['hotelName']) && isset($_SESSION['startDate']) && isset($_SESSION['endDate'])) {
-    $hotelName = $_SESSION['hotelName'];
-    $startDate = $_SESSION['startDate'];
-    $endDate = $_SESSION['endDate'];
+// Check if hotel is selected and action is set
+if (isset($_SESSION['action'])) {
+    $action = $_SESSION['action'];
 
-    // Fetch invoices for the selected hotel within the date range
-    $sql = "SELECT * FROM Invoices WHERE HotelName = '$hotelName' AND DateReceived BETWEEN '$startDate' AND '$endDate' ORDER BY DateReceived ASC";
+    // SQL for unit totals (Statement view) - when a hotel is selected
+    if ($action == "viewStatement" && isset($_SESSION['hotelName'])) {
+        $hotelName = $_SESSION['hotelName'];
+        $sql = "SELECT HotelNumber, SUM(Total) AS UnitTotal
+                FROM Invoices 
+                WHERE HotelName = '$hotelName'
+                GROUP BY HotelNumber
+                ORDER BY CAST(HotelNumber AS UNSIGNED) ASC"; // Ensure numeric sorting
 
-    $result = $conn->query($sql);
+        $result = $conn->query($sql);
 
-    $monthlyStatement = array();
-    $grandTotalSum = 0;
+        $monthlyStatement = array();
+        $grandTotalSum = 0;
 
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $monthlyStatement[] = array(
-                "HotelNumber" => $row["HotelNumber"],
-                "HotelName" => $row["HotelName"],
-                "DateReceived" => $row["DateReceived"],
-                "GrandTotal" => $row["Total"] // Use the Total column here
-            );
-            $grandTotalSum += $row["Total"]; // Sum the 'Total' column for grand total
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $monthlyStatement[] = array(
+                    "HotelNumber" => $row["HotelNumber"],
+                    "UnitTotal" => $row["UnitTotal"]
+                );
+                $grandTotalSum += $row["UnitTotal"]; // Sum the grouped totals for the grand total
+            }
+        } else {
+            echo "<script>alert('No invoices found for the selected hotel.');</script>";
         }
-    } else {
-        echo "<script>alert('No invoices found for the selected hotel within the given date range.');</script>";
+    }
+
+    // SQL for monthly grand total (Second view: Monthly Statement) - for all hotels
+    if ($action == "monthlyStatement") {
+        $sql = "SELECT HotelName, SUM(Total) AS GrandTotal
+                FROM Invoices 
+                GROUP BY HotelName";
+
+        $result = $conn->query($sql);
+
+        $hotelStatements = array();
+        $grandTotalSum = 0;
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $hotelStatements[] = array(
+                    "HotelName" => $row["HotelName"],
+                    "GrandTotal" => $row["GrandTotal"]
+                );
+                $grandTotalSum += $row["GrandTotal"]; // Sum for the overall grand total
+            }
+        } else {
+            echo "<script>alert('No invoices found for any hotels.');</script>";
+        }
     }
 }
 
@@ -119,16 +150,17 @@ $conn->close();
         <p>Umhlanga Rocks</p>
     </div>
 
+
     <h2 class="statement-title"><u>Monthly Statement</u></h2>
     <p class="tagline">“A FRESH START IN EVERY WASH”</p>
 
     <!-- Hotel Selection Form -->
     <form method="post">
         <label for="hotelName">Select Hotel:</label>
-        <select name="hotelName" id="hotelName" required>
+        <select name="hotelName" id="hotelName">
             <option value="">-- Hotel --</option>
             <option value="Beacon-Rock">Beacon-Rock</option>
-            <option value="Beniseta">Beniseta</option>
+            <option value="Bensiesta">Bensiesta</option>
             <option value="Berumdas">Bermudas</option>
             <option value="Bronze Bay">Bronze Bay</option>
             <option value="Bronze Beach">Bronze Beach</option>
@@ -146,21 +178,98 @@ $conn->close();
             <option value="Terra Mare">Terra Mare</option>
         </select>
 
-        <label for="startDate">Start Date:</label>
-        <input type="date" name="startDate" id="startDate" required class="select">
+        <button type="submit" name="action" value="viewStatement" class="small-green-btn">Unit Statement</button>
+        <button type="submit" name="action" value="monthlyStatement" class="small-green-btn">Monthly Statement</button><br></br>
+			
 
-        <label for="endDate">End Date:</label>
-        <input type="date" name="endDate" id="endDate" required class="select">
-        <button type="submit" class="small-green-btn">View Statement</button>
+    <input list="dateOptions" id="statementDate" name="statementDate" placeholder="Enter date">
+    <datalist id="dateOptions" >
+        <option value="Jan-Feb 2025">
+        <option value="Feb-Mar 2025">
+        <option value="Mar-Apr 2025">
+        <option value="Apr-May 2025">
+        <option value="May-Jun 2025">
+        <option value="Jun-Jul 2025">
+        <option value="Jul-Aug 2025">
+        <option value="Aug-Sep 2025">
+        <option value="Sep-Oct 2025">
+        <option value="Oct-Nov 2025">
+        <option value="Nov-Dec 2025">
+        <option value="Dec-Jan 2025">
+        <option value="Jan-Feb 2026">
+        <option value="Feb-Mar 2026">
+        <option value="Mar-Apr 2026">
+        <option value="Apr-May 2026">
+        <option value="May-Jun 2026">
+        <option value="Jun-Jul 2026">
+        <option value="Jul-Aug 2026">
+        <option value="Aug-Sep 2026">
+        <option value="Sep-Oct 2026">
+        <option value="Oct-Nov 2026">
+        <option value="Nov-Dec 2026">
+        <option value="Dec-Jan 2026">
+        <option value="Jan-Feb 2027">
+        <option value="Feb-Mar 2027">
+        <option value="Mar-Apr 2027">
+        <option value="Apr-May 2027">
+        <option value="May-Jun 2027">
+        <option value="Jun-Jul 2027">
+        <option value="Jul-Aug 2027">
+        <option value="Aug-Sep 2027">
+        <option value="Sep-Oct 2027">
+        <option value="Oct-Nov 2027">
+        <option value="Nov-Dec 2027">
+        <option value="Dec-Jan 2027">
+        <option value="Jan-Feb 2028">
+        <option value="Feb-Mar 2028">
+        <option value="Mar-Apr 2028">
+        <option value="Apr-May 2028">
+        <option value="May-Jun 2028">
+        <option value="Jun-Jul 2028">
+        <option value="Jul-Aug 2028">
+        <option value="Aug-Sep 2028">
+        <option value="Sep-Oct 2028">
+        <option value="Oct-Nov 2028">
+        <option value="Nov-Dec 2028">
+        <option value="Dec-Jan 2028">
+        <option value="Jan-Feb 2029">
+        <option value="Feb-Mar 2029">
+        <option value="Mar-Apr 2029">
+        <option value="Apr-May 2029">
+        <option value="May-Jun 2029">
+        <option value="Jun-Jul 2029">
+        <option value="Jul-Aug 2029">
+        <option value="Aug-Sep 2029">
+        <option value="Sep-Oct 2029">
+        <option value="Oct-Nov 2029">
+        <option value="Nov-Dec 2029">
+        <option value="Dec-Jan 2029">
+        <option value="Jan-Feb 2030">
+        <option value="Feb-Mar 2030">
+        <option value="Mar-Apr 2030">
+        <option value="Apr-May 2030">
+        <option value="May-Jun 2030">
+        <option value="Jun-Jul 2030">
+        <option value="Jul-Aug 2030">
+        <option value="Aug-Sep 2030">
+        <option value="Sep-Oct 2030">
+        <option value="Oct-Nov 2030">
+        <option value="Nov-Dec 2030">
+        <option value="Dec-Jan 2030">
+    </datalist>
+</div>
+</div>
+
+</select>
+
     </form>
 
-    <?php if (isset($hotelName)) : ?>
+    <?php if (isset($action) && $action == "viewStatement" && isset($hotelName)) : ?>
         <table id="statementTable">
             <thead>
                 <tr>
-                    <th>Hotel Number</th>
                     <th>Hotel Name</th>
-                    <th>Date Received</th>
+                    <th>Hotel Unit</th>
                     <th>Total</th>
                 </tr>
             </thead>
@@ -169,19 +278,20 @@ $conn->close();
                 if (!empty($monthlyStatement)) {
                     foreach ($monthlyStatement as $invoice) {
                         echo "<tr>";
+                        echo "<td>" . $hotelName . "</td>"; // Display the hotel name
                         echo "<td>" . $invoice["HotelNumber"] . "</td>";
-                        echo "<td>" . $invoice["HotelName"] . "</td>";
-                        echo "<td>" . $invoice["DateReceived"] . "</td>";
-                        echo "<td>R " . number_format($invoice["GrandTotal"], 2) . "</td>";
+                        echo "<td>R " . number_format($invoice["UnitTotal"], 2) . "</td>";
                         echo "</tr>";
                     }
+
                     // Display Grand Total at the bottom
                     echo "<tr class='grand-total-row'>";
-                    echo "<td colspan='3'><strong>Grand Total</strong></td>";
+                    echo "<td><strong>Grand Total</strong></td>";
+                    echo "<td></td>"; // Empty column for hotel unit
                     echo "<td><strong>R " . number_format($grandTotalSum, 2) . "</strong></td>";
                     echo "</tr>";
-                    
-                    // Display Banking Details
+					
+					// Display Banking Details
                     echo "<tr>";
                     echo "<td colspan='4' style='padding-top: 20px; text-align: center;'><strong>Banking Details</strong></td>";
                     echo "</tr>";
@@ -199,15 +309,87 @@ $conn->close();
                     echo "</tr>";
 
                 } else {
-                    echo "<tr><td colspan='4'>No invoices found.</td></tr>";
+                    echo "<tr><td colspan='3'>No invoices found.</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
-        <form method="post" action="" target="_blank">
-            <input type="button" value="Print Monthly Statement" onclick="window.print();" class="print-btn">
-        </form>
-    <?php endif; ?>
+<form method="post" action="" target="_blank">
+    <input type="button" value="Print Monthly Statement" onclick="window.print();" class="print-btn">
+</form>
+<?php endif; ?>
+
+<?php if (isset($action) && $action == "monthlyStatement") : ?>
+    <table id="statementTable">
+        <thead>
+            <tr>
+                <th>Hotel Name</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if (!empty($hotelStatements)) {
+                foreach ($hotelStatements as $statement) {
+                    echo "<tr>";
+                    echo "<td>" . $statement["HotelName"] . "</td>";
+                    echo "<td>R " . number_format($statement["GrandTotal"], 2) . "</td>";
+                    echo "</tr>";
+                }
+
+            // Standard Fuel Cost Row
+echo '<tr id="fuelCostRow">';
+echo '<td style="text-align: left;"><strong>Standard Fuel Levy</strong></td>';
+echo '<td><span>R</span> <input type="number" id="fuelCost" value="2871.50" step="0.01" onchange="updateGrandTotal()" style="width: 85%; padding: 5px; text-align: left; border: none; font-weight: normal; font-size: inherit; font-family: inherit;" /></td>';
+echo '</tr>';
+
+
+
+                // Display Overall Grand Total (initial PHP-calculated)
+                echo "<tr class='grand-total-row'>";
+                echo "<td><strong>Grand Total</strong></td>";
+                echo "<td id='grandTotalCell'><strong>R " . number_format($grandTotalSum, 2) . "</strong></td>";
+                echo "</tr>";
+                
+                // Display Banking Details
+                echo "<tr>";
+                echo "<td colspan='2' style='padding-top: 20px; text-align: center;'><strong>Banking Details</strong></td>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td colspan='2' style='text-align: center;'>Bank: FNB</td>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td colspan='2' style='text-align: center;'>Account Holder Name: Laundry Care</td>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td colspan='2' style='text-align: center;'>Account Number: 62936500520</td>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td colspan='2' style='text-align: center;'>Account Type: Cheque</td>";
+                echo "</tr>";
+            } else {
+                echo "<tr><td colspan='2'>No invoices found for any hotels.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+    <form method="post" action="" target="_blank">
+        <input type="button" value="Print Monthly Statement" onclick="window.print();" class="print-btn">
+    </form>
+
+    <script>
+    function updateGrandTotal() {
+        let fuelCost = parseFloat(document.getElementById('fuelCost').value) || 0;
+        let baseTotal = <?php echo $grandTotalSum; ?>;
+        let updatedTotal = baseTotal + fuelCost;
+
+        document.getElementById("grandTotalCell").innerHTML = "<strong>R " + updatedTotal.toFixed(2) + "</strong>";
+    }
+
+    window.onload = updateGrandTotal;
+    </script>
+<?php endif; ?>
+
 
     <!-- Back Button -->
     <button class="back-button" onclick="window.location.href='invoice_generator.php'">← Back to Invoice Generator</button>
