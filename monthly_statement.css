@@ -1,8 +1,16 @@
-/* Hide all buttons when printing */
 @media print {
-  button, .print-btn, select, input[type="date"], label{
+  /* Hide everything by default */
+  button, .print-btn, select, label {
     display: none !important;
   }
+  
+  .datalist{
+        display: block !important;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 16px;
+        color: black;
+    }
 }
 
 /* General Page Styling */
@@ -175,4 +183,73 @@ select:hover, input[type="date"]:hover {
 .small-green-btn:hover {
     background: linear-gradient(to right, #283593, #1a237e); /* Inverted Dark Royal Blue Gradient on Hover */
     transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+/* General styling for the date input container */
+.date-input-container {
+    margin: 20px;
+    text-align: center;
+}
+
+/* Label styling */
+.date-input-container label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+   
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* Input field styling */
+#statementDate {
+    font-size: 18px;
+    padding: 10px 15px;
+    width: 300px;
+    border:  linear-gradient(to right, #4b6cb7, #182848);;  
+    border-radius: 10px;
+    background-color: transparent;
+    color: black;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-align: center;
+    
+}
+
+/* Styling for the datalist dropdown */
+datalist#dateOptions {
+    font-size: 18px;
+    color: #4CAF50;
+    padding: 5px 10px;
+    border: 1px linear-gradient(to right, #4b6cb7, #182848);;
+    border-radius: 5px;
+    width: 300px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the placeholder */
+#statementDate::placeholder {
+    color: #888;
+}
+
+/* When the user clicks the input, show the options */
+#statementDate:focus {
+    opacity: 1;
+    border-color: #45a049;
+    box-shadow: 0 0 5px #45a049;
+    background-color: #f0f9f0;
+}
+
+/* Add a hover effect to make it feel interactive */
+#statementDate:hover {
+    cursor: pointer;
+    background-color: #eaf7e7;
+    border-color: #45a049;
+}
+
+/* Style the datalist options when hovered */
+datalist#dateOptions option:hover {
+    background-color: #45a049;
+    color: white;
 }
