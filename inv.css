@@ -5,11 +5,26 @@
         display: none !important; /* Hide buttons */
     }
 
-    /* Make the invoice number visible without background and text white */
-.invoice-input {
-    background: none !important; /* Remove background */
-    color: white !important; /* Set text color to white */
-    border: none !important; /* Remove border */
+ h2 input#invoice_number.invoice-input {
+  background-color: transparent !important;
+  color: white !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 1.2em;
+  width: 100px;
+}
+
+
+/* For Chrome, Safari, Edge, Opera */
+.invoice-input::-webkit-outer-spin-button,
+.invoice-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.invoice-input[type=number] {
+  -moz-appearance: textfield;
 }
 
 		
@@ -130,12 +145,15 @@ tr:hover {
 
 
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: linear-gradient(to bottom, #0968E5, #87CEEB, #FFFFFF); /* Dark blue, light blue, and white */
-    height: 100vh; /* Full screen height */
-    margin: 0; /* Remove default margin */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(to bottom, #0968E5, #87CEEB 30%, #FFFFFF 60%, #FFFFFF 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
 }
+
+
 
         h1,h2 {
 			color: white;
@@ -196,60 +214,86 @@ body {
     transform: scale(1.05);
 }
 
-/* Styling the Monthly Statements button with a blue-green gradient */
 .monthly-statements-btn {
-    background: linear-gradient(to right, #11998e, #38ef7d); /* Green-Blue Gradient */
-    border: none;
-    padding: 12px 20px;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+  --btn-bg: linear-gradient(to right, #11998e, #38ef7d);
+  --width: 160px;
+  --height: 45px;
+  --icon-size: 18px;
+
+  border: 0;
+  min-width: var(--width);
+  min-height: var(--height);
+  border-radius: var(--height);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  position: relative;
 }
 
-.monthly-statements-btn:hover {
-    background: linear-gradient(to right, #38ef7d, #11998e);
-    transform: scale(1.05);
+.monthly-statements-btn .text,
+.monthly-statements-btn .icon-container {
+  position: relative;
+  z-index: 2;
 }
 
-.custom-item {
-    background: linear-gradient(45deg, #fff, #e0e0e0);
-    border: none;
-    color: black; /* Ensure text color is black */
-    padding: 11px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 20px;
-    cursor: pointer;
-    position: relative;
-    z-index: 1; /* Ensure text stays on top of the pseudo-element */
-    overflow: hidden;
-    transition: background 0.3s ease, transform 0.3s ease;
+.monthly-statements-btn .icon-container {
+  width: calc(var(--icon-size) * 2); /* Enough width to slide in the arrow */
+  height: var(--icon-size);
+  margin-left: 10px;
+  overflow: hidden;
+  transition: transform 500ms ease;
+  position: relative;
 }
 
-.custom-item::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, #fff, #e0e0e0);
-    transition: transform 0.3s ease;
-    transform: rotate(45deg);
-    z-index: -1; /* Ensure the pseudo-element stays behind the text */
+.monthly-statements-btn .icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 500ms ease, opacity 250ms ease;
 }
 
-.custom-item:hover {
-    background: linear-gradient(45deg, #f0f0f0, #d0d0d0); /* Lighter background on hover */
-    transform: scale(1.1);
+.monthly-statements-btn .icon--left {
+  transform: translateX(-100%); /* Start fully hidden */
+  opacity: 0;
 }
 
-.custom-item:hover::before {
-    transform: rotate(45deg) scale(1.2);
+.monthly-statements-btn .icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #fff;
+}
+
+.monthly-statements-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--btn-bg);
+  border-radius: var(--height);
+  z-index: 1;
+  transition: transform 500ms ease;
+}
+
+.monthly-statements-btn:hover::after {
+  transform: translateX(75%);
+}
+
+.monthly-statements-btn:hover .icon-container {
+  transform: translateX(55%);
+}
+
+.monthly-statements-btn:hover .icon--left {
+  transform: translateX(0); /* Slide in */
+  opacity: 1;
 }
 
 .search-container {
@@ -286,4 +330,89 @@ body {
     font-size: 14px;
     width: 300px;
     border-radius: 25px;
+}
+
+button.custom-item {
+  background: linear-gradient(135deg, #f59e0b, #d97706); /* Amber gradient */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  font-family: 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+button.custom-item:hover {
+  background: linear-gradient(135deg, #d97706, #92400e);
+  transform: scale(1.05);
+}
+
+#comboAddBtn {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1); /* Indigo gradient */
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  font-family: 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+#comboAddBtn:hover {
+  background: linear-gradient(135deg, #6366f1, #4338ca);
+  transform: scale(1.05);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
+
+.modern-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  color: white;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.modern-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.modern-btn:hover::before {
+  opacity: 1;
+}
+
+.modern-btn.cancel {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+.modern-btn.cancel::before {
+  background: linear-gradient(135deg, #ff6a89, #ff7250);
+}
+
+.modern-btn.confirm {
+  background: linear-gradient(135deg, #00b09b, #96c93d);
+}
+
+.modern-btn.confirm::before {
+  background: linear-gradient(135deg, #22d7b8, #b4e84a);
+}
+
+.modern-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
