@@ -1,0 +1,15 @@
+-- Create the database
+CREATE DATABASE LC;
+
+-- Use the created database
+USE LC;
+
+-- Create the Invoices table
+CREATE TABLE Invoices (
+    InvoiceNumber INT AUTO_INCREMENT PRIMARY KEY,
+    HotelName VARCHAR(255) NOT NULL,
+    HotelNumber VARCHAR(50) NOT NULL,
+    DateReceived DATE NOT NULL,
+    Total DECIMAL(10, 2) NOT NULL, 
+    GrandTotal DECIMAL(10, 2) NOT NULL
+);
