@@ -29,6 +29,7 @@ h1, h2 {
     color-scheme: light !important;
     background: #ffffff !important;
     color: #333333 !important;
+    /* Dark mode override — keep modal always light */
 }
 
 #comboModal *,
@@ -77,4 +78,32 @@ h1, h2 {
 #categoryContainer div {
     color: #333333 !important;
     -webkit-text-fill-color: #333333 !important;
+}
+
+/* Dark mode — combo modal stays fully light */
+body.dark-mode #comboModal {
+    background: #ffffff !important;
+    color: #333333 !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5) !important;
+}
+body.dark-mode #comboModal * {
+    color: #333333 !important;
+    -webkit-text-fill-color: #333333 !important;
+}
+body.dark-mode #comboModal .modern-btn.cancel {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+}
+body.dark-mode #comboModal .modern-btn.confirm {
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+}
+body.dark-mode #comboModal label {
+    background: #f9f9f9 !important;
+    border-color: #ddd !important;
+}
+body.dark-mode #comboModal h3 {
+    color: #222 !important;
+    -webkit-text-fill-color: #222 !important;
 }

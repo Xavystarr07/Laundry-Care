@@ -238,7 +238,10 @@ style.textContent = `
     border-color: #3a3a6a !important;
   }
   body.dark-mode input[readonly], body.dark-mode select:disabled {
-    background: #1a1a32 !important; color: #a0a0c0 !important;
+    background: #1a1a32 !important;
+    color: #c9d1d9 !important;
+    -webkit-text-fill-color: #c9d1d9 !important;
+    opacity: 1 !important;
   }
   body.dark-mode .header    { color: #e0e0f0 !important; }
   body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
@@ -246,6 +249,12 @@ style.textContent = `
 
   /* Dark mode — uv-btn adjustments (borders visible on dark bg) */
   body.dark-mode .uv-btn    { opacity: 0.92; }
+
+  /* Invoice number input dark mode */
+  body.dark-mode h2 input#invoice_number.invoice-input {
+    color: #e6edf3 !important;
+    -webkit-text-fill-color: #e6edf3 !important;
+  }
 
   /* Print ALWAYS uses light mode regardless */
   @media print {
