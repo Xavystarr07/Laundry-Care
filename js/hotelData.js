@@ -1,10 +1,10 @@
 // hotelData.js - Hotel names and their associated unit numbers
 
 const hotelUnitMap = {
-    "Bronze Beach": [1, 3, 5, 6, 7, 8, 9, 11, 12, 14, 16, 17, 18, 19, 25, 26],
+    "Bronze Beach": [1, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 17, 18, 19, 25, 26],
     "Bronze Bay": [1, 2, 3, 6, 8, 10, 11, 12, 15, 17, 19, 21, 24, 25, 26],
     "Bensiesta": [201, 302],
-    "Sea Lodge": [12, 14, 45, 53, 72, 84, 92],
+    "Sea Lodge": [12, 14, 45, 53, 64, 72, 84, 92],
     "Sea Breeze": [4],
     "Terra Mare": [108],
     "Kyalanga": [17, 27],
