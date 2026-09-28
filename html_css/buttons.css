@@ -207,3 +207,35 @@ button.clear-all:hover { background: linear-gradient(45deg, #FB8C00, #F57C00); t
     font-size: 16px;
     font-weight: 700;
 }
+
+/* ── Checklist button ── */
+#checklistBtn { border: 2px solid #1d4ed8; color: #1d4ed8; --btn-fill: #1d4ed8; }
+
+/* ── Monthly Statements — moved to fixed bottom-right FAB ── */
+.monthly-statements-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9000;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: #fff;
+    border: none;
+    border-radius: 28px;
+    padding: 13px 20px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(17,153,142,0.45);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    white-space: nowrap;
+}
+.monthly-statements-fab:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 10px 32px rgba(17,153,142,0.55);
+    filter: brightness(1.08);
+}
+.monthly-statements-fab:active { transform: scale(0.97); }

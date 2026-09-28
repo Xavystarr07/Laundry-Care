@@ -99,28 +99,43 @@ style.textContent = `
     width: 0%; transition: width 0.4s ease;
   }
 
-  /* Tinkering magic icon shown after dismiss */
+  /* ── Invoice Assistant icon — always visible, pulses when errors exist ── */
   #fgTinker {
     position: fixed;
     top: 24px; right: 24px;
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, #f39c12, #e67e22);
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
     border-radius: 50%;
-    display: none;
+    display: flex;
     align-items: center; justify-content: center;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(243,156,18,0.4);
+    box-shadow: 0 4px 16px rgba(29,78,216,0.4);
     z-index: 99998;
-    transition: transform 0.2s;
-    animation: tinkerSpin 2s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
   }
-  #fgTinker.visible { display: flex; }
-  #fgTinker:hover { transform: scale(1.15); }
-  @keyframes tinkerSpin {
-    0%, 100% { transform: rotate(-8deg) scale(1); }
-    50%       { transform: rotate(8deg) scale(1.08); }
+  #fgTinker:hover { transform: scale(1.12); box-shadow: 0 6px 22px rgba(29,78,216,0.55); }
+  #fgTinker:active { transform: scale(0.95); }
+  #fgTinker.has-errors {
+    animation: fgPulse 2s ease-in-out infinite;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    box-shadow: 0 4px 16px rgba(124,58,237,0.5);
   }
+  @keyframes fgPulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(124,58,237,0.5); transform: scale(1); }
+    50%       { box-shadow: 0 4px 28px rgba(124,58,237,0.8); transform: scale(1.06); }
+  }
+  /* Badge dot on icon when errors */
+  #fgTinker .fg-badge {
+    position: absolute;
+    top: 2px; right: 2px;
+    width: 10px; height: 10px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    display: none;
+  }
+  #fgTinker.has-errors .fg-badge { display: block; }
 
   .field-ok {
     border-color: #2ecc71 !important;
@@ -151,11 +166,12 @@ guide.innerHTML = `
 `;
 document.body.appendChild(guide);
 
-// Tinkering icon
+// Invoice Assistant icon — always visible
 const tinker = document.createElement('div');
 tinker.id = 'fgTinker';
-tinker.title = 'Click to reopen assistant';
-tinker.textContent = '🔧';
+tinker.title = 'Invoice Assistant';
+tinker.innerHTML = `🧾<span class="fg-badge"></span>`;
+tinker.style.position = 'fixed'; // ensure it's always shown
 document.body.appendChild(tinker);
 
 // ── Refs ───────────────────────────────────────────────────────────────────────
@@ -207,43 +223,35 @@ function hideGuide() {
 
 function dismissGuide() {
     hideGuide();
-    dismissed  = true;
+    dismissed      = true;
     guidanceActive = false;
     stopCleanCheck();
-
+    // Error badge stays on the icon — user can reopen anytime
     const err = findFirstError();
-    if (err) {
-        tinker.classList.add('visible');
-        if (dismissReopenTimer) clearTimeout(dismissReopenTimer);
-        dismissReopenTimer = setTimeout(() => {
-            dismissed = false;
-            tinker.classList.remove('visible');
-            const error = findFirstError();
-            if (error) {
-                const g = GUIDANCE[error.field] || fallbackGuidance(error.label);
-                showGuide('error', g.icon, 'Still need your attention!',
-                    `${error.label} still needs fixing. Click "Use Assistance" to get help.`,
-                    '', true, 0);
-            }
-        }, 60000);
-    } else {
-        dismissed = false;
-    }
+    if (!err) dismissed = false;
 }
 
 fgClose.addEventListener('click', dismissGuide);
 fgDismissBtn.addEventListener('click', dismissGuide);
 
-// Tinkering icon re-opens guide
+// Icon click — toggle the guide panel
 tinker.addEventListener('click', () => {
-    tinker.classList.remove('visible');
+    if (fgEl.classList.contains('fg-show')) {
+        hideGuide();
+        return;
+    }
     dismissed = false;
     const error = findFirstError();
     if (error) {
         const g = GUIDANCE[error.field] || fallbackGuidance(error.label);
-        showGuide('error', g.icon, 'I found something to fix!',
-            `${error.label} needs attention. Click "Use Assistance" to go there.`,
-            '', true, 0);
+        showGuide('error', g.icon, g.title,
+            g.msg + ' Click "Use Assistance" and I\'ll take you there.',
+            g.step, true, 0);
+    } else {
+        updateProgress();
+        showGuide('success', '🎉', 'All looks great!',
+            'Every required field is correctly filled. Ready to save or print!',
+            '', false, 4000);
     }
 });
 
@@ -447,21 +455,17 @@ function schedulePassiveScan() {
     if (idleTimer) clearTimeout(idleTimer);
 
     idleTimer = setTimeout(() => {
-        if (guidanceActive || dismissed) return;
+        if (guidanceActive) return;
 
         updateProgress();
         const error = findFirstError();
 
         if (error) {
-            const g = GUIDANCE[error.field] || fallbackGuidance(error.label);
-            showGuide('error', g.icon, 'I found something to fix!',
-                `${error.label} needs attention. Click "Use Assistance" and I'll take you there.`,
-                '', true, 0);
+            // Just update the icon badge — don't auto-popup
+            tinker.classList.add('has-errors');
         } else {
+            tinker.classList.remove('has-errors');
             hideGuide();
-            tinker.classList.remove('visible');
-            // Also hide the bottom popup if errors are gone
-            if (typeof hideFieldGuide === 'function') hideFieldGuide();
             const rp = document.getElementById('robotPopup');
             if (rp) rp.classList.remove('show');
         }
@@ -507,18 +511,18 @@ window.showFieldGuide = function(type, icon, title, msg, step, showAssist, autoD
 };
 window.hideFieldGuide = hideGuide;
 
-// ── Global always-on watcher — kills BOTH popups the instant errors clear ──
+// ── Global always-on watcher — updates badge + kills popups when errors clear ──
 setInterval(() => {
     if (!userHasInteracted) return;
     if (guidanceActive) return;
     const error = findFirstError();
-    if (!error) {
-        // No errors — kill top guide
-        if (fgEl.classList.contains('fg-show')) {
-            hideGuide();
-            tinker.classList.remove('visible');
+    if (error) {
+        tinker.classList.add('has-errors');
+    } else {
+        tinker.classList.remove('has-errors');
+        if (fgEl.classList.contains('fg-show') && !guidanceActive) {
+            // Don't auto-hide if user deliberately opened it
         }
-        // Kill bottom popup
         const rp = document.getElementById('robotPopup');
         if (rp && rp.classList.contains('show')) {
             rp.classList.remove('show');

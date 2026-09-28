@@ -1,13 +1,14 @@
 // priceList.js - Full product price list
 
+// Updated array using the inclusive pricing values from the document
 const priceList = [
     { code: "BATHMATREC", description: "Rectangular Bathmat", price: 18.34 },
     { code: "MATTOI", description: "Toilet Mat", price: 21.00 },
     { code: "MATTSC", description: "Toilet Seat Cover", price: 21.00 },
     { code: "BASE", description: "Base cover", price: 16.00 },
-    { code: "TWLHAND", description: "Hand Towel", price: 15.70 },
-    { code: "BATHTWL", description: "Bath Towel", price: 19.00 },
-    { code: "BATHSH", description: "Bath Sheet", price: 22.00 },
+    { code: "TWLHAND", description: "Hand Towel", price: 5.24 }, // Updated from 15.70 to 5.24[cite: 1]
+    { code: "BATHTWL", description: "Bath Towel", price: 6.92 }, // Updated from 19.00 to 6.92[cite: 1]
+    { code: "BATHSH", description: "Bath Sheet", price: 8.67 }, // Updated from 22.00 to 8.67[cite: 1]
     { code: "BATHMA", description: "Bath Math", price: 19.84 },
     { code: "BLANKK", description: "King Blanket", price: 122.26 },
     { code: "BLANKQ", description: "Queen Blanket", price: 122.26 },
@@ -23,7 +24,7 @@ const priceList = [
     { code: "MFRAGS", description: "Medium Floor Rags", price: 60.00 },
     { code: "SFRAGS", description: "Small Floor Rags", price: 55.00 },
     { code: "BDFR", description: "Bed Frill", price: 31.52 },
-    { code: "BEATWL", description: "Beach Towel", price: 11.42 },
+    { code: "BEATWL", description: "Beach Towel", price: 10.42 }, // Updated from 11.42 to 10.42[cite: 1]
     { code: "CARSML", description: "Small Carpet", price: 55.00 },
     { code: "CARMED", description: "Medium Carpet", price: 60.00 },
     { code: "CARLRG", description: "Large Carpet", price: 65.00 },
@@ -40,7 +41,7 @@ const priceList = [
     { code: "COUSCOVMED", description: "Medium Cushion Cover", price: 27.01 },
     { code: "COUSCOVS", description: "Small Cushion Covers", price: 21.84 },
     { code: "DBLDUVFEA", description: "Duvet Double Feather", price: 113.59 },
-    { code: "DBLTHW", description: "Double Throw", price: 96.25 },
+    { code: "DBLTHW", description: "Double Throw", price: 95.25 }, // Updated from 96.25 to 95.25[cite: 1]
     { code: "DELCOL", description: "Delivery/Collection Fee", price: 0.00 },
     { code: "DUVCOVKS", description: "King-size Duvet Cover", price: 24.21 },
     { code: "DUVCOVQU", description: "Queen Duvet Cover", price: 17.42 },
@@ -54,8 +55,8 @@ const priceList = [
     { code: "GOWN/W/B", description: "Gowns with Belt", price: 29.90 },
     { code: "KSDUVINN/F", description: "King Duvet Inner-Feather", price: 130.86 },
     { code: "KSDUVINN/N", description: "King Duvet Inner-Normal", price: 96.25 },
-    { code: "KSFITSHT", description: "King Fitted Sheet", price: 21.64 },
-    { code: "KSFLATSHT", description: "King Flat Sheet", price: 21.64 },
+    { code: "KSFITSHT", description: "King Fitted Sheet", price: 15.59 }, // Updated from 21.64 to 15.59[cite: 1]
+    { code: "KSFLATSHT", description: "King Flat Sheet", price: 15.59 }, // Updated from 21.64 to 15.59[cite: 1]
     { code: "KSMATPRO", description: "King Mattress Protector", price: 61.63 },
     { code: "KSQUIL", description: "King Quilt", price: 148.21 },
     { code: "POOLCUS", description: "Pool Cushion Cover", price: 41.00 },
@@ -79,24 +80,24 @@ const priceList = [
     { code: "PILLSTD", description: "Standard Pillow", price: 82.94 },
     { code: "PLCEMAT", description: "Place Mats", price: 6.78 },
     { code: "PLWCASLRG", description: "Large Pillowcases", price: 12.29 },
-    { code: "QSFITSHT", description: "Queen Fitted Sheet", price: 18.09 },
+    { code: "QSFITSHT", description: "Queen Fitted Sheet", price: 9.14 }, // Updated from 18.09 to 9.14[cite: 1]
     { code: "DOFITSHT", description: "Double Fitted Sheet", price: 16.00 },
     { code: "DOFLASHT", description: "Double Flat Sheet", price: 16.00 },
     { code: "SIFITSHT", description: "Single Fitted Sheet", price: 15.50 },
     { code: "3/4FITSHT", description: "3/4 Fitted Sheet", price: 12.50 },
     { code: "SIFLASHT", description: "Single Flat Sheet", price: 15.50 },
-    { code: "QSFLATSHT", description: "Queen Flat Sheet", price: 18.09 },
+    { code: "QSFLATSHT", description: "Queen Flat Sheet", price: 15.59 }, // Updated from 18.09 to 15.59[cite: 1]
     { code: "RWASH", description: "Re-Wash", price: 0.00 },
     { code: "RUGLRG", description: "Large size rug", price: 61.00 },
     { code: "RUGSML", description: "Small size rug", price: 31.00 },
     { code: "RUGSTD", description: "Standard size rug", price: 41.00 },
     { code: "SHOWCURT", description: "Shower Curtain", price: 39.10 },
     { code: "SINGDUVINN", description: "Single Duvet Inner", price: 86.77 },
-    { code: "SINGLETHRW", description: "Single Throw", price: 58.13 },
+    { code: "SINGLETHRW", description: "Single Throw", price: 57.13 }, // Updated from 58.13 to 57.13[cite: 1]
     { code: "STAINTRT", description: "Stain Treatment", price: 0.00 },
     { code: "TBLCLOTH", description: "Tablecloth", price: 18.34 },
     { code: "TBLRUN", description: "Table Runner", price: 18.34 },
-    { code: "THROW/A/S", description: "Throws-All Sizes", price: 87.58 },
+    { code: "THROW/A/S", description: "Throws-All Sizes", price: 86.58 }, // Updated from 87.58 to 86.58[cite: 1]
     { code: "TURNMAT", description: "Turndown Mats", price: 5.71 },
     { code: "TWLTEA", description: "Tea Towel", price: 5.77 }
 ];

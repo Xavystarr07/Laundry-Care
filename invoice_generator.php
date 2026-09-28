@@ -154,14 +154,12 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
             <span>Insert Image</span>
         </button>
 
-        <!-- Monthly Statements -->
-        <button type="button" class="monthly-statements-btn" onclick="navigateToMonthlyStatement()">
-          <span class="text">Monthly Statements</span>
-          <div class="icon-container">
-            <div class="icon icon--left">
-              <svg><use xlink:href="#arrow-right"></use></svg>
-            </div>
-          </div>
+        <!-- Checklist -->
+        <button type="button" class="uv-btn" id="checklistBtn">
+            <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            <span>Checklist</span>
         </button>
     </div>
 
@@ -204,11 +202,6 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 
 </form>
 
-<svg style="display:none;">
-  <symbol id="arrow-right" viewBox="0 0 20 10">
-    <path d="M14.84 0l-1.08 1.06 3.3 3.2H0v1.49h17.05l-3.3 3.2L14.84 10 20 5l-5.16-5z"></path>
-  </symbol>
-</svg>
 
 <!-- ── JS files — edit individual files for each concern ── -->
 <script src="js/priceList.js"></script>       <!-- item price data             -->
@@ -228,6 +221,7 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/saveInvoice.js"></script>     <!-- save button behaviour       -->
 <script src="js/imageInsert.js"></script>     <!-- image insert feature        -->
 <script src="js/themeSearch.js"></script>     <!-- theme/search feature        -->
+<script src="js/checklist.js"></script>       <!-- checklist feature           -->
 
 </body>
 </html>

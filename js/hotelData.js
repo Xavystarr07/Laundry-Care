@@ -4,12 +4,14 @@ const hotelUnitMap = {
     "Bronze Beach": [1, 3, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 17, 18, 19, 25, 26],
     "Bronze Bay": [1, 2, 3, 6, 8, 10, 11, 12, 15, 17, 19, 21, 24, 25, 26],
     "Bensiesta": [201, 302],
+    "Breakers":[131, 210, 331, 512, 516],
     "Sea Lodge": [12, 14, 45, 53, 64, 72, 84, 92],
     "Sea Breeze": [4],
     "Terra Mare": [108],
     "Kyalanga": [17, 27],
     "Lighthouse": [201],
-    "Glitter Bay": [15]
+    "Glitter Bay": [15],
+    "Oceans":[2106],
 };
 
 // Returns the full hotel options HTML string (used when building rows dynamically)
@@ -17,7 +19,7 @@ function getHotelOptionsHTML(selectedHotel = "") {
     const hotels = [
         "Beacon-Rock", "Bensiesta", "Berumdas", "Bronze Bay", "Bronze Beach",
         "Breakers", "Cormoran", "Glitter Bay", "Kyalanga", "Lighthouse",
-        "Malindi", "Marine", "Oyster Rock", "Pearls", "Sea Lodge",
+        "Malindi", "Marine", "Oyster Rock", "Oceans", "Pearls", "Sea Lodge",
         "Sea Breeze", "Shades", "Terra Mare"
     ];
     return hotels.map(h =>
