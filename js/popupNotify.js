@@ -1,240 +1,181 @@
-// popupNotify.js — Robot popup with creative gradient backgrounds per type
+// popupNotify.js — Notification toast, bottom-centre, light + dark themes.
+// Errors / warnings disappear as soon as the field they are about is fixed.
+// showPopup(type, message, tip, durationMs, watch)
+//   watch (optional): a CSS selector, or a function that returns true once fixed.
 
 (function () {
 
 const style = document.createElement('style');
 style.textContent = `
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
-
   #robotPopup {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    max-width: 330px;
-    min-width: 270px;
-    border-radius: 22px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.22);
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 18px 20px 22px 18px;
-    z-index: 99999;
-    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    font-size: 14px;
-    opacity: 0;
-    transform: translateY(30px) scale(0.92);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    pointer-events: none;
-    overflow: hidden;
-    /* Default: info */
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: #e0e0f0;
-    border: 1px solid rgba(255,255,255,0.1);
+    --pp-bg:#ffffff; --pp-text:#1f2937; --pp-muted:#6b7280; --pp-line:#e5e7eb;
+    --pp-accent:#2563eb; --pp-soft:#eff6ff;
+    position: fixed; left: 50%; bottom: 28px;
+    width: min(540px, calc(100vw - 32px));
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 14px 18px 16px;
+    background: var(--pp-bg); color: var(--pp-text);
+    border: 1px solid var(--pp-line); border-left: 5px solid var(--pp-accent);
+    border-radius: 14px; box-shadow: 0 14px 40px rgba(15,23,42,0.2);
+    font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px;
+    z-index: 99999; overflow: hidden;
+    opacity: 0; transform: translate(-50%, 18px); pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
+  #robotPopup.show { opacity: 1; transform: translate(-50%, 0); pointer-events: all; }
 
-  /* Animated starfield background layer */
-  #robotPopup::before {
-    content: '✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧ ✦ ✧';
-    position: absolute;
-    top: 4px; left: 0; right: 0;
-    font-size: 9px;
-    color: rgba(255,255,255,0.12);
-    letter-spacing: 6px;
-    text-align: center;
-    pointer-events: none;
-    animation: starsFloat 6s linear infinite;
+  body.dark-mode #robotPopup {
+    --pp-bg:#181b30; --pp-text:#f1f2fa; --pp-muted:#a9adc8; --pp-line:#2c3050;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.6);
   }
-  @keyframes starsFloat {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-40px); }
-  }
-
-  #robotPopup.show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-  }
-
-  /* ── Type themes ── */
-  #robotPopup.type-error {
-    background: linear-gradient(135deg, #2d0a0a 0%, #5c1010 50%, #8b0000 100%);
-    border-color: rgba(255,100,100,0.25);
-  }
-  #robotPopup.type-success {
-    background: linear-gradient(135deg, #0a2d12 0%, #0f5c22 50%, #157a30 100%);
-    border-color: rgba(100,255,140,0.25);
-  }
-  #robotPopup.type-warning {
-    background: linear-gradient(135deg, #2d1f00 0%, #5c3d00 50%, #8b6000 100%);
-    border-color: rgba(255,200,80,0.25);
-  }
-  #robotPopup.type-info {
-    background: linear-gradient(135deg, #0a1a2d 0%, #0f3060 50%, #1a4a8b 100%);
-    border-color: rgba(100,180,255,0.25);
-  }
-  #robotPopup.type-dupe {
-    background: linear-gradient(135deg, #1e0a2d 0%, #3d0f5c 50%, #5a0f8b 100%);
-    border-color: rgba(180,100,255,0.25);
-  }
-
-  /* Decorative corner accent */
-  #robotPopup::after {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    pointer-events: none;
-  }
+  #robotPopup.type-error   { --pp-accent:#dc2626; --pp-soft:#fee2e2; }
+  #robotPopup.type-warning { --pp-accent:#d97706; --pp-soft:#fef3c7; }
+  #robotPopup.type-success { --pp-accent:#16a34a; --pp-soft:#dcfce7; }
+  #robotPopup.type-info    { --pp-accent:#2563eb; --pp-soft:#dbeafe; }
+  #robotPopup.type-dupe    { --pp-accent:#7c3aed; --pp-soft:#ede9fe; }
+  body.dark-mode #robotPopup.type-error   { --pp-accent:#f87171; --pp-soft:rgba(248,113,113,0.15); }
+  body.dark-mode #robotPopup.type-warning { --pp-accent:#fbbf24; --pp-soft:rgba(251,191,36,0.15); }
+  body.dark-mode #robotPopup.type-success { --pp-accent:#4ade80; --pp-soft:rgba(74,222,128,0.15); }
+  body.dark-mode #robotPopup.type-info    { --pp-accent:#7aa2ff; --pp-soft:rgba(122,162,255,0.15); }
+  body.dark-mode #robotPopup.type-dupe    { --pp-accent:#a78bfa; --pp-soft:rgba(167,139,250,0.15); }
 
   #robotPopupFace {
-    font-size: 38px;
-    line-height: 1;
-    flex-shrink: 0;
-    animation: robotBob 1.2s ease-in-out infinite;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
-    position: relative; z-index: 1;
+    width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%;
+    background: var(--pp-soft); color: var(--pp-accent);
+    display: flex; align-items: center; justify-content: center;
   }
-  @keyframes robotBob {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50%       { transform: translateY(-5px) rotate(3deg); }
-  }
-
-  #robotPopupBody { flex: 1; position: relative; z-index: 1; }
-
-  #robotPopupTitle {
-    font-weight: 800;
-    font-size: 14.5px;
-    margin-bottom: 5px;
-    color: #ffffff;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    letter-spacing: 0.2px;
-  }
-
-  #robotPopupMsg {
-    color: rgba(255,255,255,0.85);
-    line-height: 1.5;
-    font-size: 13.5px;
-  }
-
-  #robotPopupSolution {
-    margin-top: 8px;
-    padding: 6px 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 8px;
-    border-left: 3px solid rgba(255,255,255,0.4);
-    color: rgba(255,255,255,0.95);
-    font-weight: 700;
-    font-size: 12.5px;
-    line-height: 1.4;
-    backdrop-filter: blur(4px);
-  }
+  #robotPopupFace svg { width: 20px; height: 20px; }
+  #robotPopupBody { flex: 1; min-width: 0; }
+  #robotPopupTitle { font-size: 15px; font-weight: 700; line-height: 1.3; color: var(--pp-text); }
+  #robotPopupMsg   { margin-top: 3px; font-size: 14px; line-height: 1.5; color: var(--pp-text); }
+  #robotPopupSolution { margin-top: 6px; font-size: 13px; line-height: 1.45; color: var(--pp-muted); }
 
   #robotPopupClose {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.18);
-    color: rgba(255,255,255,0.7);
-    font-size: 14px;
-    cursor: pointer;
-    padding: 3px 7px;
-    flex-shrink: 0;
-    margin: 0 !important;
-    box-shadow: none !important;
-    border-radius: 50%;
-    line-height: 1;
-    transition: all 0.2s;
-    align-self: flex-start;
-    position: relative; z-index: 1;
+    width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; border: none;
+    background: transparent; color: var(--pp-muted); font-size: 14px; line-height: 1; cursor: pointer;
+    margin: 0 !important; padding: 0 !important; box-shadow: none !important; transition: background .15s, color .15s;
   }
-  #robotPopupClose:hover {
-    background: rgba(255,80,80,0.4);
-    color: white;
-    transform: rotate(90deg);
-  }
+  #robotPopupClose:hover { background: var(--pp-soft); color: var(--pp-accent); transform: none; }
 
-  #robotPopupProgress {
-    position: absolute;
-    bottom: 0; left: 0;
-    height: 4px;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 0 0 22px 22px;
-    background: rgba(255,255,255,0.08);
-  }
-  #robotPopupProgressBar {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, rgba(255,255,255,0.3), rgba(255,255,255,0.7));
-    border-radius: 0 0 22px 22px;
-    transition: width linear;
-  }
+  #robotPopupProgress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; }
+  #robotPopupProgressBar { height: 100%; width: 100%; background: var(--pp-accent); opacity: 0.55; transition: width linear; }
 `;
 document.head.appendChild(style);
 
 const popup = document.createElement('div');
 popup.id = 'robotPopup';
+popup.setAttribute('role', 'alert');
+popup.setAttribute('aria-live', 'polite');
 popup.innerHTML = `
-  <div id="robotPopupFace">🤖</div>
+  <div id="robotPopupFace"></div>
   <div id="robotPopupBody">
     <div id="robotPopupTitle"></div>
     <div id="robotPopupMsg"></div>
     <div id="robotPopupSolution"></div>
   </div>
-  <button id="robotPopupClose" title="Close">✕</button>
+  <button id="robotPopupClose" type="button" title="Close" aria-label="Close">✕</button>
   <div id="robotPopupProgress"><div id="robotPopupProgressBar"></div></div>
 `;
 document.body.appendChild(popup);
 document.getElementById('robotPopupClose').addEventListener('click', hidePopup);
 
-let autoTimer  = null;
-let watchTimer = null;
+const svg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const ICONS = {
+    error:   svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12.5"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/>'),
+    warning: svg('<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/>'),
+    success: svg('<circle cx="12" cy="12" r="10"/><polyline points="8 12.5 11 15.5 16 9"/>'),
+    info:    svg('<circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.8" r="0.6" fill="currentColor"/>'),
+    dupe:    svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>')
+};
+const TITLES = { error: 'Please fix this', warning: 'Please check', success: 'Done', info: 'Note', dupe: 'Already in use' };
 
-const FACES  = { error:'😟', success:'🎉', warning:'😬', info:'🤖', dupe:'🤔' };
-const TITLES = { error:'Oops! Something went wrong', success:'Woohoo! All done!', warning:'Hey, heads up!', info:'Just so you know...', dupe:'Hold on a second!' };
+// Strip emoji and "Beep boop!" for a professional tone
+const clean = s => String(s || '')
+    .replace(/^\s*beep boop!\s*/i, '')
+    .replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+    .replace(/\s{2,}/g, ' ').trim();
 
-window.showPopup = function(type, msg, solution = '', duration = 6000, watchField = null) {
-  const el = document.getElementById('robotPopup');
-  el.className = 'show type-' + type;
-  document.getElementById('robotPopupFace').textContent     = FACES[type]  || '🤖';
-  document.getElementById('robotPopupTitle').textContent    = TITLES[type] || '';
-  document.getElementById('robotPopupMsg').textContent      = msg;
-  document.getElementById('robotPopupSolution').textContent = solution;
-  document.getElementById('robotPopupSolution').style.display = solution ? 'block' : 'none';
+// Is this field valid now?
+function fieldOk(el) {
+    if (!el || !el.isConnected) return true;
+    const v = (el.value || '').trim();
+    if (el.classList.contains('invalid')) return false;
+    if (el.id === 'invoice_number' || el.id === 'depInv') return v.replace(/\D/g, '').length === 5;
+    if (el.classList.contains('code')) {
+        const price = el.closest('tr')?.querySelector('.price');
+        const custom = !!price && !price.hasAttribute('readonly');
+        if (!v) return false;
+        return custom || typeof isCodeInPriceList !== 'function' || isCodeInPriceList(v);
+    }
+    if (el.classList.contains('quantity')) return parseInt(v) > 0;
+    if (el.classList.contains('price'))    return parseFloat(v) > 0;
+    return v !== '';
+}
 
-  const bar = document.getElementById('robotPopupProgressBar');
-  bar.style.transition = 'none';
-  bar.style.width = '100%';
-  if (autoTimer) clearTimeout(autoTimer);
-  if (watchTimer) { clearInterval(watchTimer); watchTimer = null; }
+let autoTimer = null, watchTimer = null, targetTimer = null;
 
-  if (duration > 0) {
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      bar.style.transition = `width ${duration}ms linear`;
-      bar.style.width = '0%';
-    }));
-    autoTimer = setTimeout(hidePopup, duration);
-  }
+function clearTimers() {
+    if (autoTimer)   { clearTimeout(autoTimer);   autoTimer = null; }
+    if (targetTimer) { clearTimeout(targetTimer); targetTimer = null; }
+    if (watchTimer)  { clearInterval(watchTimer); watchTimer = null; }
+}
 
-  // If a field is passed, watch it and hide popup when it's fixed
-  if (watchField) {
+function startWatch(check) {
+    if (watchTimer) clearInterval(watchTimer);
     watchTimer = setInterval(() => {
-      const el = document.querySelector(watchField);
-      if (!el) { clearInterval(watchTimer); watchTimer = null; return; }
-      // Hide if field now has a valid value
-      if (el.value && el.value.trim() !== '' && !el.classList.contains('invalid')) {
-        hidePopup();
-        clearInterval(watchTimer);
-        watchTimer = null;
-      }
-    }, 300);
-  }
+        let ok = false;
+        try { ok = !!check(); } catch (e) { ok = false; }
+        if (ok) hidePopup();
+    }, 150);
+}
+
+window.showPopup = function (type, msg, solution = '', duration = 6000, watch = null) {
+    type = ICONS[type] ? type : 'info';
+    const el = document.getElementById('robotPopup');
+    clearTimers();
+
+    el.className = 'show type-' + type;
+    document.getElementById('robotPopupFace').innerHTML = ICONS[type];
+    document.getElementById('robotPopupTitle').textContent = TITLES[type];
+    document.getElementById('robotPopupMsg').textContent = clean(msg);
+    const tip = clean(solution);
+    const tipEl = document.getElementById('robotPopupSolution');
+    tipEl.textContent = tip;
+    tipEl.style.display = tip ? 'block' : 'none';
+
+    const bar = document.getElementById('robotPopupProgressBar');
+    const prog = document.getElementById('robotPopupProgress');
+    bar.style.transition = 'none';
+    bar.style.width = '100%';
+    prog.style.display = duration > 0 ? 'block' : 'none';
+    if (duration > 0) {
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            bar.style.transition = `width ${duration}ms linear`;
+            bar.style.width = '0%';
+        }));
+        autoTimer = setTimeout(hidePopup, duration);
+    }
+
+    // Disappear the moment the problem is fixed
+    let check = null;
+    if (typeof watch === 'function') check = watch;
+    else if (typeof watch === 'string') check = () => fieldOk(document.querySelector(watch));
+
+    if (check) {
+        startWatch(check);
+    } else if (type === 'error' || type === 'warning' || type === 'dupe') {
+        // No explicit field → watch whichever field has the cursor once the page has focused it
+        targetTimer = setTimeout(() => {
+            const a = document.activeElement;
+            if (a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName) && !el.contains(a)) startWatch(() => fieldOk(a));
+        }, 220);
+    }
 };
 
 function hidePopup() {
-  document.getElementById('robotPopup').classList.remove('show');
-  if (autoTimer)  { clearTimeout(autoTimer);   autoTimer  = null; }
-  if (watchTimer) { clearInterval(watchTimer);  watchTimer = null; }
+    document.getElementById('robotPopup').classList.remove('show');
+    clearTimers();
 }
+window.hidePopup = hidePopup;
 
 })();

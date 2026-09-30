@@ -239,3 +239,39 @@ button.clear-all:hover { background: linear-gradient(45deg, #FB8C00, #F57C00); t
     filter: brightness(1.08);
 }
 .monthly-statements-fab:active { transform: scale(0.97); }
+
+/* ── Icon-only action buttons that expand to the right on hover ── */
+.mode-row {
+    display: flex;
+    justify-content: center;
+    margin: 14px auto 0;
+}
+
+.btn-row .uv-btn,
+.mode-row .uv-btn {
+    height: 44px;
+    padding: 0 11px;
+    gap: 0;
+    justify-content: flex-start;
+    transition: color 0.3s 0.1s ease-out, padding 0.3s ease;
+}
+
+.btn-row .uv-btn span,
+.mode-row .uv-btn span {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
+}
+
+.btn-row .uv-btn:hover span,
+.btn-row .uv-btn:focus-visible span,
+.mode-row .uv-btn:hover span,
+.mode-row .uv-btn:focus-visible span {
+    max-width: 140px;
+    opacity: 1;
+    margin-left: 8px;
+    margin-right: 4px;
+}

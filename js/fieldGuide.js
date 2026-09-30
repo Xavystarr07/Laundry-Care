@@ -1,533 +1,405 @@
-// fieldGuide.js — Top-right assistant popup
-// Fixed:
-//  1. Never shows on page load — only after user has touched a field
-//  2. Auto-hides immediately when all errors are fixed
-//  3. Bottom popup also auto-hides when error is resolved
-//  4. Passive scan re-arms correctly after errors are fixed
+// fieldGuide.js — Assistance tool (regular invoice page)
+// Guide order: invoice number → date (calendar opens) → hotel → unit → code → quantity.
+// After the quantity the item is complete; you can add another item or finish.
+// Exit any time: Exit guide / ✕ / Esc.
 
 (function () {
 
-// ── Styles ─────────────────────────────────────────────────────────────────────
 const style = document.createElement('style');
 style.textContent = `
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
-
   #fieldGuide {
-    position: fixed;
-    top: 24px;
-    right: 24px;
-    width: 310px;
-    background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
-    border-radius: 20px;
-    box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.07);
-    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
-    font-size: 13px;
-    color: #e0e0f5;
-    z-index: 99998;
-    opacity: 0;
-    transform: translateY(-16px) scale(0.96);
-    transition: opacity 0.35s ease, transform 0.35s ease;
-    pointer-events: none;
-    overflow: hidden;
-    border-top: 4px solid #7c3aed;
+    --fg-bg:#ffffff; --fg-text:#1f2937; --fg-muted:#6b7280; --fg-line:#e5e7eb; --fg-soft:#f3f4f6;
+    --fg-accent:#2563eb; --fg-accent-soft:#dbeafe;
+    position: fixed; left: 24px; bottom: 250px;
+    width: 380px; max-width: calc(100vw - 48px); max-height: calc(100vh - 280px);
+    background: var(--fg-bg); color: var(--fg-text);
+    border: 1px solid var(--fg-line); border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(15,23,42,0.22);
+    font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px;
+    z-index: 99998; overflow-x: hidden; overflow-y: auto;
+    opacity: 0; transform: translateY(10px); pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
-  #fieldGuide::before {
-    content: '· · · · · · · · · · · · · · · · · ·';
-    position: absolute; top: 5px; left: 0; right: 0;
-    font-size: 8px; color: rgba(255,255,255,0.08);
-    letter-spacing: 4px; text-align: center; pointer-events: none;
-    animation: fgDots 8s linear infinite;
+  #fieldGuide.fg-show { opacity: 1; transform: none; pointer-events: all; }
+  body.dark-mode #fieldGuide {
+    --fg-bg:#171a2b; --fg-text:#f1f2fa; --fg-muted:#a6a9c4; --fg-line:#2b2f4d; --fg-soft:#20243c;
+    --fg-accent:#7aa2ff; --fg-accent-soft:rgba(122,162,255,0.16);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
   }
-  @keyframes fgDots { 0%{transform:translateX(0)} 100%{transform:translateX(-30px)} }
+  #fieldGuide.fg-error   { --fg-accent:#e11d48; --fg-accent-soft:#ffe4e6; }
+  #fieldGuide.fg-success { --fg-accent:#16a34a; --fg-accent-soft:#dcfce7; }
+  #fieldGuide.fg-guide   { --fg-accent:#d97706; --fg-accent-soft:#fef3c7; }
+  body.dark-mode #fieldGuide.fg-error   { --fg-accent:#fb7185; --fg-accent-soft:rgba(251,113,133,0.16); }
+  body.dark-mode #fieldGuide.fg-success { --fg-accent:#4ade80; --fg-accent-soft:rgba(74,222,128,0.16); }
+  body.dark-mode #fieldGuide.fg-guide   { --fg-accent:#fbbf24; --fg-accent-soft:rgba(251,191,36,0.16); }
 
-  #fieldGuide.fg-show {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: all;
-  }
-  #fieldGuide.fg-error   { border-top-color: #ef4444; background: linear-gradient(145deg, #1a0505, #3d0a0a, #1f0000); }
-  #fieldGuide.fg-success { border-top-color: #22c55e; background: linear-gradient(145deg, #031a08, #065f20, #022910); }
-  #fieldGuide.fg-guide   { border-top-color: #f59e0b; background: linear-gradient(145deg, #1a1000, #4a2e00, #1f1500); }
+  #fgHeader { display:flex; align-items:center; gap:14px; padding:20px 20px 12px; }
+  #fgIcon { width:44px; height:44px; flex-shrink:0; border-radius:14px; background:var(--fg-accent-soft);
+            display:flex; align-items:center; justify-content:center; font-size:22px; }
+  #fgTitleWrap { flex:1; min-width:0; }
+  #fgHeaderText { font-size:17px; font-weight:700; line-height:1.25; color:var(--fg-text); }
+  #fgSub { margin-top:2px; font-size:12.5px; font-weight:600; color:var(--fg-accent); }
+  #fgClose { width:32px; height:32px; flex-shrink:0; border-radius:50%; border:none;
+             background:var(--fg-soft); color:var(--fg-muted); font-size:14px; cursor:pointer; line-height:1;
+             margin:0 !important; padding:0 !important; box-shadow:none !important; transition:background .2s,color .2s; }
+  #fgClose:hover { background:var(--fg-accent-soft); color:var(--fg-accent); transform:none; }
 
-  #fgHeader {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 14px 10px;
-    background: rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  #fgIcon { font-size: 24px; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-  #fgHeaderText { flex: 1; font-weight: 800; font-size: 13.5px; color: #fff; line-height: 1.3; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
-  #fgClose {
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.6); font-size: 13px;
-    cursor: pointer; padding: 3px 7px; margin: 0 !important; box-shadow: none !important;
-    flex-shrink: 0; line-height: 1; border-radius: 50%; transition: all 0.2s;
-  }
-  #fgClose:hover { background: rgba(255,80,80,0.4); color: white; transform: rotate(90deg); }
-  #fgBody { padding: 12px 14px; line-height: 1.55; color: rgba(255,255,255,0.82); font-size: 13px; }
-  #fgStep {
-    margin-top: 9px; padding: 8px 11px;
-    background: rgba(255,255,255,0.08);
-    border-left: 3px solid rgba(245,158,11,0.7);
-    border-radius: 8px; font-size: 12px; color: rgba(255,220,120,0.95);
-    backdrop-filter: blur(4px);
-    display: none;
-  }
-  #fgStep.visible { display: block; }
-  #fgActions { display: flex; gap: 8px; padding: 0 14px 14px; flex-wrap: wrap; }
-  #fgAssistBtn {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
-    color: white; border: none; border-radius: 20px; padding: 7px 16px;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    font-family: 'Nunito','Segoe UI',Arial,sans-serif;
-    transition: all 0.2s; box-shadow: 0 2px 12px rgba(34,197,94,0.4); margin: 0 !important;
-    letter-spacing: 0.2px;
-  }
-  #fgAssistBtn:hover { transform:scale(1.06); box-shadow: 0 4px 16px rgba(34,197,94,0.5); }
-  #fgDismissBtn {
-    background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);
-    border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
-    padding: 7px 14px; font-size: 12px; cursor: pointer;
-    font-family: 'Nunito','Segoe UI',Arial,sans-serif;
-    transition: all 0.2s; margin: 0 !important; box-shadow: none !important;
-  }
-  #fgDismissBtn:hover { background: rgba(255,255,255,0.18); color: white; }
-  #fgProgress { height: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
-  #fgProgressBar {
-    height: 100%;
-    background: linear-gradient(90deg, #7c3aed, #22c55e);
-    width: 0%; transition: width 0.4s ease;
-  }
+  #fgBody { padding:4px 20px 6px; }
+  #fgMsg { font-size:15px; line-height:1.6; font-weight:500; color:var(--fg-text); }
+  #fgStep { margin-top:14px; padding:12px 14px; display:none; background:var(--fg-soft);
+            border-left:4px solid var(--fg-accent); border-radius:12px; font-size:13.5px; line-height:1.55; color:var(--fg-text); }
 
-  /* ── Invoice Assistant icon — always visible, pulses when errors exist ── */
+  #fgProgressWrap { padding:16px 20px 0; display:none; }
+  #fgProgress { height:6px; background:var(--fg-soft); border-radius:6px; overflow:hidden; }
+  #fgProgressBar { height:100%; width:0; background:var(--fg-accent); border-radius:6px; transition:width .4s ease; }
+  #fgProgressText { margin-top:6px; font-size:12px; font-weight:600; color:var(--fg-muted); }
+
+  #fgActions { display:flex; flex-wrap:wrap; gap:10px; padding:18px 20px 20px; }
+  .fg-btn { border:none; border-radius:12px; padding:11px 18px; font-size:14px; font-weight:700; font-family:inherit;
+            cursor:pointer; margin:0 !important; box-shadow:none !important; transition:filter .15s; }
+  .fg-btn:hover { filter:brightness(1.08); transform:none; }
+  .fg-btn.primary { background:var(--fg-accent); color:#fff; }
+  body.dark-mode .fg-btn.primary { color:#0b1020; }
+  .fg-btn.ghost { background:var(--fg-soft); color:var(--fg-text); }
+  .fg-btn.exit { background:transparent; color:var(--fg-muted); border:1.5px solid var(--fg-line) !important; margin-left:auto !important; }
+  .fg-btn.exit:hover { color:#e11d48; border-color:#e11d48 !important; }
+
+  .fg-target { outline:3px solid #f59e0b !important; outline-offset:2px; animation:fgRing 1.4s ease-in-out infinite; }
+  @keyframes fgRing { 0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,.55); } 50% { box-shadow:0 0 0 9px rgba(245,158,11,0); } }
+
+  /* Help button — blue neon, bottom-left above Switch Mode */
   #fgTinker {
-    position: fixed;
-    top: 24px; right: 24px;
-    width: 46px; height: 46px;
-    background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
-    border-radius: 50%;
-    display: flex;
-    align-items: center; justify-content: center;
-    font-size: 20px;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(29,78,216,0.4);
-    z-index: 99998;
-    transition: transform 0.2s, box-shadow 0.2s;
+    position:fixed; left:24px; bottom:192px;
+    height:44px; min-width:44px; max-width:44px; padding:0 12px;
+    display:flex; flex-direction:row; align-items:center; justify-content:flex-start;
+    border-radius:22px; overflow:hidden; cursor:pointer;
+    background:linear-gradient(135deg,#021a3a,#0a4a9e); color:#4dc3ff;
+    border:1.5px solid #22b8ff;
+    box-shadow:0 0 10px rgba(34,184,255,.55), inset 0 0 8px rgba(34,184,255,.15);
+    z-index:99998; margin:0 !important;
+    transition:max-width .35s ease, box-shadow .3s;
   }
-  #fgTinker:hover { transform: scale(1.12); box-shadow: 0 6px 22px rgba(29,78,216,0.55); }
-  #fgTinker:active { transform: scale(0.95); }
-  #fgTinker.has-errors {
-    animation: fgPulse 2s ease-in-out infinite;
-    background: linear-gradient(135deg, #7c3aed, #4f46e5);
-    box-shadow: 0 4px 16px rgba(124,58,237,0.5);
-  }
-  @keyframes fgPulse {
-    0%, 100% { box-shadow: 0 4px 16px rgba(124,58,237,0.5); transform: scale(1); }
-    50%       { box-shadow: 0 4px 28px rgba(124,58,237,0.8); transform: scale(1.06); }
-  }
-  /* Badge dot on icon when errors */
-  #fgTinker .fg-badge {
-    position: absolute;
-    top: 2px; right: 2px;
-    width: 10px; height: 10px;
-    background: #ef4444;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    display: none;
-  }
-  #fgTinker.has-errors .fg-badge { display: block; }
-
-  .field-ok {
-    border-color: #2ecc71 !important;
-    box-shadow: 0 0 0 2px rgba(46,204,113,0.25) !important;
-    transition: border-color 0.3s, box-shadow 0.3s;
-  }
+  #fgTinker svg { width:20px; height:20px; flex-shrink:0; }
+  #fgTinkerLabel { max-width:0; opacity:0; overflow:hidden; white-space:nowrap; font-size:13px; font-weight:700;
+                   font-family:'Segoe UI',Arial,sans-serif; margin-left:0;
+                   transition:max-width .35s ease, opacity .25s ease, margin .35s ease; }
+  #fgTinker:hover, #fgTinker:focus-visible { max-width:240px; transform:none;
+                   box-shadow:0 0 18px rgba(34,184,255,.9), inset 0 0 10px rgba(34,184,255,.25); }
+  #fgTinker:hover #fgTinkerLabel, #fgTinker:focus-visible #fgTinkerLabel { max-width:170px; opacity:1; margin-left:10px; }
+  #fgTinker .fg-badge { position:absolute; top:4px; right:4px; width:10px; height:10px; background:#ef4444;
+                        border:2px solid #021a3a; border-radius:50%; display:none; }
+  #fgTinker.has-errors { animation:fgNeon 2s ease-in-out infinite; }
+  #fgTinker.has-errors .fg-badge { display:block; }
+  @keyframes fgNeon { 0%,100% { box-shadow:0 0 10px rgba(34,184,255,.55); } 50% { box-shadow:0 0 24px rgba(34,184,255,1); } }
 `;
 document.head.appendChild(style);
 
-// ── DOM ────────────────────────────────────────────────────────────────────────
+// ── DOM ──────────────────────────────────────────────────────────────────────
 const guide = document.createElement('div');
 guide.id = 'fieldGuide';
+guide.setAttribute('role', 'dialog');
+guide.setAttribute('aria-label', 'Assistance tool');
 guide.innerHTML = `
-  <div id="fgProgress"><div id="fgProgressBar"></div></div>
   <div id="fgHeader">
-    <span id="fgIcon">🔍</span>
-    <span id="fgHeaderText">Invoice Assistant</span>
-    <button id="fgClose" title="Dismiss">✕</button>
+    <div id="fgIcon">🧾</div>
+    <div id="fgTitleWrap"><div id="fgHeaderText">Assistance tool</div><div id="fgSub"></div></div>
+    <button id="fgClose" type="button" title="Close">✕</button>
   </div>
-  <div id="fgBody">
-    <span id="fgMsg"></span>
-    <div id="fgStep"></div>
+  <div id="fgBody"><div id="fgMsg"></div><div id="fgStep"></div></div>
+  <div id="fgProgressWrap">
+    <div id="fgProgress"><div id="fgProgressBar"></div></div>
+    <div id="fgProgressText"></div>
   </div>
   <div id="fgActions">
-    <button id="fgAssistBtn">✨ Use Assistance</button>
-    <button id="fgDismissBtn">Dismiss</button>
+    <button type="button" class="fg-btn primary" id="fgStart">Guide me</button>
+    <button type="button" class="fg-btn primary" id="fgNext">Looks right — Next</button>
+    <button type="button" class="fg-btn primary" id="fgAdd">+ Add another item</button>
+    <button type="button" class="fg-btn primary" id="fgDone">Got it</button>
+    <button type="button" class="fg-btn ghost" id="fgSkip">Skip</button>
+    <button type="button" class="fg-btn exit" id="fgExit">Exit guide</button>
   </div>
 `;
 document.body.appendChild(guide);
 
-// Invoice Assistant icon — always visible
-const tinker = document.createElement('div');
+const tinker = document.createElement('button');
 tinker.id = 'fgTinker';
-tinker.title = 'Invoice Assistant';
-tinker.innerHTML = `🧾<span class="fg-badge"></span>`;
-tinker.style.position = 'fixed'; // ensure it's always shown
+tinker.type = 'button';
+tinker.setAttribute('aria-label', 'Assistance tool');
+tinker.innerHTML = `
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+    <line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/>
+    <line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/>
+  </svg>
+  <span id="fgTinkerLabel">Assistance tool</span>
+  <span class="fg-badge"></span>
+`;
 document.body.appendChild(tinker);
 
-// ── Refs ───────────────────────────────────────────────────────────────────────
-const fgEl         = guide;
-const fgIcon       = guide.querySelector('#fgIcon');
-const fgTitle      = guide.querySelector('#fgHeaderText');
-const fgMsg        = guide.querySelector('#fgMsg');
-const fgStep       = guide.querySelector('#fgStep');
-const fgBar        = guide.querySelector('#fgProgressBar');
-const fgAssist     = guide.querySelector('#fgAssistBtn');
-const fgDismissBtn = guide.querySelector('#fgDismissBtn');
-const fgClose      = guide.querySelector('#fgClose');
+// ── Refs / state ─────────────────────────────────────────────────────────────
+const q = s => guide.querySelector(s);
+const fgIcon = q('#fgIcon'), fgTitle = q('#fgHeaderText'), fgSub = q('#fgSub');
+const fgMsg = q('#fgMsg'), fgStep = q('#fgStep');
+const fgProgWrap = q('#fgProgressWrap'), fgBar = q('#fgProgressBar'), fgBarText = q('#fgProgressText');
+const btn = { start: q('#fgStart'), next: q('#fgNext'), add: q('#fgAdd'), done: q('#fgDone'), skip: q('#fgSkip'), exit: q('#fgExit') };
 
-// ── State ──────────────────────────────────────────────────────────────────────
-let guidanceActive     = false;
-let userHasInteracted  = false; // ← NEVER show anything until user touches a field
-let dismissed          = false;
-let dismissReopenTimer = null;
-let idleTimer          = null;
-let cleanCheckTimer    = null; // continuously checks if errors resolved → auto-hide
+let guiding = false, userHasInteracted = false;
+let current = null, stopWatch = null, closeTimer = null, doneCount = 0;
+const skipped = new Set();
+const confirmed = new Set();     // 'date' / 'hotel' already confirmed this session
 
-// ── Show / hide ────────────────────────────────────────────────────────────────
-function showGuide(type, icon, title, msg, step, showAssist, autoDismiss) {
-    dismissed = false;
-    tinker.classList.remove('visible');
-    if (dismissReopenTimer) { clearTimeout(dismissReopenTimer); dismissReopenTimer = null; }
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function fgFlash(el) { el.classList.add('field-ok'); setTimeout(() => el.classList.remove('field-ok'), 2000); }
+function fgIsCustom(row) { const p = row?.querySelector('.price'); return !!p && !p.hasAttribute('readonly'); }
+function fgCodeValid(code) {
+    if (typeof priceList === 'undefined') return true;
+    const t = (code || '').trim().toUpperCase();
+    return priceList.some(i => i.code.toUpperCase() === t);
+}
+function clearTarget() { document.querySelectorAll('.fg-target').forEach(e => e.classList.remove('fg-target')); }
 
-    fgEl.className = 'fg-show fg-' + type;
-    fgIcon.textContent  = icon;
-    fgTitle.textContent = title;
-    fgMsg.textContent   = msg;
+const GUIDANCE = {
+    invoice:        { icon:'🔢', msg:'Type the 5-digit number from the invoice slip.',  step:'Example: 10042' },
+    date:           { icon:'📅', msg:'Choose the day the laundry was received.',        step:'Pick a day on the calendar — or press Next if the date shown is right.' },
+    hotel:          { icon:'🏨', msg:'Choose the hotel for this invoice.',              step:'Pick it from the list — or press Next if it is already right.' },
+    unit:           { icon:'🔑', msg:'Enter the unit number.',                          step:'Pick a number from the list or type it.' },
+    code:           { icon:'🏷️', msg:'Enter the item code.',                            step:'Type a few letters (e.g. TWL), then pick the item from the list.' },
+    'code-invalid': { icon:'⚠️', msg:"That code isn't on the price list.",              step:'Clear it, type a few letters again and pick one from the list.' },
+    description:    { icon:'📝', msg:'Describe this custom item.',                      step:'Type a short name, then press Tab.' },
+    price:          { icon:'💰', msg:'Enter the price for one item.',                   step:'Type it in Rands (e.g. 25.50), then press Tab.' },
+    quantity:       { icon:'🔢', msg:'How many of this item?',                          step:'Type a number (e.g. 2), then press Tab.' }
+};
 
-    if (step) { fgStep.textContent = step; fgStep.classList.add('visible'); }
-    else      { fgStep.textContent = ''; fgStep.classList.remove('visible'); }
+// ── Panel ────────────────────────────────────────────────────────────────────
+function show(o) {
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+    guide.className = 'fg-show fg-' + (o.type || 'info');
+    fgIcon.textContent  = o.icon  || '🧾';
+    fgTitle.textContent = o.title || 'Assistance tool';
+    fgSub.textContent   = o.sub   || '';
+    fgSub.style.display = o.sub ? 'block' : 'none';
+    fgMsg.textContent   = o.msg   || '';
+    fgStep.textContent  = o.step  || '';
+    fgStep.style.display = o.step ? 'block' : 'none';
 
-    fgAssist.style.display = (showAssist !== false) ? 'inline-block' : 'none';
+    if (o.progress == null) fgProgWrap.style.display = 'none';
+    else { fgProgWrap.style.display = 'block'; fgBar.style.width = o.progress + '%'; fgBarText.textContent = o.progressText || ''; }
 
-    if (autoDismiss > 0) setTimeout(hideGuide, autoDismiss);
+    const b = o.buttons || [];
+    Object.keys(btn).forEach(k => btn[k].style.display = b.includes(k) ? '' : 'none');
+    btn.start.textContent = o.startText || 'Guide me';
+    btn.done.textContent  = o.doneText  || 'Got it';
+    btn.done.className = 'fg-btn ' + (b.includes('add') ? 'ghost' : 'primary');
 
-    // Start watching for errors to be resolved so we can auto-hide
-    startCleanCheck();
+    if (o.autoDismiss > 0) closeTimer = setTimeout(() => { if (!guiding) hidePanel(); }, o.autoDismiss);
+}
+function hidePanel() { guide.classList.remove('fg-show'); clearTarget(); }
+
+function exitGuide() {
+    guiding = false; current = null; doneCount = 0;
+    if (stopWatch) { stopWatch(); stopWatch = null; }
+    skipped.clear(); confirmed.clear();
+    hidePanel();
 }
 
-function hideGuide() {
-    fgEl.classList.remove('fg-show');
-    guidanceActive = false;
-    stopCleanCheck();
-}
-
-function dismissGuide() {
-    hideGuide();
-    dismissed      = true;
-    guidanceActive = false;
-    stopCleanCheck();
-    // Error badge stays on the icon — user can reopen anytime
-    const err = findFirstError();
-    if (!err) dismissed = false;
-}
-
-fgClose.addEventListener('click', dismissGuide);
-fgDismissBtn.addEventListener('click', dismissGuide);
-
-// Icon click — toggle the guide panel
-tinker.addEventListener('click', () => {
-    if (fgEl.classList.contains('fg-show')) {
-        hideGuide();
-        return;
-    }
-    dismissed = false;
-    const error = findFirstError();
-    if (error) {
-        const g = GUIDANCE[error.field] || fallbackGuidance(error.label);
-        showGuide('error', g.icon, g.title,
-            g.msg + ' Click "Use Assistance" and I\'ll take you there.',
-            g.step, true, 0);
-    } else {
-        updateProgress();
-        showGuide('success', '🎉', 'All looks great!',
-            'Every required field is correctly filled. Ready to save or print!',
-            '', false, 4000);
-    }
-});
-
-// ── Auto-hide when errors resolved ────────────────────────────────────────────
-// Polls every 500ms while guide is visible — hides immediately when no errors
-function startCleanCheck() {
-    stopCleanCheck();
-    cleanCheckTimer = setInterval(() => {
-        if (!fgEl.classList.contains('fg-show')) { stopCleanCheck(); return; }
-        if (guidanceActive) return; // don't interrupt active guidance mid-walk
-        const error = findFirstError();
-        if (!error) {
-            hideGuide();
-            tinker.classList.remove('visible');
-            updateProgress();
-            // Kill bottom popup too
-            const rp = document.getElementById('robotPopup');
-            if (rp) rp.classList.remove('show');
-        }
-    }, 500);
-}
-
-function stopCleanCheck() {
-    if (cleanCheckTimer) { clearInterval(cleanCheckTimer); cleanCheckTimer = null; }
-}
-
-// ── Progress ───────────────────────────────────────────────────────────────────
-function updateProgress() {
-    const { total, filled } = countFields();
-    const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
-    fgBar.style.width = pct + '%';
-}
-
-// ── Find first error ───────────────────────────────────────────────────────────
-function findFirstError() {
+// ── What's missing ───────────────────────────────────────────────────────────
+function findErrors() {
+    const out = [];
     const inv = document.getElementById('invoice_number');
-    if (!inv?.value || inv.value.replace(/\D/g,'').length < 5)
-        return { el: inv, field: 'invoice', label: 'Invoice Number' };
+    if (inv && inv.value.replace(/\D/g, '').length < 5) out.push({ el: inv, field: 'invoice', label: 'Invoice number' });
 
-    const row1   = document.querySelector('#invoiceTable tr');
-    const dateEl = row1?.querySelector('.date-received');
-    if (dateEl && !dateEl.value)
-        return { el: dateEl, field: 'date', label: 'Date Received' };
+    const rows = Array.from(document.querySelectorAll('#invoiceTable tr'));
+    const multi = rows.length > 1;
+    rows.forEach((row, i) => {
+        const tag = multi ? ` (row ${i + 1})` : '';
+        const add = (el, field, label) => out.push({ el, field, label: label + tag });
 
-    for (const row of document.querySelectorAll('#invoiceTable tr')) {
+        if (i === 0) { const d = row.querySelector('.date-received'); if (d && !d.value) add(d, 'date', 'Date received'); }
         const hotel = row.querySelector('.hotel');
-        if (hotel && !hotel.disabled && !hotel.value)
-            return { el: hotel, field: 'hotel', label: 'Hotel Name' };
-
+        if (hotel && !hotel.disabled && !hotel.value) add(hotel, 'hotel', 'Hotel');
         const unit = row.querySelector('.unit-number');
-        if (unit && !unit.hasAttribute('readonly') && !unit.value.trim())
-            return { el: unit, field: 'unit', label: 'Unit Number' };
+        if (unit && !unit.hasAttribute('readonly') && !unit.value.trim()) add(unit, 'unit', 'Unit number');
 
         const code = row.querySelector('.code');
-        if (code && !code.value.trim())
-            return { el: code, field: 'code', label: 'Item Code' };
-
-        if (code?.value.trim() && !isCustomRow(row) && !isCodeInPriceList(code.value))
-            return { el: code, field: 'code-invalid', label: 'Invalid Item Code' };
-
-        if (isCustomRow(row)) {
+        if (code) {
+            if (!code.value.trim()) add(code, 'code', 'Item code');
+            else if (!fgIsCustom(row) && !fgCodeValid(code.value)) add(code, 'code-invalid', 'Invalid item code');
+        }
+        if (fgIsCustom(row)) {
             const desc = row.querySelector('.description');
-            if (desc && !desc.value.trim())
-                return { el: desc, field: 'description', label: 'Description' };
-
+            if (desc && !desc.value.trim()) add(desc, 'description', 'Description');
             const price = row.querySelector('.price');
-            if (price && (!price.value || parseFloat(price.value) <= 0))
-                return { el: price, field: 'price', label: 'Unit Price' };
+            if (price && (!price.value || parseFloat(price.value) <= 0)) add(price, 'price', 'Unit price');
         }
-
         const qty = row.querySelector('.quantity');
-        if (qty && !qty.value.trim())
-            return { el: qty, field: 'quantity', label: 'Quantity' };
-    }
-    return null;
-}
-
-// ── Count fields ───────────────────────────────────────────────────────────────
-function countFields() {
-    let total = 0, filled = 0;
-    const inv = document.getElementById('invoice_number');
-    total++;
-    if (inv?.value.replace(/\D/g,'').length === 5) filled++;
-
-    document.querySelectorAll('#invoiceTable tr').forEach(row => {
-        ['.hotel', '.unit-number', '.code', '.quantity', '.date-received'].forEach(cls => {
-            const el = row.querySelector(cls);
-            if (!el || el.hasAttribute('readonly') || el.disabled) return;
-            total++;
-            if (el.value.trim()) filled++;
-        });
-        if (isCustomRow(row)) {
-            ['.description', '.price'].forEach(cls => {
-                const el = row.querySelector(cls);
-                if (!el) return;
-                total++;
-                if (el.value.trim() && parseFloat(el.value) > 0) filled++;
-            });
-        }
+        if (qty && !qty.value.trim()) add(qty, 'quantity', 'Quantity');
     });
-    return { total, filled };
+    return out;
 }
 
-// ── Guidance content ───────────────────────────────────────────────────────────
-const GUIDANCE = {
-    invoice:      { icon:'🔢', title:'Invoice Number',  msg:'A 5-digit invoice number is needed.',            step:'Type exactly 5 digits (e.g. 10042). Max value is 50000.' },
-    date:         { icon:'📅', title:'Date Received',   msg:'Please pick a date.',                           step:'Click the date field — only dates within the last 2 months are allowed.' },
-    hotel:        { icon:'🏨', title:'Hotel Name',      msg:'Choose a hotel from the dropdown.',             step:'Click the Hotel dropdown and select the correct hotel.' },
-    unit:         { icon:'🔑', title:'Unit Number',     msg:'Unit number is missing.',                       step:'Click Unit Number — a suggestion list will appear. Pick or type a valid number.' },
-    code:         { icon:'🏷️', title:'Item Code',       msg:'An item code is needed.',                       step:'Type a few letters (e.g. TWL) and pick a matching code from the dropdown.' },
-    'code-invalid':{ icon:'⚠️', title:'Invalid Code',   msg:"This code isn't in the price list.",            step:'Clear it, type a few letters, and choose a valid code from the suggestions.' },
-    description:  { icon:'📝', title:'Description',    msg:'Custom item needs a description.',              step:'Type a short description, then press Tab or click the next field when done.' },
-    price:        { icon:'💰', title:'Unit Price',      msg:'Price is missing or zero.',                     step:'Enter the price in Rands (e.g. 25.50), then press Tab or click next when done.' },
-    quantity:     { icon:'🔢', title:'Quantity',        msg:"Quantity hasn't been filled in.",               step:'Enter how many (e.g. 2), then press Tab or click the next field when done.' },
-};
-
-function fallbackGuidance(label) {
-    return { icon:'❓', title: label, msg:'This field needs attention.', step:'Fill in this field correctly.' };
+function isFixed(e) {
+    if (e.confirm) return true;                 // date / hotel: any change counts
+    const v = e.el.value || '';
+    switch (e.field) {
+        case 'invoice':      return v.replace(/\D/g, '').length === 5;
+        case 'date': case 'hotel': return !!v;
+        case 'unit': case 'code': case 'description': return !!v.trim();
+        case 'code-invalid': return fgCodeValid(v);
+        case 'price':        return parseFloat(v) > 0;
+        case 'quantity':     return parseInt(v) > 0;
+    }
+    return false;
 }
 
-// ── Use Assistance click ───────────────────────────────────────────────────────
-fgAssist.addEventListener('click', () => {
-    const error = findFirstError();
-    if (!error) {
-        showGuide('success', '🎉', 'All looks great!', 'Every field is correctly filled. Ready to save or print!', '', false, 5000);
+// Ordered steps still to do: invoice → date → hotel → everything else
+function pendingSteps() {
+    const errs = findErrors().filter(e => !skipped.has(e.el));
+    const list = [];
+    const inv = errs.find(e => e.field === 'invoice');
+    if (inv) list.push(inv);
+
+    const row1 = document.querySelector('#invoiceTable tr');
+    [['date', '.date-received', 'Date received'], ['hotel', '.hotel', 'Hotel']].forEach(([field, sel, label]) => {
+        const el = row1?.querySelector(sel);
+        if (el && !confirmed.has(field) && !skipped.has(el)) list.push({ field, el, label, confirm: true });
+    });
+    errs.forEach(e => { if (!list.some(x => x.el === e.el)) list.push(e); });
+    return list;
+}
+
+const pct = left => { const t = doneCount + left; return t ? Math.round((doneCount / t) * 100) : 100; };
+
+// ── Guided walkthrough ───────────────────────────────────────────────────────
+function watch(e, onFixed) {
+    let fired = false;
+    const evs = (e.field === 'date' || e.field === 'hotel') ? ['change'] : ['blur', 'change'];
+    const handler = () => { if (fired || !isFixed(e)) return; fired = true; stop(); onFixed(); };
+    const stop = () => evs.forEach(n => e.el.removeEventListener(n, handler));
+    evs.forEach(n => e.el.addEventListener(n, handler));
+    return stop;
+}
+
+function startGuide() { guiding = true; doneCount = 0; skipped.clear(); nextStep(); }
+
+function nextStep() {
+    if (stopWatch) { stopWatch(); stopWatch = null; }
+    clearTarget();
+
+    const pending = pendingSteps();
+    if (!pending.length) { finishGuide(); return; }
+
+    const cur = pending[0];
+    current = cur;
+    const total = doneCount + pending.length;
+    const g = GUIDANCE[cur.field] || { icon: '❓', msg: 'This field needs attention.', step: 'Fill it in.' };
+
+    show({
+        type: 'guide', icon: g.icon, title: cur.label,
+        sub: `Step ${doneCount + 1} of ${total}`,
+        msg: g.msg, step: g.step,
+        progress: pct(pending.length), progressText: `${pending.length} left`,
+        buttons: cur.confirm ? ['next', 'exit'] : ['skip', 'exit']
+    });
+
+    cur.el.classList.add('fg-target');
+    cur.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+        if (!guiding || current !== cur) return;
+        cur.el.focus({ preventScroll: true });
+        if (cur.confirm) { try { cur.el.showPicker && cur.el.showPicker(); } catch (e) {} }   // opens calendar / list
+    }, 400);
+
+    stopWatch = watch(cur, () => completeStep(cur));
+}
+
+function completeStep(cur) {
+    if (!guiding || current !== cur) return;
+    if (stopWatch) { stopWatch(); stopWatch = null; }
+    if (cur.confirm) confirmed.add(cur.field);
+    doneCount++;
+    fgFlash(cur.el);
+    cur.el.classList.remove('fg-target');
+    const left = pendingSteps().length;
+    show({
+        type: 'success', icon: '✅', title: 'Nice!',
+        msg: left ? 'Done. Moving to the next step…' : 'Done.',
+        progress: pct(left), progressText: `${left} left`, buttons: ['exit']
+    });
+    setTimeout(() => { if (guiding) nextStep(); }, 600);
+}
+
+function finishGuide() {
+    clearTarget(); current = null; guiding = false;
+    const stillMissing = findErrors().length;
+    if (stillMissing) {
+        show({
+            type: 'guide', icon: '⏭️', title: 'Almost there',
+            msg: `${stillMissing} field${stillMissing === 1 ? ' is' : 's are'} still empty (you skipped them). They are needed before you can save.`,
+            buttons: ['start', 'done'], startText: 'Guide me again', doneText: 'Close'
+        });
         return;
     }
-    guidanceActive = true;
-    startGuidingField(error);
+    show({
+        type: 'success', icon: '🎉', title: 'Item complete',
+        msg: 'This item is filled in.',
+        step: 'Need another item? Add it and I will guide you through it. Otherwise press Finish, then Save Invoice.',
+        progress: 100, progressText: 'All steps done',
+        buttons: ['add', 'done'], doneText: 'Finish'
+    });
+}
+
+// ── Home screen (opened from the help button) ────────────────────────────────
+function openHome() {
+    const errs = findErrors();
+    if (errs.length) {
+        show({
+            type: 'info', icon: '🧭', title: 'Need a hand?',
+            msg: `${errs.length} field${errs.length === 1 ? '' : 's'} still to fill in on this invoice.`,
+            step: 'Press Guide me and I will take you through it step by step.',
+            buttons: ['start', 'done'], doneText: 'Close'
+        });
+    } else {
+        show({
+            type: 'success', icon: '🎉', title: 'All good!',
+            msg: 'Every required field is filled in.',
+            step: 'Add another item, or press Close and save the invoice.',
+            buttons: ['add', 'done'], doneText: 'Close'
+        });
+    }
+}
+
+// ── Wiring ───────────────────────────────────────────────────────────────────
+btn.start.addEventListener('click', startGuide);
+btn.next.addEventListener('click', () => { if (current) completeStep(current); });
+btn.skip.addEventListener('click', () => { if (current) { skipped.add(current.el); doneCount++; } nextStep(); });
+btn.add.addEventListener('click', () => {
+    document.querySelector('.add-item')?.click();
+    setTimeout(startGuide, 150);
 });
+btn.exit.addEventListener('click', exitGuide);
+btn.done.addEventListener('click', exitGuide);
+q('#fgClose').addEventListener('click', exitGuide);
 
-// ── Guide a specific field ─────────────────────────────────────────────────────
-function startGuidingField(error) {
-    const g = GUIDANCE[error.field] || fallbackGuidance(error.label);
-    showGuide('guide', g.icon, g.title, g.msg, g.step, false, 0);
-    error.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(() => error.el.focus(), 300);
-    watchForFix(error.el, error.field);
-}
+tinker.addEventListener('click', () => { guide.classList.contains('fg-show') ? exitGuide() : openHome(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && guide.classList.contains('fg-show')) exitGuide(); });
 
-// ── Watch field for correction ─────────────────────────────────────────────────
-function watchForFix(el, field) {
-    let moved = false;
+['input', 'change'].forEach(ev => document.addEventListener(ev, () => { userHasInteracted = true; }));
+document.addEventListener('blur', () => { userHasInteracted = true; }, true);
 
-    function isFixed() {
-        if (field === 'invoice')      return el.value.replace(/\D/g,'').length === 5;
-        if (field === 'date')         return !!el.value;
-        if (field === 'hotel')        return !!el.value;
-        if (field === 'unit')         return !!el.value.trim();
-        if (field === 'code')         return !!el.value.trim();
-        if (field === 'code-invalid') return isCodeInPriceList(el.value);
-        if (field === 'description')  return !!el.value.trim();
-        if (field === 'price')        return parseFloat(el.value) > 0;
-        if (field === 'quantity')     return parseInt(el.value) > 0;
-        return false;
-    }
-
-    function onDone() {
-        if (moved) return;
-        if (!isFixed()) return;
-        moved = true;
-        cleanup();
-        flashGreen(el);
-        updateProgress();
-
-        setTimeout(() => {
-            const next = findFirstError();
-            if (!next) {
-                guidanceActive = false;
-                dismissed = false;
-                showGuide('success', '🎉', 'Well done!', 'All fields are correctly filled. Ready to save or print!', '', false, 5000);
-            } else {
-                startGuidingField(next);
-            }
-        }, 500);
-    }
-
-    const watchEvent = (field === 'date' || field === 'hotel') ? 'change' : 'blur';
-
-    function onBlur()   { onDone(); }
-    function onChange() { onDone(); }
-
-    function cleanup() {
-        el.removeEventListener('blur',   onBlur);
-        el.removeEventListener('change', onChange);
-    }
-
-    if (watchEvent === 'blur') {
-        el.addEventListener('blur',   onBlur);
-        el.addEventListener('change', onChange);
-    } else {
-        el.addEventListener('change', onChange);
-    }
-}
-
-// ── Passive scan — only after user has interacted ─────────────────────────────
-function schedulePassiveScan() {
-    if (!userHasInteracted) return;  // ← hard gate — nothing shows on page load
-    if (guidanceActive) return;
-    if (dismissed) return;
-    if (idleTimer) clearTimeout(idleTimer);
-
-    idleTimer = setTimeout(() => {
-        if (guidanceActive) return;
-
-        updateProgress();
-        const error = findFirstError();
-
-        if (error) {
-            // Just update the icon badge — don't auto-popup
-            tinker.classList.add('has-errors');
-        } else {
-            tinker.classList.remove('has-errors');
-            hideGuide();
-            const rp = document.getElementById('robotPopup');
-            if (rp) rp.classList.remove('show');
-        }
-    }, 4000);
-}
-
-function markInteraction() {
-    userHasInteracted = true;
-
-    if (dismissed) {
-        dismissed = false;
-        if (dismissReopenTimer) { clearTimeout(dismissReopenTimer); dismissReopenTimer = null; }
-        tinker.classList.remove('visible');
-    }
-
-    schedulePassiveScan();
-}
-
-document.addEventListener('input',  markInteraction);
-document.addEventListener('change', markInteraction);
-document.addEventListener('blur',   markInteraction, true);
-
-// ── Helpers expected by other JS files ────────────────────────────────────────
-function flashGreen(el) {
-    el.classList.add('field-ok');
-    setTimeout(() => el.classList.remove('field-ok'), 2000);
-}
-
-function isCustomRow(row) {
-    return row.querySelector('.description:not([readonly])') !== null;
-}
-
-function isCodeInPriceList(code) {
-    if (typeof priceList === 'undefined') return true;
-    const trimmed = code.trim().toUpperCase();
-    // priceList is an array of {code, description, price}
-    return priceList.some(item => item.code.toUpperCase() === trimmed);
-}
-
-window.showFieldGuide = function(type, icon, title, msg, step, showAssist, autoDismiss) {
-    userHasInteracted = true;
-    showGuide(type, icon, title, msg, step || '', showAssist !== false, autoDismiss || 0);
-};
-window.hideFieldGuide = hideGuide;
-
-// ── Global always-on watcher — updates badge + kills popups when errors clear ──
 setInterval(() => {
-    if (!userHasInteracted) return;
-    if (guidanceActive) return;
-    const error = findFirstError();
-    if (error) {
-        tinker.classList.add('has-errors');
-    } else {
-        tinker.classList.remove('has-errors');
-        if (fgEl.classList.contains('fg-show') && !guidanceActive) {
-            // Don't auto-hide if user deliberately opened it
-        }
-        const rp = document.getElementById('robotPopup');
-        if (rp && rp.classList.contains('show')) {
-            rp.classList.remove('show');
-        }
-    }
-}, 300);
+    if (guiding && current && !current.el.isConnected) { nextStep(); return; }   // row was rebuilt
+    if (!userHasInteracted || guiding) return;
+    tinker.classList.toggle('has-errors', findErrors().length > 0);
+}, 400);
+
+// Used by comboModal.js
+window.showFieldGuide = function (type, icon, title, msg, step, showAssist, autoDismiss) {
+    userHasInteracted = true;
+    const withGuide = showAssist !== false;
+    show({ type: type || 'info', icon, title, msg, step,
+           buttons: withGuide ? ['start', 'done'] : ['done'],
+           doneText: withGuide ? 'Close' : 'Got it', autoDismiss: autoDismiss || 0 });
+};
+window.hideFieldGuide = exitGuide;
 
 })();

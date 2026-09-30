@@ -52,3 +52,21 @@ tr:hover {
     white-space: nowrap;
     text-align: center;
 }
+
+/* One-click remove buttons beside each row */
+#rowRail { position: absolute; top: 0; left: 0; width: 0; height: 0; z-index: 50; }
+.rr-btn {
+    position: absolute; width: 34px; height: 34px;
+    margin: 0 !important; padding: 0 !important;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; border: 1.5px solid #f44336;
+    background: #fff; color: #f44336; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(244,67,54,0.25);
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.rr-btn svg { width: 16px; height: 16px; }
+.rr-btn:hover { background: #f44336; color: #fff; transform: scale(1.12); }
+body.dark-mode .rr-btn { background: #1a0d14; box-shadow: 0 0 10px rgba(244,67,54,0.45); }
+body.dark-mode .rr-btn:hover { background: #f44336; color: #fff; }
+#invoiceTable tr.row-danger td { background: rgba(244,67,54,0.12) !important; }
+@media print { #rowRail { display: none !important; } }

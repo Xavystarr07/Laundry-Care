@@ -1,0 +1,177 @@
+/* ============================================================
+   css/departure.css — Departure page styles
+   ============================================================ */
+
+.mode-badge {
+    display: inline-block;
+    margin: 6px 0 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid #f59e0b;
+    color: #c07a00;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.dep-entry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    align-items: flex-end;
+    width: 80%;
+    margin: 22px auto 6px;
+    padding: 16px 18px;
+    background: #f0f7ff;
+    border: 1px solid #b3d4f5;
+    border-radius: 14px;
+    box-sizing: border-box;
+}
+.dep-field { flex: 1 1 170px; text-align: left; }
+.dep-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #555;
+    margin-bottom: 4px;
+}
+.dep-field select, .dep-field input { margin: 0; }
+
+.dep-hint { width: 80%; margin: 4px auto 0; min-height: 18px; font-size: 13px; color: #555; }
+
+#depTable td { padding: 6px 8px; }
+#depTable td input, #depTable td select { margin: 0; }
+.dep-price { font-weight: 700; white-space: nowrap; }
+.dep-beds  { white-space: nowrap; }
+.dep-warn  { display: block; color: #c07a00; font-size: 12px; font-weight: 700; }
+.dep-empty { padding: 18px !important; color: #888; }
+.dep-bad td { background: #fff5f5; }
+.dep-note  { margin: 4px 0 0; font-size: 12px; color: #777; }
+
+.dep-remove {
+    background: #e74c3c; color: #fff; border: none; border-radius: 50%;
+    width: 28px; height: 28px; cursor: pointer; margin: 0;
+}
+.dep-remove:hover { background: #c0392b; }
+
+#depCompleteBtn {
+    border: 2px solid #6a11cb; color: #6a11cb; --btn-fill: #6a11cb;
+    font-size: 16px; font-weight: 700; padding: 11px 36px;
+}
+
+/* Dark mode */
+body.dark-mode .dep-entry { background: #1a1a2e; border-color: #3a3a6a; }
+body.dark-mode .dep-field label,
+body.dark-mode .dep-hint,
+body.dark-mode .dep-note { color: #b0b0c8 !important; }
+body.dark-mode .dep-bad td { background: #2a1220 !important; }
+body.dark-mode .mode-badge { color: #fbbf24; }
+
+.dep-field-inv { flex: 0 1 130px; }
+.dep-field-inv input { letter-spacing: 2px; font-weight: 700; }
+#depTable td input[data-f="inv"] { width: 90px; letter-spacing: 1px; font-weight: 700; }
+
+/* Stacked icon buttons on the right of the entry bar */
+.dep-actions {
+    flex: 0 0 auto;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+.dep-actions .uv-btn {
+    height: 44px;
+    margin: 0;
+    padding: 0 11px;
+    gap: 0;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    transition: color 0.3s 0.1s ease-out;
+}
+.dep-actions .uv-btn span {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-width 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
+}
+.dep-actions .uv-btn:hover span,
+.dep-actions .uv-btn:focus-visible span {
+    max-width: 120px;
+    opacity: 1;
+    margin: 0 8px 0 4px;
+}
+/* ── Less squashed layout ── */
+.dep-entry {
+    position: relative;
+    width: 86%;
+    gap: 20px 18px;
+    padding: 26px 30px;
+    margin: 26px auto 8px;
+    border-radius: 18px;
+}
+.dep-field { flex: 1 1 210px; }
+.dep-field-inv { flex: 0 1 150px; }
+.dep-field label { font-size: 12.5px; margin-bottom: 7px; }
+.dep-field select,
+.dep-field input { height: 48px; padding: 0 14px; font-size: 15px; font-family: inherit; }
+.dep-hint { width: 86%; margin: 10px auto 18px; font-size: 14px; }
+
+#depTable { width: 86%; }
+#depTable th { padding: 16px 18px; font-size: 15px; }
+#depTable td { padding: 12px 14px; }
+#depTable td select,
+#depTable td input { height: 42px; padding: 0 10px; }
+
+/* ── Add / Print sit in the free space to the right of the bar ── */
+.dep-actions {
+    position: absolute;
+    right: -58px;
+    top: 50%;
+    transform: translateY(-50%);
+    align-self: auto;
+    z-index: 5;
+}
+@media (max-width: 1000px) {
+    .dep-actions {
+        position: static;
+        transform: none;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ── Departure Billing badge ── */
+.mode-badge,
+body.dark-mode .mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 14px 0 6px;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #1a1000 !important;
+    -webkit-text-fill-color: #1a1000;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    box-shadow: 0 6px 20px rgba(245,158,11,0.35);
+}
+.mode-badge svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* Add More / Print sit OUTSIDE the bar; labels open to the right */
+.dep-entry, .dep-hint, #depTable { width: 80%; }
+.dep-actions { right: auto; left: calc(100% + 12px); align-items: flex-start; }
+.dep-actions .uv-btn { flex-direction: row; }
+.dep-actions .uv-btn:hover span,
+.dep-actions .uv-btn:focus-visible span { margin: 0 6px 0 8px; }
+body { overflow-x: hidden; }

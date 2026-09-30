@@ -5,6 +5,16 @@
 //  Edit JS links at the bottom to add/remove scripts
 // ============================================================
 session_start();
+
+// No mode chosen yet this session → ask first
+if (!isset($_SESSION['mode'])) {
+    header('Location: welcome.php');
+    exit;
+}
+$_SESSION['mode'] = 'regular';
+
+require_once 'php/undo_helper.php';
+$undo  = undoAvailable();
 $popup = null;
 if (isset($_SESSION['popup'])) {
     $popup = $_SESSION['popup'];
@@ -25,10 +35,14 @@ if (isset($_SESSION['popup'])) {
     <link rel="stylesheet" href="html_css/inputs.css">   <!-- fields, selects         -->
     <link rel="stylesheet" href="html_css/buttons.css">  <!-- all buttons             -->
     <link rel="stylesheet" href="html_css/image.css">    <!-- image preview bar       -->
-    <link rel="stylesheet" href="html_css/print.css">    <!-- print / light mode fix  -->
+    <link rel="stylesheet" href="html_css/print.css">
+    <link rel="stylesheet" href="html_css/combo.css">    <!-- print / light mode fix  -->
 </head>
 <body>
 
+<?php if ($undo): ?>
+<script>window._undoAvail = <?php echo json_encode($undo); ?>;</script>
+<?php endif; ?>
 <?php if ($popup): ?>
 <script>
 // Show popup once page has loaded and JS is ready
@@ -104,6 +118,10 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
     </table>
 
     <!-- ── Action buttons row ── -->
+
+
+
+
     <div class="btn-row">
 
         <!-- Add Item — green + icon -->
@@ -112,14 +130,6 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
             <span>Add Item</span>
-        </button>
-
-        <!-- Remove Item — red + minus icon -->
-        <button type="button" class="uv-btn remove-item" id="removeRowBtn">
-            <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-            </svg>
-            <span>Remove Item</span>
         </button>
 
         <!-- Print — blue + printer icon -->
@@ -154,6 +164,8 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
             <span>Insert Image</span>
         </button>
 
+
+
         <!-- Checklist -->
         <button type="button" class="uv-btn" id="checklistBtn">
             <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -174,18 +186,25 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
     </div>
 
     <!-- ── Combo Modal ── -->
-    <div id="comboModal" style="
-      position:fixed; top:15%; left:50%; transform:translate(-50%, -15%);
-      background:#fff !important; border:1px solid #ccc; border-radius:12px;
-      padding:30px 50px; z-index:9999; display:none; width:650px;
-      max-height:80vh; overflow-y:auto;
-      box-shadow:0 4px 30px rgba(0,0,0,0.15);
-      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; font-size:16px; color:#333 !important;">
-      <h3 style="font-size:1.8em; margin-bottom:20px; text-align:center;">🧺 Select Item Combo(s)</h3>
-      <div id="categoryContainer" style="margin-bottom:20px;"></div>
-      <div style="text-align:center; margin-top:20px;">
-        <button id="comboCancelBtn" type="button" class="modern-btn cancel">Cancel</button>
-        <button id="comboConfirmBtn" type="button" class="modern-btn confirm">Enter</button>
+    <div id="comboModal">
+      <div class="cm-box">
+        <div class="cm-head">
+          <div class="cm-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div>
+            <h3>Add Combo</h3>
+            <p>Tick one or more combos, then press Enter</p>
+          </div>
+        </div>
+        <div id="categoryContainer"></div>
+        <div class="cm-foot">
+          <span id="comboCount">Nothing selected yet</span>
+          <div>
+            <button id="comboCancelBtn" type="button" class="cm-btn cm-cancel">Cancel</button>
+            <button id="comboConfirmBtn" type="button" class="cm-btn cm-confirm">Enter</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -210,7 +229,8 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/popupNotify.js"></script>     <!-- success/error popups        -->
 <script src="js/fieldGuide.js"></script>      <!-- field highlight guide       -->
 <script src="js/grandTotal.js"></script>      <!-- grand total calculator      -->
-<script src="js/rowManager.js"></script>      <!-- add/remove table rows       -->
+<script src="js/rowManager.js"></script>
+<script src="js/rowRemove.js"></script>      <!-- add/remove table rows       -->
 <script src="js/comboModal.js"></script>      <!-- combo selection modal       -->
 <script src="js/codeSearch.js"></script>      <!-- item code autocomplete      -->
 <script src="js/printInvoice.js"></script>    <!-- print function              -->
@@ -221,7 +241,8 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/saveInvoice.js"></script>     <!-- save button behaviour       -->
 <script src="js/imageInsert.js"></script>     <!-- image insert feature        -->
 <script src="js/themeSearch.js"></script>     <!-- theme/search feature        -->
-<script src="js/checklist.js"></script>       <!-- checklist feature           -->
+<script src="js/checklist.js"></script>
+<script src="js/undoSave.js"></script>       <!-- checklist feature           -->
 
 </body>
 </html>

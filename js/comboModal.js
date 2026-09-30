@@ -191,3 +191,52 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Enter") { e.preventDefault(); insertSelectedCombos(e); }
     });
 });
+
+// ── New combo modal rendering (tabs, cards, live count) ─────────────────────
+function buildTabs() {
+    return categoryNames.map((name, i) => {
+        const n = categories[name].filter(c => selectedCombos.has(c)).length;
+        return `<button type="button" class="cm-tab${i === currentCategoryIndex ? ' active' : ''}" onclick="goCategory(${i})">${name}${n ? `<span class="cm-n">${n}</span>` : ''}</button>`;
+    }).join('');
+}
+
+function renderCategories() {
+    const container = document.getElementById("categoryContainer");
+    const cards = categories[categoryNames[currentCategoryIndex]].map(combo => {
+        const d = comboDetails[combo];
+        return `
+        <label class="cm-card">
+            <input type="checkbox" value="${combo}" ${selectedCombos.has(combo) ? 'checked' : ''}
+                   onchange="toggleCombo('${combo}'); updateComboCount();">
+            <span class="cm-check"></span>
+            <span class="cm-info">
+                <span class="cm-name">${d.name}</span>
+                <span class="cm-codes">${d.codes.join(' · ')}</span>
+            </span>
+            <span class="cm-badge">${combo}</span>
+        </label>`;
+    }).join('');
+    container.innerHTML = `<div class="cm-tabs">${buildTabs()}</div><div class="cm-list">${cards}</div>`;
+    updateComboCount();
+}
+
+function goCategory(i) {
+    currentCategoryIndex = i;
+    renderCategories();
+}
+
+function updateComboCount() {
+    const n = selectedCombos.size;
+    const el = document.getElementById('comboCount');
+    if (el) el.textContent = n ? `${n} combo${n === 1 ? '' : 's'} selected` : 'Nothing selected yet';
+    const tabs = document.querySelector('#categoryContainer .cm-tabs');
+    if (tabs) tabs.innerHTML = buildTabs();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const m = document.getElementById('comboModal');
+    m?.addEventListener('click', e => { if (e.target === m) closeComboModal(); });
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('comboModal')?.style.display === 'block') closeComboModal();
+});

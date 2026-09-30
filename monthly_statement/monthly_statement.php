@@ -224,7 +224,10 @@ if ($action === 'weeklyAll' && $startDate && $endDate) {
 
 
     <br>
-    <button class="back-button" onclick="goToInvoiceGenerator()">← Back to Invoice Generator</button>
+    <?php $cameFromDeparture = (($_SESSION['mode'] ?? '') === 'departure'); ?>
+    <button class="back-button" onclick="window.location.href='<?= $cameFromDeparture ? '../departure_generator.php' : '../invoice_generator.php' ?>'">
+        ← Back to <?= $cameFromDeparture ? 'Departures' : 'Invoice Generator' ?>
+    </button>
 
     <!-- ── JS files — edit individual files for each concern ── -->
     <script src="js/grandTotal.js"></script>

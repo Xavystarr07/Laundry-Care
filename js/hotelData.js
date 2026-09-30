@@ -17,13 +17,13 @@ const hotelUnitMap = {
 // Returns the full hotel options HTML string (used when building rows dynamically)
 function getHotelOptionsHTML(selectedHotel = "") {
     const hotels = [
-        "Beacon-Rock", "Bensiesta", "Berumdas", "Bronze Bay", "Bronze Beach",
+        "Beacon-Rock", "Bensiesta", "Bermudas", "Bronze Bay", "Bronze Beach",
         "Breakers", "Cormoran", "Glitter Bay", "Kyalanga", "Lighthouse",
         "Malindi", "Marine", "Oyster Rock", "Oceans", "Pearls", "Sea Lodge",
         "Sea Breeze", "Shades", "Terra Mare"
     ];
     return hotels.map(h =>
-        `<option value="${h}" ${h === selectedHotel ? "selected" : ""}>${h === "Berumdas" ? "Bermudas" : h}</option>`
+        `<option value="${h}" ${h === selectedHotel ? "selected" : ""}>${h === "Bermudas" ? "Bermudas" : h}</option>`
     ).join('');
 }
 

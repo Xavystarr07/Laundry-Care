@@ -55,6 +55,17 @@ style.textContent = `
     box-shadow: 0 6px 20px rgba(255,200,0,0.45);
   }
 
+  /* Switch mode button */
+  #switchModeFab {
+    background: linear-gradient(135deg, #04210f, #075e3a);
+    color: #3dffa0;
+    border: 1.5px solid #22ff88;
+    box-shadow: 0 0 10px rgba(34,255,136,0.5), inset 0 0 8px rgba(34,255,136,0.15);
+  }
+  #switchModeFab:hover {
+    box-shadow: 0 0 18px rgba(34,255,136,0.85), inset 0 0 10px rgba(34,255,136,0.25);
+  }
+
   /* Search icon button */
   #searchFab {
     background: linear-gradient(135deg, #0f3460, #533483);
@@ -67,6 +78,16 @@ style.textContent = `
   #searchFab:hover {
     transform: scale(1.15) rotate(-15deg);
     box-shadow: 0 6px 20px rgba(83,52,131,0.5);
+  }
+
+  body #searchFab, body.dark-mode #searchFab {
+    background: linear-gradient(135deg, #1a0533, #4c1391);
+    color: #d9a3ff;
+    border: 1.5px solid #b45cff;
+    box-shadow: 0 0 10px rgba(180,92,255,0.55), inset 0 0 8px rgba(180,92,255,0.18);
+  }
+  body #searchFab:hover, body.dark-mode #searchFab:hover {
+    box-shadow: 0 0 18px rgba(180,92,255,0.9), inset 0 0 10px rgba(180,92,255,0.28);
   }
 
   /* Stars animation around moon */
@@ -224,6 +245,43 @@ style.textContent = `
   }
   em.sr-match { background: rgba(167,139,250,0.3); border-radius: 3px; font-style: normal; padding: 0 2px; }
 
+  /* ── Roomier search panel, lifted above the 3 buttons ── */
+  #searchPanel { bottom: 250px; width: 400px; max-width: calc(100vw - 48px); border-radius: 20px; }
+  #searchPanelHeader { padding: 16px 18px 12px; gap: 10px; }
+  #searchPanelTitle { font-size: 15px; }
+  #searchInputWrap { padding: 14px 16px 12px; }
+  #searchInput { padding: 12px 16px; font-size: 14.5px; border-radius: 12px; }
+  #searchResults { max-height: 340px; padding: 8px 0; }
+  .sr-item { padding: 11px 18px; gap: 12px; }
+  .sr-code { font-size: 12px; padding: 3px 9px; }
+  .sr-desc { font-size: 14px; line-height: 1.4; }
+  .sr-price { font-size: 13.5px; }
+  .sr-empty { padding: 26px 18px; font-size: 14px; }
+  .sr-count { padding: 8px 18px 6px; font-size: 12px; }
+
+  /* ── Pill buttons that widen to the right to show their label ── */
+  #themeToggleWrap { align-items: flex-start; gap: 12px; }
+  .theme-fab {
+    width: auto; min-width: 44px; max-width: 44px;
+    padding: 0 12px; border-radius: 22px;
+    justify-content: flex-start; gap: 0;
+    transition: max-width 0.35s ease, box-shadow 0.3s, background 0.4s;
+  }
+  .theme-fab > svg, .theme-fab > span { flex-shrink: 0; }
+  #themeIcon {
+    display: inline-flex; width: 20px; height: 20px;
+    align-items: center; justify-content: center;
+    font-size: 18px; line-height: 1;
+  }
+  .theme-fab::after {
+    position: static; transform: none; background: none; border-radius: 0;
+    padding: 0 6px 0 10px; font-size: 13px; font-weight: 700;
+    color: inherit; opacity: 0;
+    transition: opacity 0.25s ease 0.1s;
+  }
+  .theme-fab:hover { max-width: 260px; transform: none !important; }
+  .theme-fab:hover::after { opacity: 1; }
+
   /* ── DARK MODE theme vars ── */
   body.dark-mode {
     background: #0f0f1a !important;
@@ -275,6 +333,12 @@ document.head.appendChild(style);
 const wrap = document.createElement('div');
 wrap.id = 'themeToggleWrap';
 wrap.innerHTML = `
+  <button class="theme-fab" id="switchModeFab" data-tip="Switch mode">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+      <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+    </svg>
+  </button>
   <button class="theme-fab" id="searchFab" data-tip="Search items">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -306,6 +370,12 @@ document.body.appendChild(panel);
 // ─────────────────────────────────────────────────────────────────────────────
 // THEME
 // ─────────────────────────────────────────────────────────────────────────────
+document.getElementById('switchModeFab').addEventListener('click', () => {
+    if (typeof window.departureSwitchMode === 'function') window.departureSwitchMode();
+    else if (typeof navigateToWelcome === 'function') navigateToWelcome();
+    else window.location.href = 'welcome.php';
+});
+
 const themeBtn  = document.getElementById('themeBtn');
 const themeIcon = document.getElementById('themeIcon');
 let darkMode = localStorage.getItem('lcDarkMode') === 'true';

@@ -79,6 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
         $stmt = $pdo->prepare('
             INSERT INTO invoices ("InvoiceNumber", "HotelName", "HotelNumber", "DateReceived", "Total")
             VALUES (:inv, :hotel, :unit, :date, :total)
+            RETURNING id
         ');
         $stmt->execute([
             ':inv'   => $invoiceNumber,
@@ -87,6 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
             ':date'  => $dateReceived,
             ':total' => $grandTotal,
         ]);
+        $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [(int)$stmt->fetchColumn()], 'time' => time()];
 
         $_SESSION['popup'] = [
             'type' => 'success',

@@ -28,6 +28,31 @@ function navigateToMonthlyStatement() {
 }
 
 // ── Reusable centred confirm dialog ──────────────────────────────────────────
+function navigateToWelcome() {
+    const invoiceNum = document.getElementById('invoice_number')?.value?.trim();
+    let anyData = !!invoiceNum;
+    if (!anyData) {
+        for (const row of document.querySelectorAll('#invoiceTable tr')) {
+            if (row.querySelector('.code')?.value.trim() || row.querySelector('.quantity')?.value.trim()) {
+                anyData = true;
+                break;
+            }
+        }
+    }
+    const go = () => { window.location.href = 'welcome.php'; };
+    if (anyData) {
+        showConfirmDialog(
+            '⚠️ Unsaved Invoice',
+            "This invoice hasn't been saved yet. If you switch mode now, all data will be lost.",
+            'Yes, switch anyway',
+            'Stay here',
+            go
+        );
+    } else {
+        go();
+    }
+}
+
 function showConfirmDialog(title, message, confirmText, cancelText, onConfirm) {
     // Remove any existing dialog
     document.getElementById('confirmDialog')?.remove();
@@ -82,6 +107,17 @@ function showConfirmDialog(title, message, confirmText, cancelText, onConfirm) {
             @keyframes popIn { from{transform:scale(0.8);opacity:0} to{transform:scale(1);opacity:1} }
             #confirmYes:hover { transform:scale(1.05) !important; }
             #confirmNo:hover  { transform:scale(1.05) !important; background:#e0e0e0 !important; }
+            #confirmDialog h3 { color:#222 !important; }
+            #confirmDialog p  { color:#666 !important; }
+            body.dark-mode #confirmDialog {
+                background:linear-gradient(145deg,#1a1a2e,#241b3d) !important;
+                border:1px solid rgba(139,92,246,0.35);
+                box-shadow:0 16px 48px rgba(0,0,0,0.6) !important;
+            }
+            body.dark-mode #confirmDialog h3 { color:#fff !important; }
+            body.dark-mode #confirmDialog p  { color:#b8b8d4 !important; }
+            body.dark-mode #confirmNo { background:#2a2a4a !important; color:#e0e0f0 !important; }
+            body.dark-mode #confirmNo:hover { background:#36365e !important; }
         `;
         document.head.appendChild(s);
     }

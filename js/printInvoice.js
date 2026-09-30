@@ -53,7 +53,7 @@ function printInvoice() {
     });
 
     if (!allFilled) {
-        showPopup('error', 'Some row fields are still empty.', '💡 Fill in all items completely before printing.', 0);
+        showPopup('error', 'Some row fields are still empty.', '💡 Fill in all items completely before printing.', 0, () => typeof checkInputs === 'function' && checkInputs());
         return;
     }
 
@@ -217,7 +217,9 @@ function printInvoice() {
                     <p>Cornubia</p>
                 </div>
                 <div class="header-right">
+                <p>www.laundrycare.co.za</p>
                     <p>Email: donovanmark14@gmail.com</p>
+                      <p>Email: laundry_care@outlook.com</p>
                     <p>Cell: 062 283 9374</p>
                     <p>Cell: 069 780 0340</p>
                 </div>
