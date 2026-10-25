@@ -81,16 +81,16 @@ Go to Security → Scrape Shield:
 ## STEP 6 — CLOUDFLARE PAGE RULES (or Rules → Redirects)
 
 Rule 1: Force HTTPS everywhere
-  URL pattern: http://*yourdomain.co.za/*
+  URL pattern: http://*https://www.laundrycare.co.za/?i=1/*
   Setting: Always Use HTTPS
 
 Rule 2: Cache static assets at edge
-  URL pattern: *yourdomain.co.za/css/*
+  URL pattern: *https://www.laundrycare.co.za/?i=1/css/*
   Setting: Cache Level = Cache Everything, Edge Cache TTL = 1 month
   (Repeat for /js/* and image files)
 
 Rule 3: Bypass cache for PHP
-  URL pattern: *yourdomain.co.za/*.php*
+  URL pattern: *https://www.laundrycare.co.za/?i=1/*.php*
   Setting: Cache Level = Bypass
 
 
@@ -133,7 +133,7 @@ Add these DNS records in Cloudflare (not GoDaddy) for email security:
 
 ## STEP 9 — WHAT TO UPDATE IN .htaccess BEFORE GOING LIVE
 
-Search for "yourdomain.co.za" in .htaccess and replace with your real domain.
+Search for "https://www.laundrycare.co.za/?i=1" in .htaccess and replace with your real domain.
 Then uncomment the HTTPS redirect block (lines starting with #).
 
 

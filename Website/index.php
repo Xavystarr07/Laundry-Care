@@ -72,30 +72,10 @@ if (isset($_SESSION['form_status'])) {
                     <li><a href="#about"    class="nav-link">About Us</a></li>
                     <li><a href="#services" class="nav-link">Services</a></li>
                     <li><a href="#process"  class="nav-link">Our Process</a></li>
-                    <li><a href="#contact"  class="nav-link nav-cta">Get a Quote</a></li>
+                    <li><a href="#pricing" class="nav-link">Pricing</a></li><li><a href="#contact"  class="nav-link nav-cta">Get a Quote</a></li>
                 </ul>
                 <span class="nav-indicator" id="nav-indicator" aria-hidden="true"></span>
             </nav>
-
-            <!-- Social shortcuts with brand colours on hover -->
-            <div class="header-socials">
-                <a href="https://wa.me/27622839374" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-btn social-wa">
-                    <i class="fa-brands fa-whatsapp"></i>
-                    <span class="social-tooltip">WhatsApp</span>
-                </a>
-                <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" class="social-btn social-fb">
-                    <i class="fa-brands fa-facebook-f"></i>
-                    <span class="social-tooltip">Facebook</span>
-                </a>
-                <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="social-btn social-ig">
-                    <i class="fa-brands fa-instagram"></i>
-                    <span class="social-tooltip">Instagram</span>
-                </a>
-                <a href="https://tiktok.com/" target="_blank" rel="noopener" aria-label="TikTok" class="social-btn social-tt">
-                    <i class="fa-brands fa-tiktok"></i>
-                    <span class="social-tooltip">TikTok</span>
-                </a>
-            </div>
 
             <button id="nav-toggle" class="hamburger" aria-label="Toggle menu" aria-expanded="false">
                 <span></span><span></span><span></span>
@@ -115,14 +95,9 @@ if (isset($_SESSION['form_status'])) {
                 <li><a href="#about"    class="drawer-link"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
                 <li><a href="#services" class="drawer-link"><i class="fa-solid fa-list-check"></i> Services</a></li>
                 <li><a href="#process"  class="drawer-link"><i class="fa-solid fa-rotate"></i> Our Process</a></li>
-                <li><a href="#contact"  class="drawer-link drawer-cta"><i class="fa-solid fa-comments"></i> Get a Quote</a></li>
+                <li><a href="#pricing" class="drawer-link"><i class="fa-solid fa-tag"></i> Pricing</a></li><li><a href="#contact"  class="drawer-link drawer-cta"><i class="fa-solid fa-comments"></i> Get a Quote</a></li>
             </ul>
-            <div class="drawer-socials">
-                <a href="https://wa.me/27622839374" target="_blank" rel="noopener" class="dsoc-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                <a href="https://facebook.com/"     target="_blank" rel="noopener" class="dsoc-fb"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="https://instagram.com/"    target="_blank" rel="noopener" class="dsoc-ig"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://tiktok.com/"       target="_blank" rel="noopener" class="dsoc-tt"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
+            
             <p class="drawer-slogan">A Fresh Start In Every Wash</p>
         </div>
     </aside>
@@ -138,7 +113,7 @@ if (isset($_SESSION['form_status'])) {
             <div class="hero-content container">
                 <div class="hero-eyebrow reveal-up" data-delay="0">
                     <span class="eyebrow-line"></span>
-                    <span>Cornubia · Parkgate · Umhlanga</span>
+                    <span>Serving Durban</span>
                     <span class="eyebrow-line"></span>
                 </div>
 
@@ -148,7 +123,7 @@ if (isset($_SESSION['form_status'])) {
                 </h1>
 
                 <p class="hero-subheadline reveal-up" data-delay="2">
-                    Industrial-grade linen and garment care for Umhlanga's leading hotels — collected, treated, and delivered on your schedule.
+                    Industrial-grade linen and garment care for Umhlanga's leading hotels. Collected, treated and delivered on your schedule.
                 </p>
 
                 <div class="hero-actions reveal-up" data-delay="3">
@@ -157,7 +132,7 @@ if (isset($_SESSION['form_status'])) {
                 </div>
 
                 <div class="hero-badges reveal-up" data-delay="4">
-                    <div class="badge"><i class="fa-solid fa-shield-halved"></i> Hygienic Certified</div>
+                    
                     <div class="badge"><i class="fa-solid fa-clock"></i> On-Time Delivery</div>
                     <div class="badge"><i class="fa-solid fa-hotel"></i> Hotel Grade</div>
                 </div>
@@ -176,7 +151,7 @@ if (isset($_SESSION['form_status'])) {
                 <!-- Visual side: animated journey story cycling through all stages -->
                 <div class="about-visual">
                     <div class="about-image-wrap reveal-left">
-                        <div class="story-panel" id="story-panel" aria-label="Our laundry journey illustrated">
+                        <div class="photo-placeholder"><i class="fa-solid fa-camera"></i><span>Photo: our facility</span></div>
 
                             <!-- Frame 1: Collection — truck driving with motion lines -->
                             <div class="story-frame active" data-stage="pickup">
@@ -505,27 +480,26 @@ if (isset($_SESSION['form_status'])) {
         </section>
 
         <!-- ════════════════ STATS ════════════════ -->
-        <section class="stats-section" aria-label="Key statistics">
-            <div class="container stats-grid">
-                <div class="stat-item reveal-up">
-                    <span class="stat-num" data-count="250">0</span><span class="stat-unit">+</span>
-                    <span class="stat-label">Loads Weekly</span>
-                </div>
-                <div class="stat-item reveal-up" data-delay="1">
-                    <span class="stat-num" data-count="7">0</span><span class="stat-unit">+</span>
-                    <span class="stat-label">Hotels Served</span>
-                </div>
-                <div class="stat-item reveal-up" data-delay="2">
-                    <!-- Decimal stat handled separately in counter.js -->
-                    <span class="stat-num stat-has-decimal" data-count-decimal="99.99">0</span><span class="stat-unit">%</span>
-                    <span class="stat-label">Satisfaction Rate</span>
-                </div>
-                <div class="stat-item reveal-up" data-delay="3">
-                    <span class="stat-num" data-count="4">0</span><span class="stat-unit">+</span>
-                    <span class="stat-label">Years of Service</span>
-                </div>
-            </div>
-        </section>
+        <section class="clients-section" aria-labelledby="clients-heading">
+<div class="container text-center">
+<div class="section-tag">Trusted By</div>
+<h2 id="clients-heading" class="section-title">20+ hotels and lodges across Durban</h2>
+<p class="section-intro">Recent work includes Balito Utopia Holidays and Teremok Lodge. Large bulk loads are what we do best.</p>
+<div class="client-logos">
+<div class="photo-placeholder">Logo: Balito Utopia Holidays</div>
+<div class="photo-placeholder">Logo: Teremok Lodge</div>
+</div>
+</div>
+</section>
+
+<section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
+<div class="container text-center">
+<div class="section-tag">Pricing</div>
+<h2 id="pricing-heading" class="section-title">Our Price <em>List</em></h2>
+<p class="section-intro">Clear pricing for hotels, lodges and private clients.</p>
+<div class="photo-placeholder">Price list coming soon</div>
+</div>
+</section>
 
         <!-- ════════════════ CONTACT ════════════════ -->
         <section id="contact" class="contact-section" aria-labelledby="contact-heading">
@@ -578,11 +552,11 @@ if (isset($_SESSION['form_status'])) {
                 </div>
 
                 <!-- OR DIVIDER -->
-                <div class="or-divider reveal-up">
-                    <span class="or-line"></span>
-                    <span class="or-text">OR</span>
-                    <span class="or-line"></span>
-                </div>
+               <div class="contact-info reveal-up">
+<p><i class="fa-solid fa-clock"></i> Office hours: 8am to 5pm</p>
+<p><i class="fa-solid fa-envelope"></i> Emails answered until midnight</p>
+<p><i class="fa-solid fa-truck"></i> Pickup and drop-off available</p>
+</div>
 
                 <!-- BOTTOM: Send an Enquiry form -->
                 <div class="contact-form-wrap reveal-up" data-delay="1">
@@ -720,12 +694,7 @@ if (isset($_SESSION['form_status'])) {
                 </a>
                 <p class="footer-slogan">"A Fresh Start In Every Wash"</p>
                 <p class="footer-desc">Premium hospitality linen &amp; garment maintenance. Cornubia, Parkgate, KwaZulu-Natal.</p>
-                <div class="footer-socials">
-                    <a href="https://wa.me/27622839374" target="_blank" rel="noopener" aria-label="WhatsApp" class="fsoc fsoc-wa"><i class="fa-brands fa-whatsapp"></i></a>
-                    <a href="https://facebook.com/"     target="_blank" rel="noopener" aria-label="Facebook" class="fsoc fsoc-fb"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://instagram.com/"    target="_blank" rel="noopener" aria-label="Instagram" class="fsoc fsoc-ig"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://tiktok.com/"       target="_blank" rel="noopener" aria-label="TikTok"   class="fsoc fsoc-tt"><i class="fa-brands fa-tiktok"></i></a>
-                </div>
+                
             </div>
 
             <div class="footer-col">

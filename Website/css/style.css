@@ -712,3 +712,11 @@ em { font-style: italic; color: var(--teal); }
     .badge               { font-size: 0.68rem; padding: 0.35rem 0.6rem; }
     .contact-form-wrap   { padding: 1rem; }
 }
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;min-height:240px;width:100%;border:2px dashed var(--silver);border-radius:16px;background:#F5F7FA;color:var(--text-light);font-size:.85rem}
+.clients-section,.pricing-section{padding-block:5rem}
+.clients-section{background:#F5F7FA}
+.client-logos{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem;max-width:700px;margin-inline:auto}
+.client-logos .photo-placeholder{min-height:100px;background:#fff}
+.contact-info{text-align:center;margin-top:2rem;color:var(--text-secondary)}
+.contact-info p{margin-bottom:.4rem}
+.contact-info i{color:var(--teal);margin-right:.4rem}
