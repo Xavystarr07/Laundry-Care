@@ -1,0 +1,62 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Laundry Care — .htaccess
+# Apache configuration for security, routing, and performance.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Enable rewrite engine ──
+Options -Indexes
+RewriteEngine On
+
+# ── Redirect all traffic to index.php (single-page app routing) ──
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# ── Security headers ──
+<IfModule mod_headers.c>
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Remove server signature
+    Header unset Server
+</IfModule>
+
+# ── Block direct access to php/ directory ──
+<FilesMatch "^php/">
+    Require all denied
+</FilesMatch>
+
+# Allow contact.php to be called via fetch
+<Files "contact.php">
+    Require all granted
+</Files>
+
+# ── Block access to sensitive files ──
+<FilesMatch "\.(env|log|sql|json|lock|composer\..*|\.git.*)$">
+    Require all denied
+</FilesMatch>
+
+# ── Enable compression ──
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json
+</IfModule>
+
+# ── Browser caching for static assets ──
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css             "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png            "access plus 1 year"
+    ExpiresByType image/jpeg           "access plus 1 year"
+    ExpiresByType image/svg+xml        "access plus 1 year"
+    ExpiresByType font/woff2           "access plus 1 year"
+</IfModule>
+
+# ── Force HTTPS (uncomment on production with SSL) ──
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

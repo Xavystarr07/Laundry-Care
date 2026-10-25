@@ -1,0 +1,234 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# Laundry Care — .htaccess  v2.0  SECURITY HARDENED
+# ══════════════════════════════════════════════════════════════════════════════
+# Stack: Apache (XAMPP local / InfinityFree / cPanel) + Cloudflare CDN + GoDaddy DNS
+#
+# PROTECTION LAYERS:
+#   1.  Core Apache hardening (disable directory listing, server signature)
+#   2.  Security headers (XSS, clickjack, MIME sniff, referrer, permissions)
+#   3.  HTTPS enforcement (works alongside Cloudflare Full SSL)
+#   4.  Hotlinking prevention
+#   5.  Bad bot and scraper blocking
+#   6.  Common attack blocking (SQLi, XSS probes, path traversal, shell injection)
+#   7.  Sensitive file protection (env, logs, configs, composer, git)
+#   8.  PHP directory protection (only contact.php accessible via AJAX)
+#   9.  Block suspicious HTTP methods (TRACE, TRACK, DELETE etc.)
+#  10.  Block empty user agents (automated scanners)
+#  11.  CORS lockdown (only your domain may POST to contact.php)
+#  12.  Request size limits (stops form bomb / DOS attacks)
+#  13.  Browser caching and GZIP compression (performance)
+#  14.  Custom error pages (hides server info from attackers)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Disable directory browsing and multi-view guessing ────────────────────
+Options -Indexes -MultiViews
+RewriteEngine On
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 1. HTTPS ENFORCEMENT
+#    Uncomment the three lines below ONLY on your live domain (not localhost).
+#    Cloudflare handles edge TLS, this catches any direct origin requests.
+# ══════════════════════════════════════════════════════════════════════════════
+# RewriteCond %{HTTPS} off
+# RewriteCond %{HTTP:X-Forwarded-Proto} !https
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ── Redirect www to non-www (uncomment on live site) ──────────────────────
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ── Single-page app routing — everything goes through index.php ───────────
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 2. SECURITY RESPONSE HEADERS
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Browser XSS filter
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Prevent MIME confusion attacks
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://fonts.googleapis.com 'unsafe-inline'; style-src 'self' https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+
+    # Disable browser features this site does not use
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=()"
+
+    # HSTS — uncomment only after confirming HTTPS works on live domain
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Hide server technology
+    Header unset Server
+    Header always unset X-Powered-By
+
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 3. SENSITIVE FILE PROTECTION
+# ══════════════════════════════════════════════════════════════════════════════
+<FilesMatch "(^\.htaccess|^\.env|^\.git|\.log$|\.sql$|\.bak$|\.backup$|\.old$|\.orig$|\.save$|\.swp$|\.tmp$|composer\.(json|lock)$|package(-lock)?\.json$|README\.md$|\.DS_Store$|thumbs\.db$)$">
+    Require all denied
+</FilesMatch>
+
+# Block php/ directory browsing — only contact.php is reachable
+<IfModule mod_rewrite.c>
+    RewriteRule ^php/$ - [F,L]
+    RewriteRule ^php/(?!contact\.php$) - [F,L]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 4. BAD BOT AND SCANNER BLOCKING
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|python-requests|python-urllib|scrapy|nikto|sqlmap|nmap|masscan|dirbuster|gobuster|wfuzz|hydra|acunetix|netsparker|openvas|w3af|skipfish|whatweb|commix|havij|pangolin|jbrofuzz|httrack|teleport|webzip|webcopier|larbot|yeti\/|nutch|robot|crawler|spider|scrape|harvest|extract|grab|miner|emailcollect|bulkemail|mailbot|spambot|zgrab|shodan|censys|internet-census|mirai|stretchoid|binlar|casper|cmsworldmap|dotbot|feedfinder|flunky|genieo|heritrix|htmlparser|httpunit) [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 5. ATTACK PATTERN BLOCKING (SQLi, XSS, Path Traversal, RFI, Shell)
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_rewrite.c>
+
+    # SQL injection
+    RewriteCond %{QUERY_STRING} (union.*select|select.*from|insert.*into|delete.*from|drop\s+table|update.*set|exec\(|execute\(|char\(|cast\(|benchmark\(|sleep\(|load_file\(|outfile\s) [NC,OR]
+    # XSS
+    RewriteCond %{QUERY_STRING} (<script|javascript:|vbscript:|data:text\/html|onload\s*=|onerror\s*=|eval\s*\(|document\.cookie|window\.location|base64_decode|fromcharcode) [NC,OR]
+    # Path traversal
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.\%2F|\%2e\%2e\%2f|\%252e\%252e) [NC,OR]
+    # Null byte injection
+    RewriteCond %{QUERY_STRING} (\%00|\%0d\%0a) [NC,OR]
+    # Remote file inclusion
+    RewriteCond %{QUERY_STRING} (https?://|ftp://).+(\=|\%3D) [NC,OR]
+    # Shell / webshell identifiers
+    RewriteCond %{QUERY_STRING} (cmd=|exec=|shell=|passthru=|system\(|phpinfo\(\)|c99\.php|r57\.php|webshell|b374k|wso\.php|alfa\.php) [NC]
+    RewriteRule ^ - [F,L]
+
+    # Block path traversal in URI
+    RewriteCond %{REQUEST_URI} \.\. [NC]
+    RewriteRule ^ - [F,L]
+
+    # Block requests targeting common CMS/admin attack paths
+    RewriteCond %{REQUEST_URI} (phpMyAdmin|phpmyadmin|pma|myadmin|adminer|wp-admin|wp-login|xmlrpc|\.php\.suspected|eval-stdin|setup\.php|install\.php|config\.php) [NC]
+    RewriteRule ^ - [F,L]
+
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 6. BLOCK DANGEROUS HTTP METHODS
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|DELETE|PUT|CONNECT|OPTIONS|PATCH) [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 7. BLOCK EMPTY USER AGENTS
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 8. HOTLINK PROTECTION
+#    Replace yourdomain.co.za with your actual GoDaddy domain name.
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.co\.za [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://[a-z0-9-]+\.cloudflare\.com [NC]
+    RewriteRule \.(jpg|jpeg|png|gif|webp|svg|ico|woff2)$ - [F,L]
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 9. CORS — Restrict contact.php to your domain only
+#    Replace yourdomain.co.za with your actual domain.
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+    <FilesMatch "contact\.php$">
+        Header always set Access-Control-Allow-Origin "https://yourdomain.co.za"
+        Header always set Access-Control-Allow-Methods "POST"
+        Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With"
+    </FilesMatch>
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 10. PHP HARDENING (request limits, hide errors from public)
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_php.c>
+    php_value post_max_size        10M
+    php_value upload_max_filesize  2M
+    php_value max_execution_time   30
+    php_value max_input_time       30
+    php_value memory_limit         64M
+    php_flag  display_errors       Off
+    php_flag  log_errors           On
+    php_value expose_php           Off
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 11. CUSTOM ERROR PAGES
+#     Routes errors through index.php — hides Apache version, OS, and paths.
+# ══════════════════════════════════════════════════════════════════════════════
+ErrorDocument 400 /index.php
+ErrorDocument 401 /index.php
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+ErrorDocument 405 /index.php
+ErrorDocument 500 /index.php
+ErrorDocument 503 /index.php
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 12. GZIP COMPRESSION
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css
+    AddOutputFilterByType DEFLATE text/javascript application/javascript
+    AddOutputFilterByType DEFLATE application/json application/xml
+    AddOutputFilterByType DEFLATE image/svg+xml font/woff2
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|woff2|zip|gz)$ no-gzip dont-vary
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 13. BROWSER CACHING
+# ══════════════════════════════════════════════════════════════════════════════
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css               "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png              "access plus 1 year"
+    ExpiresByType image/jpeg             "access plus 1 year"
+    ExpiresByType image/webp             "access plus 1 year"
+    ExpiresByType image/svg+xml          "access plus 1 year"
+    ExpiresByType image/x-icon           "access plus 1 year"
+    ExpiresByType font/woff2             "access plus 1 year"
+    ExpiresByType text/html              "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000, must-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.(png|jpg|jpeg|gif|webp|svg|ico|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(php|html)$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+    </FilesMatch>
+</IfModule>
+
+# ══════════════════════════════════════════════════════════════════════════════
+# END — Laundry Care Security Configuration
+# ══════════════════════════════════════════════════════════════════════════════
