@@ -1,60 +1,16 @@
 <?php
-// ============================================================
-//  php/queries.php — All SQL queries
-//  Edit individual functions to change what data is fetched
-// ============================================================
-
-function getUnitStatement($pdo, $hotelName) {
-    $stmt = $pdo->prepare('
-        SELECT "HotelNumber", SUM("Total") AS "UnitTotal"
-        FROM invoices
-        WHERE "HotelName" = :hotel
-        GROUP BY "HotelNumber"
-        ORDER BY CAST("HotelNumber" AS INTEGER) ASC
-    ');
-    $stmt->execute([':hotel' => $hotelName]);
-    $rows  = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $total = array_sum(array_column($rows, 'UnitTotal'));
-    return ['rows' => $rows, 'total' => $total];
+function getPeriods($pdo) {
+    return $pdo->query('SELECT id,name,start_date,end_date,is_closed FROM lc_periods ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
 }
-
-function getMonthlyStatement($pdo) {
-    $stmt = $pdo->query('
-        SELECT "HotelName", SUM("Total") AS "HotelTotal"
-        FROM invoices
-        GROUP BY "HotelName"
-        ORDER BY "HotelName" ASC
-    ');
-    $rows  = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $total = array_sum(array_column($rows, 'HotelTotal'));
-    return ['rows' => $rows, 'total' => $total];
+function getInvoices($pdo, $f, $t) {
+    $s = $pdo->prepare('SELECT "DateReceived","Total" FROM invoices WHERE "DateReceived" BETWEEN :f AND :t');
+    $s->execute([':f'=>$f, ':t'=>$t]);
+    return $s->fetchAll(PDO::FETCH_ASSOC);
 }
-
-function getWeeklyStatement($pdo, $hotelName, $startDate, $endDate) {
-    $stmt = $pdo->prepare('
-        SELECT "HotelNumber", SUM("Total") AS "UnitTotal"
-        FROM invoices
-        WHERE "HotelName" = :hotel
-          AND "DateReceived" BETWEEN :start AND :end
-        GROUP BY "HotelNumber"
-        ORDER BY CAST("HotelNumber" AS INTEGER) ASC
-    ');
-    $stmt->execute([':hotel' => $hotelName, ':start' => $startDate, ':end' => $endDate]);
-    $rows  = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $total = array_sum(array_column($rows, 'UnitTotal'));
-    return ['rows' => $rows, 'total' => $total];
-}
-
-function getWeeklyAllStatement($pdo, $startDate, $endDate) {
-    $stmt = $pdo->prepare('
-        SELECT "HotelName", SUM("Total") AS "HotelTotal"
-        FROM invoices
-        WHERE "DateReceived" BETWEEN :start AND :end
-        GROUP BY "HotelName"
-        ORDER BY "HotelName" ASC
-    ');
-    $stmt->execute([':start' => $startDate, ':end' => $endDate]);
-    $rows  = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $total = array_sum(array_column($rows, 'HotelTotal'));
-    return ['rows' => $rows, 'total' => $total];
+function getUnits($pdo, $f, $t) {
+    $s = $pdo->prepare('SELECT "HotelName","HotelNumber",SUM("Total") AS tot FROM invoices
+        WHERE "DateReceived" BETWEEN :f AND :t GROUP BY "HotelName","HotelNumber"
+        ORDER BY "HotelName", CAST("HotelNumber" AS INTEGER)');
+    $s->execute([':f'=>$f, ':t'=>$t]);
+    return $s->fetchAll(PDO::FETCH_ASSOC);
 }
