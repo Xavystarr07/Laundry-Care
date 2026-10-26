@@ -11,6 +11,7 @@ foreach ($periods as $p) { if (!$p['is_closed']) $open = $p; if ($p['id'] == $pi
 $openRows = $open ? getInvoices($pdo, $open['start_date'], $today) : [];
 $end   = $cur ? ($cur['end_date'] ?: $today) : '';
 $units = $cur ? getUnits($pdo, $cur['start_date'], $end) : [];
+$det   = $cur ? getDetail($pdo, $cur['start_date'], $end) : [];
 $grp = []; $total = 0;
 foreach ($units as $u) { $grp[$u['HotelName']][$u['HotelNumber']] = (float)$u['tot']; $total += (float)$u['tot']; }
 $dep  = (($_SESSION['mode'] ?? '') === 'departure');
@@ -57,7 +58,9 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
     <a class="btn ghost" href="<?= $back ?>">Invoice</a>
     <?php if (!$cur['is_closed']): ?><em class="chip open">Period still open</em><?php endif; ?>
     <span class="sp"></span>
-    <button type="button" class="act pdf" onclick="window.print()"><i></i>Print / Save PDF</button>
+    <button type="button" class="act pdf" onclick="window.print()"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></i>Print / Save PDF</button>
+    <button type="button" class="act xls" id="xl"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg></i>Download Excel</button>
+    <button type="button" class="act mail" id="xlMail"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></i>Send Email</button>
   </div>
   <article id="paper">
     <div class="bar2"></div>
@@ -87,5 +90,10 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
     <div class="foot"><strong>Thank you for your business</strong></div>
   </article>
 </main>
+<?php endif; ?>
+<?php if ($cur): ?>
+<script>window.STMT = <?= json_encode(['start'=>$cur['start_date'],'end'=>$end,'total'=>$total,'rows'=>$det], JSON_HEX_TAG) ?>;</script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="js/excel.js"></script>
 <?php endif; ?>
 </body></html>

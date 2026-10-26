@@ -54,3 +54,5 @@
     }
 
 })();
+
+(function(){var t=document.getElementById('pl-t'),r=document.getElementById('pl-r');if(!t||!r)return;var s='A Fresh Start In Every Wash',i=0;r.textContent=s;setTimeout(function k(){if(i<s.length){i++;t.textContent=s.slice(0,i);r.textContent=s.slice(i);setTimeout(k,55)}},1900)})();

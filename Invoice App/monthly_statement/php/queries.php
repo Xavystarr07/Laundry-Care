@@ -14,3 +14,9 @@ function getUnits($pdo, $f, $t) {
     $s->execute([':f'=>$f, ':t'=>$t]);
     return $s->fetchAll(PDO::FETCH_ASSOC);
 }
+function getDetail($pdo, $f, $t) {
+    $s = $pdo->prepare('SELECT "InvoiceNumber","HotelName","HotelNumber","DateReceived","Total","BillingType","DepCode" FROM invoices
+        WHERE "DateReceived" BETWEEN :f AND :t ORDER BY "HotelName", CAST("HotelNumber" AS INTEGER), "DateReceived"');
+    $s->execute([':f'=>$f, ':t'=>$t]);
+    return $s->fetchAll(PDO::FETCH_ASSOC);
+}

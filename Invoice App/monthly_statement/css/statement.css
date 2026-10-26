@@ -115,5 +115,5 @@ tr{page-break-inside:avoid}
   thead{display:table-header-group}
 }
 
-tr.hb td{background:#0D47A1;color:#fff;font-weight:700}
+tbody tr.hb td{background:#0D47A1;color:#fff;font-weight:700}
 tr.ht td{background:#E8F1FB;font-weight:700;color:#0D47A1}

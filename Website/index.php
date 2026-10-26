@@ -28,7 +28,7 @@ if (isset($_SESSION['form_status'])) {
     <!-- FONTS: Nunito matches logo's rounded humanist style; Raleway for display headings -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Raleway:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
@@ -37,15 +37,16 @@ if (isset($_SESSION['form_status'])) {
 <body>
 
     <!-- PRELOADER -->
-    <div id="preloader" aria-hidden="true">
-        <div class="preloader-inner">
-            <div class="preloader-logo">
-                <img src="logo.png" alt="Laundry Care" class="pre-logo-img" />
-            </div>
-            <p class="pre-slogan">A Fresh Start In Every Wash</p>
-            <div class="preloader-bar"><div class="preloader-fill"></div></div>
-        </div>
-    </div>
+<div id="preloader" aria-hidden="true">
+<div class="pl-wrap">
+<div class="pl-door">
+<div class="pl-ring"></div>
+<div class="pl-lc"><span>L</span><span>C</span></div>
+</div>
+<p class="pl-name"><span>L</span><b>aundry</b> <span class="c">C</span><b>are</b></p>
+<p class="pl-slogan"><span id="pl-t"></span><span id="pl-r" style="visibility:hidden"></span></p>
+</div>
+</div>
 
     <!-- FLASH BANNER -->
     <?php if ($flash_message): ?>
@@ -149,23 +150,7 @@ if (isset($_SESSION['form_status'])) {
             <div class="container about-grid">
 
                 <!-- Visual side: animated journey story cycling through all stages -->
-                <div class="about-visual">
-                    <div class="about-image-wrap reveal-left">
-                        <div class="photo-placeholder"><i class="fa-solid fa-camera"></i><span>Photo: our facility</span></div>
-
-                            <!-- Frame 1: Collection — truck driving with motion lines -->
-                            <div class="story-frame active" data-stage="pickup">
-                                <div class="story-scene scene-pickup">
-                                    <div class="scene-road-strip"></div>
-                                    <div class="scene-truck-group">
-                                        <div class="s-truck"><i class="fa-solid fa-truck-pickup"></i></div>
-                                        <div class="s-motion"><span></span><span></span><span></span></div>
-                                    </div>
-                                    <div class="s-bundle"><i class="fa-solid fa-bag-shopping"></i></div>
-                                </div>
-                                <div class="story-label"><span class="sl-num">01</span> Collection</div>
-                            </div>
-
+                <div class="about-visual"><div class="photo-placeholder reveal-left"><i class="fa-solid fa-camera"></i><span>Photo: our facility</span></div></div>
                             <!-- Frame 2: Inspection — magnifying glass sweeps across linen -->
                             <div class="story-frame" data-stage="scan">
                                 <div class="story-scene scene-scan">
@@ -360,7 +345,22 @@ if (isset($_SESSION['form_status'])) {
         </section>
 
         <!-- ════════════════ 6-STAGE PROCESS ════════════════ -->
-        <section id="process" class="process-section" aria-labelledby="process-heading">
+        <section id="work" class="work-section" aria-labelledby="work-heading">
+<div class="container text-center">
+<div class="section-tag">Our Work</div>
+<h2 id="work-heading" class="section-title">Pressed, folded and <em>ready</em></h2>
+<div class="work-grid">
+<div class="photo-placeholder">Photo: pressed linen</div>
+<div class="photo-placeholder">Photo: our machines</div>
+<div class="photo-placeholder">Photo: folded towels</div>
+<div class="photo-placeholder">Photo: delivery van</div>
+<div class="photo-placeholder">Photo: our team</div>
+<div class="photo-placeholder">Photo: packaged orders</div>
+</div>
+</div>
+</section>
+
+<section id="process" class="process-section" aria-labelledby="process-heading">
             <div class="container">
                 <div class="section-tag reveal-up text-center">How It Works</div>
                 <h2 id="process-heading" class="section-title text-center reveal-up" data-delay="1">
@@ -373,111 +373,12 @@ if (isset($_SESSION['form_status'])) {
                         <div class="process-line" id="process-line"></div>
                     </div>
 
-                    <!-- Step 1: Collection — truck drives with motion lines -->
-                    <div class="process-step" data-step="1">
-                        <div class="step-node node-collection">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-truck-pickup main-icon"></i>
-                                <div class="anim-road-strip"></div>
-                                <div class="anim-motion-lines"><span></span><span></span><span></span></div>
-                            </div>
-                            <span class="step-number">01</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Collection</h3>
-                            <p>Standardised, scheduled pickup from your Durban or Umhlanga property. Items logged on collection.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Inspection — magnifying glass sweeps with scan line -->
-                    <div class="process-step" data-step="2">
-                        <div class="step-node node-inspection">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-magnifying-glass main-icon icon-search"></i>
-                                <div class="anim-scan-line"></div>
-                            </div>
-                            <span class="step-number">02</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Inspection</h3>
-                            <p>Every garment assessed for damage, staining, and care requirements before processing.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Treatment — flask tilts and drops fall -->
-                    <div class="process-step" data-step="3">
-                        <div class="step-node node-treatment">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-flask main-icon icon-tilt"></i>
-                                <div class="anim-drops">
-                                    <span class="drop dp1"></span>
-                                    <span class="drop dp2"></span>
-                                    <span class="drop dp3"></span>
-                                </div>
-                            </div>
-                            <span class="step-number">03</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Treatment</h3>
-                            <p>Specialist de-staining and industrial washing with hotel-approved detergents and sanitisers.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: Finishing — iron glides with steam puffs -->
-                    <div class="process-step" data-step="4">
-                        <div class="step-node node-finishing">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-iron main-icon icon-iron-slide"></i>
-                                <div class="anim-steam-puffs">
-                                    <span class="sp sp1"></span>
-                                    <span class="sp sp2"></span>
-                                    <span class="sp sp3"></span>
-                                </div>
-                                <div class="anim-iron-board"></div>
-                            </div>
-                            <span class="step-number">04</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Finishing</h3>
-                            <p>Professional tumble drying then industrial pressing and ironing to a flawless finish.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 5: Packaging — box with floating label tag -->
-                    <div class="process-step" data-step="5">
-                        <div class="step-node node-packaging">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-box-open main-icon icon-box-pulse"></i>
-                                <div class="anim-tag"><i class="fa-solid fa-tag"></i></div>
-                            </div>
-                            <span class="step-number">05</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Packaging</h3>
-                            <p>Hotel-grade folding and protective packaging to preserve quality during transport.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 6: Logistics — delivery truck drives toward hotel icon -->
-                    <div class="process-step" data-step="6">
-                        <div class="step-node node-logistics">
-                            <div class="step-anim-icon">
-                                <i class="fa-solid fa-truck main-icon icon-truck-go"></i>
-                                <div class="anim-road-strip"></div>
-                                <div class="anim-dest-hotel"><i class="fa-solid fa-hotel"></i></div>
-                                <div class="anim-motion-lines"><span></span><span></span><span></span></div>
-                            </div>
-                            <span class="step-number">06</span>
-                        </div>
-                        <div class="step-content">
-                            <h3>Logistics</h3>
-                            <p>On-time, scheduled delivery back to your property — ready for immediate use.</p>
-                        </div>
-                    </div>
-
-                </div><!-- /.process-track -->
-            </div>
-        </section>
+                   <div class="process-step"><div class="step-node"><div class="pa p1"><i class="fa-solid fa-truck-pickup"></i></div><span class="step-number">01</span></div><div class="step-content"><h3>Collection</h3><p>Standardised, scheduled pickup from your property. Items logged on collection.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p2"><i class="fa-solid fa-shirt bg"></i><i class="fa-solid fa-magnifying-glass"></i></div><span class="step-number">02</span></div><div class="step-content"><h3>Inspection</h3><p>Every garment assessed for damage, staining and care requirements before processing.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p3"><i class="fa-solid fa-hands-bubbles"></i><b></b><b></b><b></b></div><span class="step-number">03</span></div><div class="step-content"><h3>Treatment</h3><p>Specialist de-staining and industrial washing with hotel-approved detergents and sanitisers.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p4"><i class="fa-solid fa-iron"></i><b></b><b></b><b></b><u></u></div><span class="step-number">04</span></div><div class="step-content"><h3>Finishing</h3><p>Professional tumble drying, then industrial pressing and ironing to a flawless finish.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p5"><i class="fa-solid fa-box-open"></i><i class="fa-solid fa-circle-check ok"></i></div><span class="step-number">05</span></div><div class="step-content"><h3>Packaging</h3><p>Hotel-grade folding and protective packaging to preserve quality during transport.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p6"><i class="fa-solid fa-truck"></i><i class="fa-solid fa-hotel dest"></i><u></u></div><span class="step-number">06</span></div><div class="step-content"><h3>Delivery</h3><p>On-time, scheduled delivery back to your property, ready for immediate use.</p></div></div>
 
         <!-- ════════════════ STATS ════════════════ -->
         <section class="clients-section" aria-labelledby="clients-heading">
@@ -558,128 +459,6 @@ if (isset($_SESSION['form_status'])) {
 <p><i class="fa-solid fa-truck"></i> Pickup and drop-off available</p>
 </div>
 
-                <!-- BOTTOM: Send an Enquiry form -->
-                <div class="contact-form-wrap reveal-up" data-delay="1">
-                    <form id="enquiry-form" novalidate aria-label="Enquiry form">
-                        <!-- Web3Forms honeypot — bots fill this, humans don't. Submission rejected if not empty. -->
-                        <input type="checkbox" name="botcheck" style="display:none;" tabindex="-1" autocomplete="off" />
-
-                        <h3 class="form-title">Send an Enquiry</h3>
-
-                        <!-- Full Name: letters + spaces only, no numbers -->
-                        <div class="form-group">
-                            <label for="name">Full Name <span class="req-star" aria-hidden="true">*</span></label>
-                            <input type="text" id="name" name="name"
-                                placeholder="e.g. John Smith"
-                                autocomplete="name"
-                                maxlength="80"
-                                required aria-required="true"
-                                aria-describedby="name-error name-hint" />
-                            <span id="name-hint" class="field-hint">Letters and spaces only — no numbers or symbols.</span>
-                            <span id="name-error" class="field-error" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <!-- Email: with inline format guide -->
-                        <div class="form-group">
-                            <label for="email">Email Address <span class="req-star" aria-hidden="true">*</span></label>
-                            <input type="email" id="email" name="email"
-                                placeholder="yourname@company.com"
-                                autocomplete="email"
-                                maxlength="120"
-                                required aria-required="true"
-                                aria-describedby="email-error email-hint" />
-                            <span id="email-hint" class="field-hint">Format: <code>name@domain.com</code> — must include @ and a domain.</span>
-                            <span id="email-error" class="field-error" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <!-- Phone: exactly 10 digits, numeric input only -->
-                        <div class="form-group">
-                            <label for="phone">Phone Number <span class="req-star" aria-hidden="true">*</span></label>
-                            <input type="tel" id="phone" name="phone"
-                                placeholder="0622839374"
-                                autocomplete="tel"
-                                maxlength="10"
-                                pattern="[0-9]{10}"
-                                inputmode="numeric"
-                                required aria-required="true"
-                                aria-describedby="phone-error phone-hint" />
-                            <span id="phone-hint" class="field-hint">10 digits, no spaces or symbols. e.g. 0622839374</span>
-                            <span id="phone-error" class="field-error" role="alert" aria-live="polite"></span>
-                        </div>
-
-                        <!-- Service -->
-                        <div class="form-group">
-                            <label for="service">Service of Interest</label>
-                            <select id="service" name="service">
-                                <option value="">— Select a service —</option>
-                                <option value="Bed Linen">Bed Linen</option>
-                                <option value="Towels &amp; Bathrobes">Towels &amp; Bathrobes</option>
-                                <option value="Table Linen">Table Linen</option>
-                                <option value="Staff Uniforms">Staff Uniforms</option>
-                                <option value="Stain Removal">Specialist Stain Removal</option>
-                                <option value="Scheduled Logistics">Scheduled Logistics</option>
-                                <option value="Private Client Care">Private Client Care (School / Suits)</option>
-                                <option value="Full Package">Full Package / All Services</option>
-                            </select>
-                        </div>
-
-                        <!-- Message: generous limit, profanity filtered in JS -->
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message"
-                                rows="4" maxlength="3000"
-                                placeholder="Tell us about your property, garments, or laundry volumes…"
-                                aria-describedby="message-error message-count"></textarea>
-                            <div class="message-meta">
-                                <span id="message-error" class="field-error" role="alert" aria-live="polite"></span>
-                                <span id="message-count" class="char-count">0 / 3000</span>
-                            </div>
-                        </div>
-
-                        <!-- Preferred channel: icon pills with hover + selected state -->
-                        <div class="form-group channel-select-group">
-                            <span class="channel-label-heading">Preferred Response Channel</span>
-                            <div class="channel-toggles">
-                                <label class="toggle-pill" data-channel="email">
-                                    <input type="radio" name="preferred_channel" value="Email" checked />
-                                    <div class="pill-inner">
-                                        <i class="fa-solid fa-envelope pill-icon"></i>
-                                        <span class="pill-label">Email</span>
-                                    </div>
-                                </label>
-                                <label class="toggle-pill" data-channel="phone">
-                                    <input type="radio" name="preferred_channel" value="Phone" />
-                                    <div class="pill-inner">
-                                        <i class="fa-solid fa-phone pill-icon"></i>
-                                        <span class="pill-label">Phone Call</span>
-                                    </div>
-                                </label>
-                                <label class="toggle-pill" data-channel="whatsapp">
-                                    <input type="radio" name="preferred_channel" value="WhatsApp" />
-                                    <div class="pill-inner">
-                                        <i class="fa-brands fa-whatsapp pill-icon"></i>
-                                        <span class="pill-label">WhatsApp</span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div id="form-global-error" class="form-global-message" role="alert" aria-live="assertive"></div>
-
-                        <button type="submit" id="submit-btn" class="btn btn-gold btn-full">
-                            <span class="btn-text">Send Enquiry</span>
-                            <span class="btn-loader" aria-hidden="true"><i class="fa-solid fa-spinner fa-spin"></i></span>
-                            <i class="fa-solid fa-paper-plane btn-icon"></i>
-                        </button>
-
-                        <p class="form-privacy">
-                            <i class="fa-solid fa-lock"></i>
-                            Your information is private and will never be shared with third parties.
-                        </p>
-                    </form>
-                </div>
-
-            </div>
         </section>
 
     </main>
