@@ -162,8 +162,50 @@ ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('on
 document.getElementById('xl')?.addEventListener('click', downloadExcel);
 document.getElementById('xlMail')?.addEventListener('click', openEmail);
 
-document.getElementById('fuelSave')?.addEventListener('click', e => {
-    fetch('php/save_fuel.php', { method: 'POST', body: new URLSearchParams({ id: e.target.dataset.id, days: document.getElementById('fuelDays').value }) })
-        .then(r => r.json()).then(d => d.ok ? location.reload() : alert(d.msg))
-        .catch(() => alert('Could not save fuel.'));
+// ── Fuel mini form ───────────────────────────────────────────────────────────
+const fst = document.createElement('style');
+fst.textContent = `#fuOv{position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(8,10,25,.8);backdrop-filter:blur(6px)}
+#fuOv.on{display:flex}
+#fuBox{width:100%;max-width:380px;background:#14122b;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:22px;color:#f1f0ff}
+#fuBox h2{font-size:20px;margin-bottom:6px}
+#fuBox label{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:#a5a3c9;font-weight:700;margin-top:14px}
+#fuBox input{width:100%;margin-top:6px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.14);border-radius:12px;color:#f1f0ff;padding:10px 12px;font:600 15px 'Segoe UI',Arial,sans-serif;outline:none;box-sizing:border-box}
+#fuBox input:focus{border-color:#a78bfa}
+#fuBox input:disabled{opacity:.6}
+#fuAmt{margin-top:16px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.06);font-size:15px}
+#fuAmt b{font-size:20px}
+#fuBox .fuF{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}`;
+document.head.appendChild(fst);
+
+const fov = document.createElement('div');
+fov.id = 'fuOv';
+fov.innerHTML = `<div id="fuBox"><h2 id="fuTitle"></h2>
+<label>Days<input id="fuDays" type="number" min="0" max="366" inputmode="numeric"></label>
+<label>Rate per day (R)<input id="fuRate" disabled></label>
+<div id="fuAmt"></div>
+<div class="fuF"><button type="button" class="btn ghost" id="fuCancel">Cancel</button><button type="button" class="btn ghost" id="fuClear">Remove</button><button type="button" class="btn" id="fuSave">Save</button></div></div>`;
+document.body.appendChild(fov);
+
+let fuId = 0, fuRate = 0;
+const fuCalc = () => { const d = parseInt($('fuDays').value) || 0; $('fuAmt').innerHTML = d + ' × R ' + fuRate.toFixed(2) + ' = <b>R ' + (d * fuRate).toFixed(2) + '</b>'; };
+const fuPost = days => fetch('php/save_fuel.php', { method: 'POST', body: new URLSearchParams({ id: fuId, days }) })
+    .then(r => r.json()).then(d => d.ok ? location.reload() : alert(d.msg))
+    .catch(() => alert('Could not save fuel.'));
+
+document.getElementById('fuelBtn')?.addEventListener('click', e => {
+    const b = e.currentTarget, days = +b.dataset.days;
+    fuId = b.dataset.id; fuRate = parseFloat(b.dataset.rate) || 0;
+    $('fuTitle').textContent = days ? 'Edit fuel' : 'Add fuel';
+    $('fuDays').value = days || '';
+    $('fuRate').value = fuRate.toFixed(2);
+    $('fuClear').style.display = days ? '' : 'none';
+    fuCalc();
+    fov.classList.add('on');
+    $('fuDays').focus();
 });
+$('fuDays').addEventListener('input', fuCalc);
+$('fuDays').addEventListener('keydown', e => { if (e.key === 'Enter') $('fuSave').click(); });
+$('fuSave').onclick = () => fuPost(parseInt($('fuDays').value) || 0);
+$('fuClear').onclick = () => fuPost(0);
+$('fuCancel').onclick = () => fov.classList.remove('on');
+fov.addEventListener('click', e => { if (e.target === fov) fov.classList.remove('on'); });

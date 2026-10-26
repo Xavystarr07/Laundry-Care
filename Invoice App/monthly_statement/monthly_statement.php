@@ -57,7 +57,7 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
     <a class="btn ghost" href="monthly_statement.php">⟵ Statements</a>
     <a class="btn ghost" href="<?= $back ?>">Invoice</a>
     <?php if (!$cur['is_closed']): ?><em class="chip open">Period still open</em><?php endif; ?>
-    <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px">Fuel days <input id="fuelDays" type="number" min="0" max="366" value="<?= $fd ?>" style="width:70px;padding:8px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff"> × R <?= number_format($fr,2) ?></label><button type="button" class="btn" id="fuelSave" data-id="<?= (int)$cur['id'] ?>">Save fuel</button><span class="sp"></span>
+    <button type="button" class="btn" id="fuelBtn" data-id="<?= (int)$cur['id'] ?>" data-days="<?= $fd ?>" data-rate="<?= $fr ?>">⛽ <?= $fd ? 'Edit fuel' : 'Add fuel' ?></button><span class="sp"></span>
     <button type="button" class="act pdf" onclick="window.print()"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></i>Print / Save PDF</button>
     <button type="button" class="act xls" id="xl"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg></i>Download Excel</button>
     <button type="button" class="act mail" id="xlMail"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></i>Send Email</button>
@@ -85,7 +85,7 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
       <?php endforeach; else: ?><tr><td colspan="2">No invoices in this period.</td></tr><?php endif; ?>
       </tbody>
     </table>
-    <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px">Fuel days <input id="fuelDays" type="number" min="0" max="366" value="<?= $fd ?>" style="width:70px;padding:8px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff"> × R <?= number_format($fr,2) ?></label><button type="button" class="btn" id="fuelSave" data-id="<?= (int)$cur['id'] ?>">Save fuel</button><span class="sp"></span>
+    <div class="tot"><div class="tbox"><?php if ($fd): ?><div class="trow"><span>Fuel: <?= $fd ?> day<?= $fd == 1 ? '' : 's' ?> × R <?= number_format($fr,2) ?></span><span>R <?= number_format($fuel,2) ?></span></div><?php endif; ?><div class="tgrand"><span>Grand Total</span><strong>R <?= number_format($total + $fuel,2) ?></strong></div></div></div>
     <div class="bank"><b>Banking details</b>Bank: FNB<br>Account Holder: Laundry Care<br>Account Number: 63179920872<br>Account Type: Cheque</div>
     <div class="foot"><strong>Thank you for your business</strong></div>
   </article>
