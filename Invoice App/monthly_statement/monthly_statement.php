@@ -12,7 +12,7 @@ $openRows = $open ? getInvoices($pdo, $open['start_date'], $today) : [];
 $end   = $cur ? ($cur['end_date'] ?: $today) : '';
 $units = $cur ? getUnits($pdo, $cur['start_date'], $end) : [];
 $det   = $cur ? getDetail($pdo, $cur['start_date'], $end) : [];
-$grp = []; $total = 0;
+$grp = []; $total = 0; $fd = $cur ? (int)$cur['fuel_days'] : 0; $fr = $cur ? (float)$cur['fuel_rate'] : 0; $fuel = round($fd * $fr, 2);
 foreach ($units as $u) { $grp[$u['HotelName']][$u['HotelNumber']] = (float)$u['tot']; $total += (float)$u['tot']; }
 $dep  = (($_SESSION['mode'] ?? '') === 'departure');
 $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
@@ -57,7 +57,7 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
     <a class="btn ghost" href="monthly_statement.php">⟵ Statements</a>
     <a class="btn ghost" href="<?= $back ?>">Invoice</a>
     <?php if (!$cur['is_closed']): ?><em class="chip open">Period still open</em><?php endif; ?>
-    <span class="sp"></span>
+    <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px">Fuel days <input id="fuelDays" type="number" min="0" max="366" value="<?= $fd ?>" style="width:70px;padding:8px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff"> × R <?= number_format($fr,2) ?></label><button type="button" class="btn" id="fuelSave" data-id="<?= (int)$cur['id'] ?>">Save fuel</button><span class="sp"></span>
     <button type="button" class="act pdf" onclick="window.print()"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></i>Print / Save PDF</button>
     <button type="button" class="act xls" id="xl"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16"/></svg></i>Download Excel</button>
     <button type="button" class="act mail" id="xlMail"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></i>Send Email</button>
@@ -85,14 +85,14 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
       <?php endforeach; else: ?><tr><td colspan="2">No invoices in this period.</td></tr><?php endif; ?>
       </tbody>
     </table>
-    <div class="tot"><div class="tbox"><div class="tgrand"><span>Grand Total</span><strong>R <?= number_format($total,2) ?></strong></div></div></div>
+    <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px">Fuel days <input id="fuelDays" type="number" min="0" max="366" value="<?= $fd ?>" style="width:70px;padding:8px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff"> × R <?= number_format($fr,2) ?></label><button type="button" class="btn" id="fuelSave" data-id="<?= (int)$cur['id'] ?>">Save fuel</button><span class="sp"></span>
     <div class="bank"><b>Banking details</b>Bank: FNB<br>Account Holder: Laundry Care<br>Account Number: 63179920872<br>Account Type: Cheque</div>
     <div class="foot"><strong>Thank you for your business</strong></div>
   </article>
 </main>
 <?php endif; ?>
 <?php if ($cur): ?>
-<script>window.STMT = <?= json_encode(['start'=>$cur['start_date'],'end'=>$end,'total'=>$total,'rows'=>$det], JSON_HEX_TAG) ?>;</script>
+<script>window.STMT = <?= json_encode(['start'=>$cur['start_date'],'end'=>$end,'total'=>$total+$fuel,'fuel'=>['days'=>$fd,'rate'=>$fr,'amt'=>$fuel],'rows'=>$det], JSON_HEX_TAG) ?>;</script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="js/excel.js"></script>
 <?php endif; ?>

@@ -1,6 +1,6 @@
 <?php
 function getPeriods($pdo) {
-    return $pdo->query('SELECT id,name,start_date,end_date,is_closed FROM lc_periods ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
+    return $pdo->query('SELECT id,name,start_date,end_date,is_closed,fuel_days,fuel_rate FROM lc_periods ORDER BY id DESC')->fetchAll(PDO::FETCH_ASSOC);
 }
 function getInvoices($pdo, $f, $t) {
     $s = $pdo->prepare('SELECT "DateReceived","Total" FROM invoices WHERE "DateReceived" BETWEEN :f AND :t');

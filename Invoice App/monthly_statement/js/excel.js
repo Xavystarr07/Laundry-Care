@@ -75,6 +75,24 @@ async function buildExcel() {
         total(title + ' TOTAL', secSum, '0D47A1', { bold: true, size: 13, color: { argb: 'FFFFFFFF' } });
         r += 2;
     });
+    if (S.fuel.days) {
+        line('FUEL', { bold: true, size: 13, color: { argb: 'FFFFFFFF' } }, '111111', 28);
+        r++;
+        ['Days', 'Rate (R)', '', 'Amount'].forEach((h, i) => {
+            const c = ws.getCell(r, i + 1); c.value = h; c.fill = fill('111111'); c.font = { bold: true, size: 10, color: { argb: 'FFFFFFFF' } }; style(c, i === 3);
+        });
+        ws.getRow(r).height = 30; r++;
+        [S.fuel.days, S.fuel.rate, '', null].forEach((v, k) => {
+            const c = ws.getCell(r, k + 1); c.value = v; c.font = { size: 11, bold: k === 3 }; style(c, k === 3);
+            c.border = { bottom: { style: 'thin', color: { argb: 'FFC9D6E6' } } };
+        });
+        ws.getCell(r, 2).numFmt = '#,##0.00';
+        ws.getCell(r, 4).value = { formula: 'A' + r + '*B' + r, result: S.fuel.amt };
+        ws.getCell(r, 4).numFmt = '#,##0.00';
+        ws.getRow(r).height = 30;
+        secCells.push('D' + r);
+        r += 2;
+    }
     total('GRAND TOTAL', Number(S.total), '111111', { bold: true, size: 14, color: { argb: 'FFFFFFFF' } });
     ws.getCell(r - 1, N).value = { formula: secCells.join('+'), result: Number(S.total) };
     return wb.xlsx.writeBuffer();
@@ -143,3 +161,9 @@ $('emSend').onclick = sendEmail;
 ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('on'); });
 document.getElementById('xl')?.addEventListener('click', downloadExcel);
 document.getElementById('xlMail')?.addEventListener('click', openEmail);
+
+document.getElementById('fuelSave')?.addEventListener('click', e => {
+    fetch('php/save_fuel.php', { method: 'POST', body: new URLSearchParams({ id: e.target.dataset.id, days: document.getElementById('fuelDays').value }) })
+        .then(r => r.json()).then(d => d.ok ? location.reload() : alert(d.msg))
+        .catch(() => alert('Could not save fuel.'));
+});
