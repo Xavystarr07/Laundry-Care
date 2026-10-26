@@ -38,7 +38,7 @@
      *
      * Whichever finishes last triggers the dismiss.
      */
-    const MIN_DISPLAY_MS = 1900; // Keep loader visible for at least this long
+    const MIN_DISPLAY_MS = 3600; // Keep loader visible for at least this long
     const startTime = Date.now();
 
     function tryDismiss() {

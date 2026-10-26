@@ -381,7 +381,7 @@ if (isset($_SESSION['form_status'])) {
 <div class="process-step"><div class="step-node"><div class="pa p6"><i class="fa-solid fa-truck"></i><i class="fa-solid fa-hotel dest"></i><u></u></div><span class="step-number">06</span></div><div class="step-content"><h3>Delivery</h3><p>On-time, scheduled delivery back to your property, ready for immediate use.</p></div></div>
 
         <!-- ════════════════ STATS ════════════════ -->
-        <section class="clients-section" aria-labelledby="clients-heading">
+        </div></div></section><section class="clients-section" aria-labelledby="clients-heading">
 <div class="container text-center">
 <div class="section-tag">Trusted By</div>
 <h2 id="clients-heading" class="section-title">20+ hotels and lodges across Durban</h2>
@@ -453,7 +453,7 @@ if (isset($_SESSION['form_status'])) {
                 </div>
 
                 <!-- OR DIVIDER -->
-               <div class="contact-info reveal-up">
+               </div><div class="contact-info reveal-up">
 <p><i class="fa-solid fa-clock"></i> Office hours: 8am to 5pm</p>
 <p><i class="fa-solid fa-envelope"></i> Emails answered until midnight</p>
 <p><i class="fa-solid fa-truck"></i> Pickup and drop-off available</p>

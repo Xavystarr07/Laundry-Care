@@ -110,7 +110,7 @@
        over any .service-card element.
        ───────────────────────────────────────────────────────────── */
 
-    const serviceCards = document.querySelectorAll('.service-card');
+    const serviceCards = [];
 
     serviceCards.forEach(card => {
         card.addEventListener('mousemove', function (e) {
@@ -152,7 +152,7 @@
        ───────────────────────────────────────────────────────────── */
 
     const heroSection  = document.querySelector('.hero-section');
-    const heroOverlay  = document.querySelector('.hero-bg-overlay');
+    const heroOverlay  = null;
 
     if (heroSection && heroOverlay) {
         heroSection.addEventListener('mousemove', function (e) {
