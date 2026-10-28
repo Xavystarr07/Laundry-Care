@@ -909,3 +909,14 @@ em{font-style:normal;color:var(--teal)}
 .cg-cards .channel-card{max-width:none}
 @media(max-width:860px){.hslide{grid-template-columns:1fr}.hero-img{display:none}.contact-grid{grid-template-columns:1fr;gap:2.5rem}}
 @media(max-width:600px){.work-grid{grid-template-columns:1fr 1fr}.work-grid .photo-img:first-child{grid-row:auto}}
+
+/* SCROLL MOTION */
+.st{opacity:0}
+.sec.in .st{opacity:1;animation:st-in 1s cubic-bezier(.22,1,.36,1) backwards;animation-delay:var(--d,0s)}
+.sec.in .work-grid .st{animation-name:st-clip;animation-duration:1.3s}
+.sec.in .process-step.st{animation-name:st-in}
+@keyframes st-in{from{opacity:0;transform:translateY(60px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes st-clip{from{opacity:0;clip-path:inset(0 0 100% 0);transform:scale(1.12)}to{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
+.sec{transform:translateY(50px)}
+.client-logos{grid-template-columns:repeat(3,1fr);max-width:900px}
+@media(max-width:700px){.client-logos{grid-template-columns:1fr}}

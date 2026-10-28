@@ -202,11 +202,11 @@ if (isset($_SESSION['form_status'])) {
 <section class="clients-section" aria-labelledby="clients-heading">
 <div class="container text-center">
 <div class="section-tag">Trusted By</div>
-<h2 id="clients-heading" class="section-title text-center">20+ companies we do work for</h2>
-<p class="section-intro">Hotels, lodges and holiday businesses across Durban. Large bulk loads are what we do best.</p>
+<h2 id="clients-heading" class="section-title text-center">Accommodation across Durban trusts us</h2>
+<p class="section-intro">We handle large bulk loads for Umhlanga accommodation, holiday businesses and lodges.</p>
 <div class="client-logos">
 <div class="client-chip"><i class="fa-solid fa-building"></i> Balito Utopia Holidays</div>
-<div class="client-chip"><i class="fa-solid fa-building"></i> Teremok Lodge</div>
+<div class="client-chip"><i class="fa-solid fa-building"></i> Teremok Lodge &amp; Spa</div><div class="client-chip"><i class="fa-solid fa-building"></i> Umhlanga Accommodation</div>
 </div>
 </div>
 </section>
@@ -485,7 +485,7 @@ if (isset($_SESSION['form_status'])) {
 <p class="section-intro">Recent work includes Balito Utopia Holidays and Teremok Lodge. Large bulk loads are what we do best.</p>
 <div class="client-logos">
 <div class="photo-placeholder">Logo: Balito Utopia Holidays</div>
-<div class="photo-placeholder">Logo: Teremok Lodge</div>
+<div class="photo-placeholder">Logo: Teremok Lodge &amp; Spa</div><div class="client-chip"><i class="fa-solid fa-building"></i> Umhlanga Accommodation</div>
 </div>
 </div>
 </section>
