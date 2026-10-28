@@ -104,46 +104,143 @@ if (isset($_SESSION['form_status'])) {
     </aside>
     <div id="drawer-overlay" aria-hidden="true"></div>
 
-    <main id="main-content" role="main">
+    <section id="hero" class="hero-section" aria-label="Hero">
+<div class="hero-bg-overlay"></div>
+<div class="hero-content container">
+<div class="hero-tabs reveal-up" data-delay="0"><button type="button" class="htab active">Hotels &amp; Lodges</button><button type="button" class="htab">Private Clients</button></div>
+<div class="hero-slides reveal-up" data-delay="1">
+<div class="hslide active">
+<div>
+<div class="hero-eyebrow"><span>Serving Durban</span></div>
+<h1 class="hero-headline">Fresh Linen.<br /><em>Every Single Time.</em></h1>
+<p class="hero-subheadline">Industrial-grade linen and garment care for Umhlanga's leading hotels. Collected, treated and delivered on your schedule.</p>
+<div class="hero-actions"><a href="#contact" class="btn btn-gold" data-tf>Request a Quote</a><a href="#process" class="btn btn-ghost">See Our Process</a></div>
+<div class="hero-badges"><div class="badge"><i class="fa-solid fa-clock"></i> On-Time Delivery</div><div class="badge"><i class="fa-solid fa-hotel"></i> Hotel Grade</div></div>
+</div>
+<img class="hero-img" src="https://picsum.photos/seed/hotellinen/800/1000" alt="Fresh hotel linen" />
+</div>
+<div class="hslide">
+<div>
+<div class="hero-eyebrow"><span>Private Clients</span></div>
+<h1 class="hero-headline">Everyday washing.<br /><em>Handled for you.</em></h1>
+<p class="hero-subheadline">Weekly washing, school uniforms, suits and delicate garments. Pickup and drop-off anywhere in Durban, at the same hotel-grade standard.</p>
+<div class="hero-actions"><a href="#contact" class="btn btn-gold" data-tf>Get a Quote</a><a href="#pricing" class="btn btn-ghost">See Pricing</a></div>
+<div class="hero-badges"><div class="badge"><i class="fa-solid fa-truck"></i> Pickup &amp; Drop-off</div><div class="badge"><i class="fa-solid fa-shirt"></i> Regular or Once-off</div></div>
+</div>
+<img class="hero-img" src="https://picsum.photos/seed/familywash/800/1000" alt="Folded clothes" />
+</div>
+</div>
+</div>
+<a href="#about" class="scroll-cue" aria-label="Scroll down"><span>Scroll</span><div class="scroll-line"></div></a>
+</section>
 
-        <!-- ════════════════ HERO ════════════════ -->
-        <section id="hero" class="hero-section" aria-label="Hero">
-            <div class="hero-bg-overlay"></div>
-            <div class="hero-grain"></div>
+<section id="about" class="about-section" aria-labelledby="about-heading">
+<div class="container about-grid">
+<div class="about-visual"><img class="photo-img reveal-left" src="https://picsum.photos/seed/laundryfacility/900/700" alt="Our facility" /></div>
+<div class="about-copy">
+<div class="section-tag">Who We Are</div>
+<h2 id="about-heading" class="section-title">Where Precision Meets <em>Cleanliness</em></h2>
+<p>Laundry Care is a specialist laundry service based in Cornubia, Parkgate. We serve hotels, lodges and guest houses across Durban, and families who want the same standard for their own clothes.</p>
+<p>Every item is inspected on arrival, treated, washed, pressed and packaged before it comes back to you. Large bulk loads are what we do best.</p>
+<ul class="about-pillars">
+<li><i class="fa-solid fa-check-circle"></i> Industrial-grade equipment</li>
+<li><i class="fa-solid fa-check-circle"></i> Hotels and private clients</li>
+<li><i class="fa-solid fa-check-circle"></i> Pickup and drop-off</li>
+<li><i class="fa-solid fa-check-circle"></i> Bulk loads welcome</li>
+</ul>
+</div>
+</div>
+</section>
 
-            <div class="hero-content container">
-                <div class="hero-eyebrow reveal-up" data-delay="0">
-                    <span class="eyebrow-line"></span>
-                    <span>Serving Durban</span>
-                    <span class="eyebrow-line"></span>
-                </div>
+<section id="services" class="services-section" aria-labelledby="services-heading">
+<div class="container">
+<div class="section-tag text-center">What We Offer</div>
+<h2 id="services-heading" class="section-title text-center">Comprehensive Linen <em>Solutions</em></h2>
+<p class="section-intro text-center">Tailored packages for hotels, lodges and guest houses.</p>
+<div class="services-grid">
+<div class="service-card"><img src="https://picsum.photos/seed/bedlinen/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-bed"></i></div><h3>Bed Linen</h3><p>Sheets, duvet covers and pillow cases, washed, treated and pressed to crisp hotel standards.</p></div></div>
+<div class="service-card"><img src="https://picsum.photos/seed/towels/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-bath"></i></div><h3>Towels &amp; Bathrobes</h3><p>Deep-sanitised, fluffed and hygienically packaged for a premium guest experience.</p></div></div>
+<div class="service-card"><img src="https://picsum.photos/seed/tablelinen/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-utensils"></i></div><h3>Table Linen</h3><p>Restaurant-quality tablecloths and napkins with dedicated stain treatment.</p></div></div>
+<div class="service-card"><img src="https://picsum.photos/seed/uniforms/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-user-tie"></i></div><h3>Staff Uniforms</h3><p>Regular laundering and pressing of front-of-house and back-of-house uniforms.</p></div></div>
+<div class="service-card"><img src="https://picsum.photos/seed/stainremoval/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-spray-can-sparkles"></i></div><h3>Stain Removal</h3><p>Enzyme and solvent treatment for stubborn stains, protecting your linen investment.</p></div></div>
+<div class="service-card"><img src="https://picsum.photos/seed/vandelivery/600/360" alt="" loading="lazy" /><div class="sc-body"><div class="service-icon"><i class="fa-solid fa-truck-fast"></i></div><h3>Pickup &amp; Drop-off</h3><p>Reliable scheduled collection and delivery anywhere in Durban.</p></div></div>
+</div>
+</div>
+</section>
 
-                <h1 class="hero-headline reveal-up" data-delay="1">
-                    Fresh Linen.<br />
-                    <em>Every Single Time.</em>
-                </h1>
+<section id="work" class="work-section" aria-labelledby="work-heading">
+<div class="container text-center">
+<div class="section-tag">Our Work</div>
+<h2 id="work-heading" class="section-title text-center">Pressed, folded and <em>ready</em></h2>
+<div class="work-grid">
+<img class="photo-img" src="https://picsum.photos/seed/work1/900/700" alt="Pressed linen" loading="lazy" />
+<img class="photo-img" src="https://picsum.photos/seed/work2/600/450" alt="Our machines" loading="lazy" />
+<img class="photo-img" src="https://picsum.photos/seed/work3/600/450" alt="Folded towels" loading="lazy" />
+<img class="photo-img" src="https://picsum.photos/seed/work4/600/450" alt="Delivery van" loading="lazy" />
+<img class="photo-img" src="https://picsum.photos/seed/work5/600/450" alt="Our team" loading="lazy" />
+<img class="photo-img" src="https://picsum.photos/seed/work6/600/450" alt="Packaged orders" loading="lazy" />
+</div>
+</div>
+</section>
 
-                <p class="hero-subheadline reveal-up" data-delay="2">
-                    Industrial-grade linen and garment care for Umhlanga's leading hotels. Collected, treated and delivered on your schedule.
-                </p>
+<section id="process" class="process-section" aria-labelledby="process-heading">
+<div class="container">
+<div class="section-tag text-center">How It Works</div>
+<h2 id="process-heading" class="section-title text-center">Our 6-Stage <em>Promise</em></h2>
+<div class="process-track" id="process-track">
+<div class="process-line-wrap" aria-hidden="true"><div class="process-line" id="process-line"></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p1"><i class="fa-solid fa-truck-pickup"></i></div></div><div class="step-content"><h3>Collection</h3><p>Standardised, scheduled pickup from your property. Items logged on collection.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p2"><i class="fa-solid fa-shirt bg"></i><i class="fa-solid fa-magnifying-glass"></i></div></div><div class="step-content"><h3>Inspection</h3><p>Every garment assessed for damage, staining and care requirements before processing.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p3"><i class="fa-solid fa-hands-bubbles"></i><b></b><b></b><b></b></div></div><div class="step-content"><h3>Treatment</h3><p>Specialist de-staining and industrial washing with hotel-approved detergents and sanitisers.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p4"><i class="fa-solid fa-iron"></i><b></b><b></b><b></b><u></u></div></div><div class="step-content"><h3>Finishing</h3><p>Professional tumble drying, then industrial pressing and ironing to a flawless finish.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p5"><i class="fa-solid fa-box-open"></i><i class="fa-solid fa-circle-check ok"></i></div></div><div class="step-content"><h3>Packaging</h3><p>Hotel-grade folding and protective packaging to preserve quality during transport.</p></div></div>
+<div class="process-step"><div class="step-node"><div class="pa p6"><i class="fa-solid fa-truck"></i><i class="fa-solid fa-hotel dest"></i><u></u></div></div><div class="step-content"><h3>Delivery</h3><p>On-time, scheduled delivery back to your property, ready for immediate use.</p></div></div>
+</div>
+</div>
+</section>
 
-                <div class="hero-actions reveal-up" data-delay="3">
-                    <a href="#contact" class="btn btn-gold">Request a Quote</a>
-                    <a href="#process" class="btn btn-ghost">See Our Process</a>
-                </div>
+<section class="clients-section" aria-labelledby="clients-heading">
+<div class="container text-center">
+<div class="section-tag">Trusted By</div>
+<h2 id="clients-heading" class="section-title text-center">20+ companies we do work for</h2>
+<p class="section-intro">Hotels, lodges and holiday businesses across Durban. Large bulk loads are what we do best.</p>
+<div class="client-logos">
+<div class="client-chip"><i class="fa-solid fa-building"></i> Balito Utopia Holidays</div>
+<div class="client-chip"><i class="fa-solid fa-building"></i> Teremok Lodge</div>
+</div>
+</div>
+</section>
 
-                <div class="hero-badges reveal-up" data-delay="4">
-                    
-                    <div class="badge"><i class="fa-solid fa-clock"></i> On-Time Delivery</div>
-                    <div class="badge"><i class="fa-solid fa-hotel"></i> Hotel Grade</div>
-                </div>
-            </div>
+<section id="pricing" class="pricing-section" aria-labelledby="pricing-heading">
+<div class="container text-center">
+<div class="section-tag">Pricing</div>
+<h2 id="pricing-heading" class="section-title text-center">Our Price <em>List</em></h2>
+<p class="section-intro">Clear pricing for hotels, lodges and private clients.</p>
+<div class="photo-placeholder">Price list coming soon</div>
+</div>
+</section>
 
-            <div class="scroll-cue" aria-hidden="true">
-                <span>Scroll</span>
-                <div class="scroll-line"></div>
-            </div>
-        </section>
+<section id="contact" class="contact-section" aria-labelledby="contact-heading">
+<div class="container contact-grid">
+<div class="cg-copy">
+<div class="section-tag">Let's Connect</div>
+<h2 id="contact-heading" class="section-title">Let's get your <em>laundry sorted</em></h2>
+<p>Tell us what you need and we will send you a quote. Hotels, lodges and private clients are all welcome.</p>
+<button type="button" class="btn btn-gold" id="tf-open" data-tf>Get a Quote</button>
+<ul class="cg-info">
+<li><i class="fa-solid fa-clock"></i> Office hours: 8am to 5pm</li>
+<li><i class="fa-solid fa-envelope"></i> Emails answered until midnight</li>
+<li><i class="fa-solid fa-truck"></i> Pickup and drop-off available</li>
+<li><i class="fa-solid fa-location-dot"></i> Based in Cornubia, Parkgate. Serving all of Durban.</li>
+</ul>
+</div>
+<div class="cg-cards">
+<a href="tel:+27622839374" class="channel-card call-card"><div class="channel-icon"><i class="fa-solid fa-phone"></i></div><div class="channel-text"><strong>Call Us</strong><span>062 283 9374</span></div><i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i></a>
+<a href="https://wa.me/27622839374?text=Hi%20Laundry%20Care%2C%20I'd%20like%20to%20enquire%20about%20your%20services." target="_blank" rel="noopener" class="channel-card whatsapp-card"><div class="channel-icon"><i class="fa-brands fa-whatsapp"></i></div><div class="channel-text"><strong>WhatsApp</strong><span>Chat directly with our team</span></div><i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i></a>
+<a href="mailto:laundry_care@outlook.com" class="channel-card email-card"><div class="channel-icon"><i class="fa-solid fa-envelope"></i></div><div class="channel-text"><strong>Email Us</strong><span>laundry_care@outlook.com</span></div><i class="fa-solid fa-arrow-up-right-from-square channel-arrow"></i></a>
+</div>
+</div>
+</section>
 
         <!-- ════════════════ ABOUT ════════════════ -->
         <section id="about" class="about-section" aria-labelledby="about-heading">

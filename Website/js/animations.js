@@ -212,4 +212,5 @@
 
 })();
 
-(function(){var s=document.querySelectorAll('main > section:not(.hero-section) > .container');var io=new IntersectionObserver(function(e){e.forEach(function(x){x.target.classList.toggle('in',x.isIntersecting)})},{threshold:.08});s.forEach(function(el){el.classList.add('sec');io.observe(el)})})();
+(function(){var s=document.querySelectorAll('main > section:not(.hero-section) > .container');var io=new IntersectionObserver(function(e){e.forEach(function(x){x.target.classList.toggle('in',x.isIntersecting)})},{threshold:0,rootMargin:'0px 0px -8% 0px'});s.forEach(function(el){el.classList.add('sec');io.observe(el)})})();
+(function(){var t=[].slice.call(document.querySelectorAll('.htab')),s=[].slice.call(document.querySelectorAll('.hslide')),n=0,m;function g(i){n=i;t.forEach(function(x,j){x.classList.toggle('active',j==i)});s.forEach(function(x,j){x.classList.toggle('active',j==i)})}function r(){clearInterval(m);m=setInterval(function(){g((n+1)%s.length)},7000)}t.forEach(function(x,i){x.onclick=function(){g(i);r()}});if(s.length)r()})();
