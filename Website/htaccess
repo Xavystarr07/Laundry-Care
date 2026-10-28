@@ -84,6 +84,7 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 # Block php/ directory browsing — only contact.php is reachable
 <IfModule mod_rewrite.c>
     RewriteRule ^php/$ - [F,L]
+    RewriteRule ^inc/ - [F,L]
     RewriteRule ^php/(?!contact\.php$) - [F,L]
 </IfModule>
 
@@ -91,7 +92,7 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 # 4. BAD BOT AND SCANNER BLOCKING
 # ══════════════════════════════════════════════════════════════════════════════
 <IfModule mod_rewrite.c>
-    RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|python-requests|python-urllib|scrapy|nikto|sqlmap|nmap|masscan|dirbuster|gobuster|wfuzz|hydra|acunetix|netsparker|openvas|w3af|skipfish|whatweb|commix|havij|pangolin|jbrofuzz|httrack|teleport|webzip|webcopier|larbot|yeti\/|nutch|robot|crawler|spider|scrape|harvest|extract|grab|miner|emailcollect|bulkemail|mailbot|spambot|zgrab|shodan|censys|internet-census|mirai|stretchoid|binlar|casper|cmsworldmap|dotbot|feedfinder|flunky|genieo|heritrix|htmlparser|httpunit) [NC]
+    RewriteCond %{HTTP_USER_AGENT} (libwww-perl|wget|python-requests|python-urllib|scrapy|nikto|sqlmap|nmap|masscan|dirbuster|gobuster|wfuzz|hydra|acunetix|netsparker|openvas|w3af|skipfish|whatweb|commix|havij|pangolin|jbrofuzz|httrack|teleport|webzip|webcopier|larbot|yeti\/|nutch|scrape|harvest|extract|grab|miner|emailcollect|bulkemail|mailbot|spambot|zgrab|shodan|censys|internet-census|mirai|stretchoid|binlar|casper|cmsworldmap|dotbot|feedfinder|flunky|genieo|heritrix|htmlparser|httpunit) [NC]
     RewriteRule ^ - [F,L]
 </IfModule>
 
@@ -146,7 +147,7 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 # ══════════════════════════════════════════════════════════════════════════════
 <IfModule mod_rewrite.c>
     RewriteCond %{HTTP_REFERER} !^$
-    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.co\.za [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?laundrycare\.co\.za [NC]
     RewriteCond %{HTTP_REFERER} !^https?://[a-z0-9-]+\.cloudflare\.com [NC]
     RewriteRule \.(jpg|jpeg|png|gif|webp|svg|ico|woff2)$ - [F,L]
 </IfModule>
