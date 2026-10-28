@@ -27,6 +27,12 @@ if (isset($_SESSION['popup'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Care Invoice</title>
+<script>
+if (localStorage.getItem('lcDarkMode') === 'true') {
+    document.documentElement.classList.add('dk', 'dkpre');
+    addEventListener('load', function () { document.documentElement.classList.remove('dkpre'); });
+}
+</script>
 
     <!-- ── CSS files — edit individual files for each concern ── -->
     <link rel="stylesheet" href="html_css/base.css">     <!-- body, fonts             -->
@@ -36,7 +42,7 @@ if (isset($_SESSION['popup'])) {
     <link rel="stylesheet" href="html_css/buttons.css">  <!-- all buttons             -->
     <link rel="stylesheet" href="html_css/image.css">    <!-- image preview bar       -->
     <link rel="stylesheet" href="html_css/print.css">
-    <link rel="stylesheet" href="html_css/combo.css">    <!-- print / light mode fix  -->
+    <link rel="stylesheet" href="html_css/space.css">
 </head>
 <body>
 
@@ -149,12 +155,14 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
         </button>
 
         <!-- Add Combo — indigo + grid icon -->
-        <button type="button" class="uv-btn" id="comboAddBtn">
-            <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
-            </svg>
-            <span>Add Combo</span>
-        </button>
+<button type="button" class="uv-btn" style="border:2px solid #f43f5e;color:#f43f5e;--btn-fill:#f43f5e" onclick="guardGo('saved.php')">
+    <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+    <span>Saved</span>
+</button>
+<button type="button" class="uv-btn" style="border:2px solid #65a30d;color:#65a30d;--btn-fill:#65a30d" onclick="guardGo('prices.php')">
+    <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"/><circle cx="7" cy="7" r="1.2"/></svg>
+    <span>Prices</span>
+</button>
 
         <!-- Insert Image — teal + image icon -->
         <button type="button" class="uv-btn" id="insertImageBtn">
@@ -185,33 +193,10 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
         </button>
     </div>
 
-    <!-- ── Combo Modal ── -->
-    <div id="comboModal">
-      <div class="cm-box">
-        <div class="cm-head">
-          <div class="cm-icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          </div>
-          <div>
-            <h3>Add Combo</h3>
-            <p>Tick one or more combos, then press Enter</p>
-          </div>
-        </div>
-        <div id="categoryContainer"></div>
-        <div class="cm-foot">
-          <span id="comboCount">Nothing selected yet</span>
-          <div>
-            <button id="comboCancelBtn" type="button" class="cm-btn cm-cancel">Cancel</button>
-            <button id="comboConfirmBtn" type="button" class="cm-btn cm-confirm">Enter</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ── Grand Total — centred, well below save button ── -->
     <div class="grand-total-row">
         <h3>Grand Total: R<span id="grandTotal">0.00</span></h3>
-        <input type="hidden" name="grandTotal" id="grandTotalInput" value="0.00">
+        <input type="hidden" name="grandTotal" id="grandTotalInput" value="0.00"><input type="hidden" name="items" id="itemsJson">
     </div>
 
     <!-- ── Image Preview — left-aligned, below grand total ── -->
@@ -223,15 +208,13 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 
 
 <!-- ── JS files — edit individual files for each concern ── -->
-<script src="js/priceList.js"></script>       <!-- item price data             -->
+<script src="js/priceList.php"></script>       <!-- item price data             -->
 <script src="js/hotelData.js"></script>       <!-- hotel/unit data             -->
-<script src="js/comboData.js"></script>       <!-- combo preset data           -->
 <script src="js/popupNotify.js"></script>     <!-- success/error popups        -->
 <script src="js/fieldGuide.js"></script>      <!-- field highlight guide       -->
 <script src="js/grandTotal.js"></script>      <!-- grand total calculator      -->
 <script src="js/rowManager.js"></script>
 <script src="js/rowRemove.js"></script>      <!-- add/remove table rows       -->
-<script src="js/comboModal.js"></script>      <!-- combo selection modal       -->
 <script src="js/codeSearch.js"></script>      <!-- item code autocomplete      -->
 <script src="js/printInvoice.js"></script>    <!-- print function              -->
 <script src="js/navigation.js"></script>      <!-- page navigation + guard     -->

@@ -872,4 +872,8 @@ em{font-style:normal;color:var(--teal)}
 .process-step.revealed .step-node{animation:none}
 .pa i,.pa b{will-change:transform,opacity}
 .service-card,.btn,.channel-card{transition-timing-function:cubic-bezier(.22,1,.36,1);transition-duration:.45s}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+/* SECTION FLOW */
+.sec{opacity:0;transform:translateY(70px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1)}
+.sec.in{opacity:1;transform:none}
+.process-step{transition-duration:.8s}

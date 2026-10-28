@@ -93,7 +93,7 @@
     const sectionObserver = new IntersectionObserver(
         function (entries) {
             entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
+                if (!entry.isIntersecting) { entry.target.classList.remove('revealed'); return; }
 
                 const id = entry.target.getAttribute('id');
 

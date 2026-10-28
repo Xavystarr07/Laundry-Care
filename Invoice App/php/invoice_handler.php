@@ -88,7 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
             ':date'  => $dateReceived,
             ':total' => $grandTotal,
         ]);
-        $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [(int)$stmt->fetchColumn()], 'time' => time()];
+        $newId = (int)$stmt->fetchColumn();
+$items = json_decode($_POST['items'] ?? '[]', true) ?: [];
+$ins = $pdo->prepare('INSERT INTO lc_invoice_items (invoice_id,"Code","Description","Price","Quantity","LineTotal") VALUES (?,?,?,?,?,?)');
+foreach ($items as $it) $ins->execute([$newId, $it['code'], $it['description'], floatval($it['price']), intval($it['quantity']), floatval($it['total'])]);
+$_SESSION['last_save'] = ['type' => 'regular', 'ids' => [$newId], 'time' => time()];
 
         $_SESSION['popup'] = [
             'type' => 'success',

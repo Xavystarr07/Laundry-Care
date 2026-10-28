@@ -383,6 +383,7 @@ let darkMode = localStorage.getItem('lcDarkMode') === 'true';
 function applyTheme(dark) {
     darkMode = dark;
     document.body.classList.toggle('dark-mode', dark);
+document.documentElement.classList.toggle('dk', dark);
     themeIcon.textContent = dark ? '☀️' : '🌙';
     themeBtn.setAttribute('data-tip', dark ? 'Switch to light mode' : 'Switch to dark mode');
     localStorage.setItem('lcDarkMode', dark);

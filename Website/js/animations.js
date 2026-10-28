@@ -90,10 +90,10 @@
     const scrollRevealObserver = new IntersectionObserver(
         function (entries, observer) {
             entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
+                if (!entry.isIntersecting) { entry.target.classList.remove('revealed'); return; }
 
                 entry.target.classList.add('revealed');
-                observer.unobserve(entry.target); // Animate once only
+                
             });
         },
         {
@@ -211,3 +211,5 @@
     });
 
 })();
+
+(function(){var s=document.querySelectorAll('main > section:not(.hero-section) > .container');var io=new IntersectionObserver(function(e){e.forEach(function(x){x.target.classList.toggle('in',x.isIntersecting)})},{threshold:.08});s.forEach(function(el){el.classList.add('sec');io.observe(el)})})();

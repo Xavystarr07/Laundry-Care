@@ -53,7 +53,7 @@
     const trackObserver = new IntersectionObserver(
         function (entries, observer) {
             entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
+                if (!entry.isIntersecting) { entry.target.classList.remove('revealed'); return; }
 
                 // Reveal each step with a cascading delay
                 steps.forEach(function (step, index) {
@@ -66,7 +66,7 @@
                     }, delay);
                 });
 
-                observer.unobserve(entry.target); // Animate once
+                
             });
         },
         { threshold: 0.15 }

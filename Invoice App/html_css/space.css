@@ -1,0 +1,87 @@
+/* space.css — light "blue sky" <-> dark "deep space". Dark is keyed on html.dk (set before first paint) */
+@media screen {
+    html { background: linear-gradient(180deg, #ffffff 0%, #e3f2fd 45%, #bbdefb 100%); background-attachment: fixed; min-height: 100%; }
+    html.dk { background: #05060f; }
+    html body, html body.dark-mode { background: transparent !important; transition: color 1s ease; }
+    html.dkpre body { visibility: hidden; }   /* no light flash on load */
+
+    /* LIGHT layer: soft drifting clouds */
+    body::after {
+        content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+        opacity: 1; transition: opacity 1.2s ease-in-out;
+        background:
+            radial-gradient(ellipse 40% 22% at 18% 20%, rgba(255,255,255,.95), transparent 70%),
+            radial-gradient(ellipse 35% 18% at 78% 14%, rgba(255,255,255,.9), transparent 70%),
+            radial-gradient(ellipse 45% 25% at 65% 80%, rgba(255,255,255,.85), transparent 70%),
+            radial-gradient(ellipse 38% 22% at 12% 85%, rgba(100,181,246,.35), transparent 70%),
+            radial-gradient(ellipse 40% 24% at 90% 55%, rgba(33,150,243,.22), transparent 70%);
+        background-size: 150% 150%;
+        animation: lcDrift 30s ease-in-out infinite alternate;
+    }
+    @keyframes lcDrift { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+    @media (prefers-reduced-motion: reduce) { body::after { animation: none; } }
+
+    /* DARK layer: deep space */
+    body::before {
+        content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        opacity: 0; transition: opacity 1.2s ease-in-out;
+        background:
+            radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+            radial-gradient(1.5px 1.5px at 90px 140px, #cfe3ff, transparent),
+            radial-gradient(1px 1px at 160px 70px, #fff, transparent),
+            radial-gradient(1px 1px at 230px 190px, #ffe9c4, transparent),
+            radial-gradient(ellipse at 15% 10%, rgba(124,58,237,.45), transparent 50%),
+            radial-gradient(ellipse at 85% 85%, rgba(6,182,212,.35), transparent 50%),
+            linear-gradient(180deg, #05060f, #0b0d24 60%, #120a2e);
+        background-size: 260px 220px, 260px 220px, 260px 220px, 260px 220px, auto, auto, auto;
+    }
+    html.dk body::before { opacity: 1; }
+    html.dk body::after  { opacity: 0; }
+
+    /* smooth colour changes for the content */
+    table, th, td, input, select, .header, .header * { transition: background-color 1s ease, color 1s ease, border-color 1s ease, box-shadow 1s ease; }
+
+    /* Light text */
+    h1, h2, h3, .header p { color: #0d2a4d; }
+    body h2 input#invoice_number.invoice-input { border-bottom: 2px solid #2196F3 !important; }
+    table { box-shadow: 0 8px 32px rgba(33,150,243,.3); border-radius: 10px; }
+
+    /* Dark text + glow */
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode .header p {
+        color: #e8e8ff !important; text-shadow: 0 0 14px rgba(124,58,237,.55);
+    }
+    body.dark-mode h2 input#invoice_number.invoice-input::placeholder { color: rgba(255,255,255,.35); }
+    body.dark-mode table { box-shadow: 0 0 40px rgba(124,58,237,.3); }
+    body.dark-mode #saveInvoiceBtn { border-color: #a78bfa; color: #c4b5fd; --btn-fill: #7c3aed; }
+    body.dark-mode #checklistBtn   { border-color: #60a5fa; color: #93c5fd; --btn-fill: #2563eb; }
+    body.dark-mode #insertImageBtn { color: #22d3ee; }
+
+    /* ── Light-theme floating buttons (dark mode keeps the neon look) ── */
+    .theme-fab, #fgTinker, #monthlyStatsFab, .monthly-statements-fab { transition: background 1s ease, color 1s ease, border-color 1s ease, box-shadow .3s, max-width .35s ease !important; }
+    body:not(.dark-mode) #fgTinker,
+    body:not(.dark-mode) #switchModeFab,
+    body:not(.dark-mode) #searchFab,
+    body:not(.dark-mode) #themeBtn {
+        background: linear-gradient(135deg, #ffffff, #e3f2fd) !important;
+        color: #1976d2 !important;
+        border: 1.5px solid #64b5f6 !important;
+        box-shadow: 0 4px 14px rgba(33,150,243,.28) !important;
+    }
+    body:not(.dark-mode) #switchModeFab { background: linear-gradient(135deg, #ffffff, #e8f5e9) !important; color: #2e7d32 !important; border-color: #81c784 !important; box-shadow: 0 4px 14px rgba(76,175,80,.28) !important; }
+    body:not(.dark-mode) #searchFab     { background: linear-gradient(135deg, #ffffff, #ede7f6) !important; color: #6d28d9 !important; border-color: #b39ddb !important; box-shadow: 0 4px 14px rgba(124,58,237,.25) !important; }
+    body:not(.dark-mode) #themeBtn      { background: linear-gradient(135deg, #ffffff, #e8eaf6) !important; color: #3949ab !important; border-color: #9fa8da !important; box-shadow: 0 4px 14px rgba(63,81,181,.25) !important; }
+    body:not(.dark-mode) .theme-fab:hover,
+    body:not(.dark-mode) #fgTinker:hover { box-shadow: 0 6px 20px rgba(33,150,243,.45) !important; }
+    body:not(.dark-mode) #fgTinker .fg-badge { border-color: #fff; }
+    body:not(.dark-mode) #themeBtn .star1, body:not(.dark-mode) #themeBtn .star2, body:not(.dark-mode) #themeBtn .star3 { background: #5c6bc0; }
+
+    body:not(.dark-mode) #monthlyStatsFab,
+    body:not(.dark-mode) .monthly-statements-fab {
+        background: linear-gradient(135deg, #ffffff, #e0f7fa) !important;
+        color: #00796b !important;
+        border: 1.5px solid #4db6ac !important;
+        box-shadow: 0 6px 20px rgba(0,150,136,.28) !important;
+    }
+    body:not(.dark-mode) #monthlyStatsFab svg,
+    body:not(.dark-mode) .monthly-statements-fab svg { fill: currentColor; }
+}
