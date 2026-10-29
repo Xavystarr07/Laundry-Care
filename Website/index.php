@@ -55,20 +55,24 @@ include __DIR__ . '/inc/header.php';
 </div>
 </section>
 
-<section id="promise" class="flow-sec dark-sec" data-no="6" aria-labelledby="promise-heading">
-<div class="container">
+<section id="promise" class="flow-sec dark-sec" aria-labelledby="promise-heading">
+<div class="container promise-grid">
+<div class="promise-copy">
 <div class="section-tag" data-fx="up">How It Works</div>
 <h2 id="promise-heading" class="big-title" data-fx="up" style="--d:.1s">Our 6-stage <em>promise</em></h2>
 <p class="lead" data-fx="up" style="--d:.2s">Every item follows the same path, from the moment we collect it to the moment it is back on your shelf.</p>
-<div class="stage-row" data-stagger="zoom">
-<span class="stage-chip"><b>1</b> Collection</span>
-<span class="stage-chip"><b>2</b> Inspection</span>
-<span class="stage-chip"><b>3</b> Treatment</span>
-<span class="stage-chip"><b>4</b> Finishing</span>
-<span class="stage-chip"><b>5</b> Packaging</span>
-<span class="stage-chip"><b>6</b> Delivery</span>
+<a href="process.php" class="btn btn-gold" data-fx="up" style="--d:.35s">See the full process <i class="fa-solid fa-arrow-right"></i></a>
 </div>
-<a href="process.php" class="btn btn-gold" data-fx="up" style="--d:.9s">See the full process</a>
+<div class="orbit" data-fx="zoom" style="--d:.2s" aria-label="Six stages: collection, inspection, treatment, finishing, packaging, delivery">
+<div class="orbit-ring"></div>
+<div class="orbit-core"><b>6</b><small>stages</small></div>
+<div class="orbit-node" style="--a:-90deg;--i:0"><i class="fa-solid fa-truck-pickup"></i><span>Collection</span></div>
+<div class="orbit-node" style="--a:-30deg;--i:1"><i class="fa-solid fa-magnifying-glass"></i><span>Inspection</span></div>
+<div class="orbit-node" style="--a:30deg;--i:2"><i class="fa-solid fa-hands-bubbles"></i><span>Treatment</span></div>
+<div class="orbit-node" style="--a:90deg;--i:3"><i class="fa-solid fa-iron"></i><span>Finishing</span></div>
+<div class="orbit-node" style="--a:150deg;--i:4"><i class="fa-solid fa-box-open"></i><span>Packaging</span></div>
+<div class="orbit-node" style="--a:210deg;--i:5"><i class="fa-solid fa-truck"></i><span>Delivery</span></div>
+</div>
 </div>
 </section>
 
