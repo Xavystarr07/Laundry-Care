@@ -23,14 +23,17 @@ include __DIR__ . '/inc/header.php';
 
 <section id="process" class="process-section flow-sec" aria-label="Our process">
 <div class="container">
-<div class="process-track" id="process-track">
-<div class="process-line-wrap" aria-hidden="true"><div class="process-line" id="process-line"></div></div>
+<div class="sec-head"><div class="section-tag" data-fx="up">The Stages</div><h2 class="big-title" data-fx="up" style="--d:.1s">Six stages, <em>one standard</em></h2><p class="lead" data-fx="up" style="--d:.2s">Swipe, drag or use the arrows to move through each stage.</p></div>
+<div class="pr-wrap" data-fx="up" style="--d:.3s">
+<div class="process-track" id="process-track" tabindex="0" aria-label="Process stages">
 <div class="process-step"><div class="step-node"><div class="pa p1"><i class="fa-solid fa-truck-pickup"></i></div></div><div class="step-content"><h3>1. Collection</h3><p>Standardised, scheduled pickup from your property. Items logged on collection.</p></div></div>
 <div class="process-step"><div class="step-node"><div class="pa p2"><i class="fa-solid fa-shirt bg"></i><i class="fa-solid fa-magnifying-glass"></i></div></div><div class="step-content"><h3>2. Inspection</h3><p>Every garment assessed for damage, staining and care requirements before processing.</p></div></div>
 <div class="process-step"><div class="step-node"><div class="pa p3"><i class="fa-solid fa-hands-bubbles"></i><b></b><b></b><b></b></div></div><div class="step-content"><h3>3. Treatment</h3><p>Specialist de-staining and industrial washing with hotel-approved detergents and sanitisers.</p></div></div>
 <div class="process-step"><div class="step-node"><div class="pa p4"><i class="fa-solid fa-iron"></i><b></b><b></b><b></b><u></u></div></div><div class="step-content"><h3>4. Finishing</h3><p>Professional tumble drying, then industrial pressing and ironing to a flawless finish.</p></div></div>
 <div class="process-step"><div class="step-node"><div class="pa p5"><i class="fa-solid fa-box-open"></i><i class="fa-solid fa-circle-check ok"></i></div></div><div class="step-content"><h3>5. Packaging</h3><p>Hotel-grade folding and protective packaging to preserve quality during transport.</p></div></div>
 <div class="process-step"><div class="step-node"><div class="pa p6"><i class="fa-solid fa-truck"></i><i class="fa-solid fa-hotel dest"></i><u></u></div></div><div class="step-content"><h3>6. Delivery</h3><p>On-time, scheduled delivery back to your property, ready for immediate use.</p></div></div>
+</div>
+<div class="pr-ctrl"><button type="button" class="pr-btn" id="pr-prev" aria-label="Previous stage"><i class="fa-solid fa-arrow-left"></i></button><div class="pr-dots" id="pr-dots"></div><span id="pr-count">1 / 6</span><button type="button" class="pr-btn" id="pr-next" aria-label="Next stage"><i class="fa-solid fa-arrow-right"></i></button></div>
 </div>
 </div>
 </section>

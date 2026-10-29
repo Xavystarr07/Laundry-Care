@@ -3,7 +3,7 @@ $page  = 'clients';
 $snap  = true;
 $title = 'Private Clients | Laundry Care';
 $desc  = 'Everyday washing, school uniforms, suits and delicate garments for families and individuals in Durban. Pickup and drop-off included.';
-$js    = ['tabs.js'];
+$js    = ['tabs.js', 'steps.js'];
 
 /* key => [icon, title, lead, what we do[], great for[]] */
 $tabs = [
@@ -65,12 +65,15 @@ include __DIR__ . '/inc/header.php';
 
 <section class="flow-sec dark-sec" data-no="02" aria-labelledby="how-heading">
 <div class="container">
-<div class="sec-head"><div class="section-tag" data-fx="up">How It Works</div><h2 id="how-heading" class="big-title" data-fx="up" style="--d:.1s">Four simple <em>steps</em></h2></div>
-<div class="step-row" data-stagger="up">
-<div class="hstep"><div class="n">01</div><h3>Message us</h3><p>WhatsApp, call or email us what you need washed and where you are.</p></div>
-<div class="hstep"><div class="n">02</div><h3>We collect</h3><p>Scheduled pickup from your door. Your items are logged on collection.</p></div>
-<div class="hstep"><div class="n">03</div><h3>We clean and press</h3><p>Inspected, treated, washed and finished to a flawless standard.</p></div>
-<div class="hstep"><div class="n">04</div><h3>Delivered back</h3><p>Folded, packaged and dropped off, ready to wear or ready to use.</p></div>
+<div class="sec-head"><div class="section-tag" data-fx="up">How It Works</div><h2 id="how-heading" class="big-title" data-fx="up" style="--d:.1s">Four simple <em>steps</em></h2><p class="lead" data-fx="up" style="--d:.2s">Swipe, drag or use the arrows to see how it works.</p></div>
+<div class="pr-wrap" data-fx="up" style="--d:.3s">
+<div class="how-track" id="how-track" tabindex="0" aria-label="How it works">
+<div class="hstep"><div class="hs-ico"><i class="fa-solid fa-comments"></i></div><div class="n">01</div><h3>Message us</h3><p>WhatsApp, call or email us what you need washed and where you are.</p></div>
+<div class="hstep"><div class="hs-ico"><i class="fa-solid fa-truck-pickup"></i></div><div class="n">02</div><h3>We collect</h3><p>Scheduled pickup from your door. Your items are logged on collection.</p></div>
+<div class="hstep"><div class="hs-ico"><i class="fa-solid fa-hands-bubbles"></i></div><div class="n">03</div><h3>We clean and press</h3><p>Inspected, treated, washed and finished to a flawless standard.</p></div>
+<div class="hstep"><div class="hs-ico"><i class="fa-solid fa-box-open"></i></div><div class="n">04</div><h3>Delivered back</h3><p>Folded, packaged and dropped off, ready to wear or ready to use.</p></div>
+</div>
+<div class="pr-ctrl"><button type="button" class="pr-btn" id="how-prev" aria-label="Previous step"><i class="fa-solid fa-arrow-left"></i></button><div class="pr-dots" id="how-dots"></div><span id="how-count">1 / 4</span><button type="button" class="pr-btn" id="how-next" aria-label="Next step"><i class="fa-solid fa-arrow-right"></i></button></div>
 </div>
 </div>
 </section>
