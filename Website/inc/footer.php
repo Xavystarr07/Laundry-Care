@@ -13,7 +13,7 @@
                     <li><a href="services.php">Table Linen</a></li>
                     <li><a href="services.php">Staff Uniforms</a></li>
                     <li><a href="services.php">Stain Removal</a></li>
-                    <li><a href="services.php">Private Client Care</a></li>
+                    <li><a href="clients.php">Private Client Care</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -21,6 +21,7 @@
                 <ul class="footer-links">
                     <li><a href="index.php">Home</a></li>
                     <li><a href="about.php">About Us</a></li>
+                    <li><a href="clients.php">Private Clients</a></li>
                     <li><a href="process.php">Our Process</a></li>
                     <li><a href="pricing.php">Pricing</a></li>
                     <li><a href="contact.php">Get a Quote</a></li>
@@ -53,6 +54,7 @@
     <script src="js/animations.js" defer></script>
     <script src="js/scroll.js"     defer></script>
     <script src="js/theme.js"      defer></script>
+    <script src="js/flow.js"       defer></script>
     <?php foreach (($js ?? []) as $f): ?>
     <script src="js/<?= $f ?>" defer></script>
     <?php endforeach; ?>

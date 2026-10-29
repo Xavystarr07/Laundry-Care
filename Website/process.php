@@ -1,21 +1,27 @@
 <?php
 $page  = 'process';
+$snap  = true;
 $title = 'Our Process | Laundry Care';
 $desc  = 'Our 6-stage promise: collection, inspection, treatment, finishing, packaging and delivery.';
-$js    = ['process.js'];
+$js    = ['process.js', 'promise.js'];
 include __DIR__ . '/inc/header.php';
 ?>
+<noscript><style>#promise-intro{display:none}html.pi-active{overflow:auto}html.pi-active #pi-target{visibility:visible}html.pi-active .page-hero .section-tag,html.pi-active .page-hero p{opacity:1!important}</style></noscript>
+
+<div id="promise-intro" aria-hidden="true"><div class="pi-bg"></div><div class="pi-text" id="pi-text"></div></div>
+
 <main id="main">
 
-<section class="page-hero" aria-labelledby="page-heading">
+<section class="page-hero flow-sec" aria-labelledby="page-heading">
 <div class="container">
 <div class="section-tag">How It Works</div>
-<h1 id="page-heading" class="section-title">Our 6-Stage <em>Promise</em></h1>
-<p>From the moment we collect your laundry to the moment it is back on your shelves.</p>
+<h1 id="page-heading" class="section-title"><span id="pi-target" class="pi-target">Our 6-Stage <em>Promise</em></span></h1>
+<p>From the moment we collect your laundry to the moment it is back on your shelves, every item follows the same six stages.</p>
 </div>
+<a href="#process" class="scroll-cue" aria-label="Scroll down"><span>Scroll</span><div class="scroll-line"></div></a>
 </section>
 
-<section id="process" class="process-section" aria-label="Our process">
+<section id="process" class="process-section flow-sec" aria-label="Our process">
 <div class="container">
 <div class="process-track" id="process-track">
 <div class="process-line-wrap" aria-hidden="true"><div class="process-line" id="process-line"></div></div>
@@ -29,11 +35,11 @@ include __DIR__ . '/inc/header.php';
 </div>
 </section>
 
-<section class="cta-band" aria-labelledby="cta-heading">
+<section class="cta-band flow-sec" aria-labelledby="cta-heading">
 <div class="container">
-<h2 id="cta-heading" class="section-title">Book your first collection</h2>
-<p>Get in touch and we will arrange a pickup that suits your schedule.</p>
-<div class="cta-actions"><a href="contact.php" class="btn btn-gold">Get a Quote</a><a href="pricing.php" class="btn btn-ghost">View Pricing</a></div>
+<h2 id="cta-heading" class="big-title" data-fx="up">Book your first <em>collection</em></h2>
+<p class="lead" data-fx="up" style="--d:.15s;margin:0 auto 2.25rem">Get in touch and we will arrange a pickup that suits your schedule.</p>
+<div class="cta-actions" data-fx="up" style="--d:.3s"><a href="contact.php" class="btn btn-gold">Get a Quote</a><a href="pricing.php" class="btn btn-ghost">View Pricing</a></div>
 </div>
 </section>
 

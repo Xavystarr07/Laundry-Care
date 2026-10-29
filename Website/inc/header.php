@@ -1,11 +1,12 @@
 <?php
-/* Expects before include: $page (slug), $title, $desc */
+/* Expects before include: $page (slug), $title, $desc ; optional $snap = true for section-snap scrolling */
 $nav = [
-    ['index.php',    'Home',        'index',    'fa-house'],
-    ['about.php',    'About Us',    'about',    'fa-circle-info'],
-    ['services.php', 'Services',    'services', 'fa-list-check'],
-    ['process.php',  'Our Process', 'process',  'fa-rotate'],
-    ['pricing.php',  'Pricing',     'pricing',  'fa-tag'],
+    ['index.php',    'Home',            'index',    'fa-house'],
+    ['about.php',    'About Us',        'about',    'fa-circle-info'],
+    ['services.php', 'Services',        'services', 'fa-list-check'],
+    ['clients.php',  'Private Clients', 'clients',  'fa-user-group'],
+    ['process.php',  'Our Process',     'process',  'fa-rotate'],
+    ['pricing.php',  'Pricing',         'pricing',  'fa-tag'],
 ];
 $title = $title ?? 'Laundry Care | A Fresh Start In Every Wash';
 $desc  = $desc  ?? 'Laundry Care - premium hospitality linen & garment maintenance in Durban.';
@@ -19,6 +20,7 @@ $desc  = $desc  ?? 'Laundry Care - premium hospitality linen & garment maintenan
     <meta name="theme-color" content="#0B1E3D" />
     <title><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></title>
     <script>try{var t=localStorage.getItem('lcTheme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    <script>document.documentElement.classList.add('js');<?php if ($page === 'process'): ?>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('pi-active');setTimeout(function(){document.documentElement.classList.remove('pi-active');var o=document.getElementById('promise-intro');o&&o.remove()},9000)}}catch(e){}<?php endif; ?></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet" />
@@ -26,8 +28,9 @@ $desc  = $desc  ?? 'Laundry Care - premium hospitality linen & garment maintenan
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="css/flow.css" />
 </head>
-<body class="page-<?= $page ?>">
+<body class="page-<?= $page ?> flowy"<?= !empty($snap) ? ' data-snap' : '' ?>>
 
 <?php if ($page === 'index'): ?>
     <!-- PRELOADER (home only, once per visit) -->
