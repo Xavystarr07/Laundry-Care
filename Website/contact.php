@@ -2,35 +2,41 @@
 $page  = 'contact';
 $title = 'Contact & Quote | Laundry Care';
 $desc  = 'Get a quote from Laundry Care. Call, WhatsApp or email us.';
+$js    = ['contact.js'];
 include __DIR__ . '/inc/header.php';
 ?>
+<script>document.documentElement.classList.add('cx-on');setTimeout(function(){document.documentElement.classList.add('cx-go','cx-done')},8000)</script>
+<div id="cx-intro" aria-hidden="true">
+<div class="cx-in-ico"><i class="fa-solid fa-phone"></i><i class="fa-brands fa-whatsapp"></i><i class="fa-solid fa-envelope"></i></div>
+<div class="cx-in-text"><span id="cx-type"></span></div>
+<small>Laundry Care</small>
+</div>
+
 <main id="main">
+<section id="cx" class="cx" aria-labelledby="cx-h">
+<div class="cx-bg" aria-hidden="true"></div>
+<div class="container cx-wrap">
+<div class="cx-top">
+<div><div class="section-tag">Let’s connect</div><h1 id="cx-h" class="cx-title">Choose how <em>you’d like to reach us</em></h1></div>
+<div class="cx-status"><span class="cx-dot"></span><span id="cx-status-text">Office hours 8am to 5pm</span></div>
+</div>
 
-<section class="page-hero flow-sec" aria-labelledby="page-heading">
-<div class="container">
-<div class="section-tag" data-fx="up">Let's Connect</div>
-<h1 id="page-heading" class="section-title" data-fx="up" style="--d:.1s">Let's get your <em>laundry sorted</em></h1>
-<p data-fx="up" style="--d:.25s">Call, WhatsApp or email us. Tell us what you need and we will send you a quote. Hotels, lodges and private clients are all welcome.</p>
+<div class="cx-cards">
+<a href="tel:+27622839374" class="cx-card cx-call" style="--i:0"><i class="fa-solid fa-phone cx-wm" aria-hidden="true"></i>
+<div class="cx-row"><div class="cx-ico"><i class="fa-solid fa-phone"></i></div><span class="cx-num">01</span></div>
+<div class="cx-body"><h3>Phone call</h3><p>Speak to our team directly during office hours.</p><strong>062 283 9374</strong><span class="cx-go">Call now <i class="fa-solid fa-arrow-right"></i></span></div></a>
+
+<a href="https://wa.me/27622839374?text=Hi%20Laundry%20Care%2C%20I'd%20like%20a%20quote." target="_blank" rel="noopener" class="cx-card cx-wa" style="--i:1"><i class="fa-brands fa-whatsapp cx-wm" aria-hidden="true"></i>
+<div class="cx-row"><div class="cx-ico"><i class="fa-brands fa-whatsapp"></i></div><span class="cx-num">02</span></div>
+<div class="cx-body"><h3>WhatsApp</h3><p>Send a message or photos of what you need washed.</p><strong>062 283 9374</strong><span class="cx-go">Open WhatsApp <i class="fa-solid fa-arrow-right"></i></span></div></a>
+
+<a href="mailto:laundry_care@outlook.com?subject=Quote%20request" class="cx-card cx-mail" style="--i:2"><i class="fa-solid fa-envelope cx-wm" aria-hidden="true"></i>
+<div class="cx-row"><div class="cx-ico"><i class="fa-solid fa-envelope"></i></div><span class="cx-num">03</span></div>
+<div class="cx-body"><h3>Email</h3><p>Prefer to write it all down? Send us the details.</p><strong>laundry_care@outlook.com</strong><span class="cx-go">Send an email <i class="fa-solid fa-arrow-right"></i></span></div></a>
+</div>
+
+<p class="cx-foot"><span><i class="fa-solid fa-clock"></i> Office hours 8am to 5pm</span><span><i class="fa-solid fa-envelope"></i> Emails answered until midnight</span><span><i class="fa-solid fa-location-dot"></i> Cornubia, Parkgate · serving all of Durban</span></p>
 </div>
 </section>
-
-<section id="contact" class="flow-sec alt" aria-labelledby="contact-heading">
-<div class="container">
-<div class="sec-head"><div class="section-tag" data-fx="up">Choose How</div><h2 id="contact-heading" class="big-title" data-fx="up" style="--d:.1s">Reach us the way <em>you prefer</em></h2></div>
-
-<div class="contact-big" data-stagger="up">
-<a href="tel:+27622839374" class="cc-card cc-call"><div class="cc-ico"><i class="fa-solid fa-phone"></i></div><h3>Phone call</h3><p>Speak to our team directly during office hours.</p><strong>062 283 9374</strong><span class="cc-go">Call now <i class="fa-solid fa-arrow-right"></i></span></a>
-<a href="https://wa.me/27622839374?text=Hi%20Laundry%20Care%2C%20I'd%20like%20a%20quote." target="_blank" rel="noopener" class="cc-card cc-wa"><div class="cc-ico"><i class="fa-brands fa-whatsapp"></i></div><h3>WhatsApp</h3><p>Send us a message or photos of what you need washed.</p><strong>062 283 9374</strong><span class="cc-go">Open WhatsApp <i class="fa-solid fa-arrow-right"></i></span></a>
-<a href="mailto:laundry_care@outlook.com?subject=Quote%20request" class="cc-card cc-mail"><div class="cc-ico"><i class="fa-solid fa-envelope"></i></div><h3>Email</h3><p>Prefer to write it all down? Send us the details.</p><strong>laundry_care@outlook.com</strong><span class="cc-go">Send an email <i class="fa-solid fa-arrow-right"></i></span></a>
-</div>
-
-<div class="info-strip" data-stagger="up">
-<div class="info-card"><i class="fa-solid fa-clock"></i><div><h3>Office hours</h3><p>8am to 5pm</p></div></div>
-<div class="info-card"><i class="fa-solid fa-envelope"></i><div><h3>Emails</h3><p>Answered until midnight</p></div></div>
-<div class="info-card"><i class="fa-solid fa-location-dot"></i><div><h3>Based in</h3><p>Cornubia, Parkgate. Serving all of Durban.</p></div></div>
-</div>
-</div>
-</section>
-
 </main>
 <?php include __DIR__ . '/inc/footer.php'; ?>
