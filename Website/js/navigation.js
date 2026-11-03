@@ -116,3 +116,23 @@
     sections.forEach(section => sectionObserver.observe(section));
 
 })();
+/* Page transition into Contact */
+(function () {
+    var ov = document.createElement('div');
+    ov.className = 'pt-wipe';
+    ov.setAttribute('aria-hidden', 'true');
+    ov.innerHTML = '<div class="pt-ico"><i class="fa-solid fa-phone"></i><i class="fa-brands fa-whatsapp"></i><i class="fa-solid fa-envelope"></i></div>';
+    document.body.appendChild(ov);
+
+    document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href="contact.php"]');
+        if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        e.preventDefault();
+        ov.classList.add('go');
+        setTimeout(function () { location.href = 'contact.php'; }, 750);
+    });
+
+    /* back button: clear the overlay */
+    window.addEventListener('pageshow', function () { ov.classList.remove('go'); });
+})();

@@ -720,13 +720,7 @@ em { font-style: italic; color: var(--teal); }
 .contact-info{text-align:center;margin-top:2rem;color:var(--text-secondary)}
 .contact-info p{margin-bottom:.4rem}
 .contact-info i{color:var(--teal);margin-right:.4rem}
-/* PRELOADER v2 */
-#preloader{background:linear-gradient(160deg,#060f1f,#0B1E3D 60%,#152C55);transition:transform .9s cubic-bezier(.76,0,.24,1)}
-#preloader.hidden{opacity:1;visibility:visible;transform:translateY(-100%)}
-.pre-logo-img{height:110px;animation:pre-rise .8s var(--ease-expo) both}
-.pre-slogan{font-family:var(--font-body);font-style:normal;font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--teal-light);opacity:0;animation:pre-rise .8s .3s var(--ease-expo) forwards}
-.preloader-bar{width:220px;height:3px}
-@keyframes pre-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
 /* PRELOADER v3 */
 #preloader{background:radial-gradient(circle at 50% 40%,#152C55,#060f1f 70%);transition:transform .9s cubic-bezier(.76,0,.24,1)}
 #preloader.hidden{opacity:1;visibility:visible;transform:translateY(-100%)}
@@ -921,4 +915,12 @@ em{font-style:normal;color:var(--teal)}
 @keyframes st-clip{from{opacity:0;clip-path:inset(0 0 100% 0);transform:scale(1.12)}to{opacity:1;clip-path:inset(0 0 0 0);transform:none}}
 .sec{transform:translateY(50px)}
 .client-logos{grid-template-columns:repeat(3,1fr);max-width:900px}
-@media(max-width:700px){.client-logos{grid-template-columns:1fr}}
+@media(max-width:700px){.client-logos{grid-template-columns:1fr}}\
+/* PAGE TRANSITION */
+.pt-wipe{position:fixed;inset:0;z-index:700;display:grid;place-items:center;pointer-events:none;background:radial-gradient(circle at 50% 40%,#152C55,#060f1f 70%);clip-path:circle(0 at 50% 100%);transition:clip-path .75s cubic-bezier(.76,0,.24,1)}
+[data-theme="light"] .pt-wipe{background:radial-gradient(circle at 50% 40%,#fff,#e2f0f4 75%)}
+.pt-wipe.go{clip-path:circle(150% at 50% 100%);pointer-events:all}
+.pt-ico{display:flex;gap:1rem;opacity:0;transform:scale(.5);transition:opacity .4s .35s,transform .5s .35s var(--ease-spring)}
+.pt-wipe.go .pt-ico{opacity:1;transform:none}
+.pt-ico i{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-size:1.5rem;color:var(--teal-light);background:rgba(74,191,191,.12);border:1px solid rgba(74,191,191,.4)}
+.pt-ico i:nth-child(2){color:#25D366}

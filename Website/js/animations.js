@@ -104,73 +104,7 @@
 
     revealElements.forEach(el => scrollRevealObserver.observe(el));
 
-    /* ─────────────────────────────────────────────────────────────
-       3. SERVICE CARD — 3D TILT on mousemove
-       Applies a subtle perspective rotation when the user hovers
-       over any .service-card element.
-       ───────────────────────────────────────────────────────────── */
-
-    const serviceCards = [];
-
-    serviceCards.forEach(card => {
-        card.addEventListener('mousemove', function (e) {
-            const rect   = card.getBoundingClientRect();
-            const centerX = rect.left + rect.width  / 2;
-            const centerY = rect.top  + rect.height / 2;
-
-            /* Normalise mouse position to -1 → +1 */
-            const deltaX = (e.clientX - centerX) / (rect.width  / 2);
-            const deltaY = (e.clientY - centerY) / (rect.height / 2);
-
-            const MAX_ROTATE = 6; // degrees
-
-            gsap.to(card, {
-                rotationY:   deltaX * MAX_ROTATE,
-                rotationX:  -deltaY * MAX_ROTATE,
-                transformPerspective: 800,
-                transformOrigin: 'center center',
-                duration: 0.4,
-                ease: 'power2.out'
-            });
-        });
-
-        /* Reset on mouse leave */
-        card.addEventListener('mouseleave', function () {
-            gsap.to(card, {
-                rotationX: 0,
-                rotationY: 0,
-                duration: 0.6,
-                ease: 'elastic.out(1, 0.5)'
-            });
-        });
-    });
-
-    /* ─────────────────────────────────────────────────────────────
-       4. HERO PARALLAX — background shift on mousemove
-       Gives the hero a subtle depth effect by moving its overlay
-       opposite to the cursor direction.
-       ───────────────────────────────────────────────────────────── */
-
-    const heroSection  = document.querySelector('.hero-section');
-    const heroOverlay  = null;
-
-    if (heroSection && heroOverlay) {
-        heroSection.addEventListener('mousemove', function (e) {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-
-            const xPct = (e.clientX / w - 0.5) * 2; // -1 → +1
-            const yPct = (e.clientY / h - 0.5) * 2;
-
-            gsap.to(heroOverlay, {
-                x: xPct * -20,
-                y: yPct * -15,
-                duration: 1.2,
-                ease: 'power2.out'
-            });
-        });
-    }
-
+ 
     /* ─────────────────────────────────────────────────────────────
        5. GSAP SCROLLTRIGGER — section heading underline reveals
        Each .section-title gets a gold underline that grows from
