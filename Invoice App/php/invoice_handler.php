@@ -76,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
 
     // ── Insert ────────────────────────────────────────────────────────────────
     try {
+        $perId = (int)$pdo->query('SELECT id FROM lc_periods WHERE is_closed = FALSE ORDER BY id LIMIT 1')->fetchColumn();
+        if (!$perId) throw new Exception('No open period.');
         $stmt = $pdo->prepare('
             INSERT INTO invoices ("InvoiceNumber", "HotelName", "HotelNumber", "DateReceived", "Total")
             VALUES (:inv, :hotel, :unit, :date, :total)

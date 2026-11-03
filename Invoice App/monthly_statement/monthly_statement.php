@@ -8,10 +8,10 @@ function d($s){return $s?date('d M Y',strtotime($s)):'';}
 try { $periods = getPeriods($pdo); } catch (Exception $e) { die('Run the lc_periods SQL first.'); }
 $open = $cur = null; $pid = (int)($_GET['p'] ?? 0); $today = date('Y-m-d');
 foreach ($periods as $p) { if (!$p['is_closed']) $open = $p; if ($p['id'] == $pid) $cur = $p; }
-$openRows = $open ? getInvoices($pdo, $open['start_date'], $today) : [];
+$openRows = $open ? getInvoices($pdo, (int)$open['id']) : [];
 $end   = $cur ? ($cur['end_date'] ?: $today) : '';
-$units = $cur ? getUnits($pdo, $cur['start_date'], $end) : [];
-$det   = $cur ? getDetail($pdo, $cur['start_date'], $end) : [];
+$units = $cur ? getUnits($pdo, (int)$cur['id']) : [];
+$det   = $cur ? getDetail($pdo, (int)$cur['id']) : [];
 $grp = []; $total = 0; $fd = $cur ? (int)$cur['fuel_days'] : 0; $fr = $cur ? (float)$cur['fuel_rate'] : 0; $fuel = round($fd * $fr, 2);
 foreach ($units as $u) { $grp[$u['HotelName']][$u['HotelNumber']] = (float)$u['tot']; $total += (float)$u['tot']; }
 $dep  = (($_SESSION['mode'] ?? '') === 'departure');

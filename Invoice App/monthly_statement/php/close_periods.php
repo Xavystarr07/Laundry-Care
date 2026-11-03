@@ -11,8 +11,11 @@ try {
     if ($end < $p['start_date'] || $end > date('Y-m-d')) throw new Exception('Date must be between the period start and today.');
     $e = new DateTimeImmutable($end);
     $pdo->prepare('UPDATE lc_periods SET is_closed=TRUE, closed_at=now(), end_date=? WHERE id=?')->execute([$end, $p['id']]);
-    $pdo->prepare('INSERT INTO lc_periods (name,start_date) VALUES (?,?)')
-        ->execute([$e->modify('first day of next month')->format('F Y'), $e->modify('+1 day')->format('Y-m-d')]);
+    $n = $pdo->prepare('INSERT INTO lc_periods (name,start_date) VALUES (?,?) RETURNING id');
+    $n->execute([$e->modify('first day of next month')->format('F Y'), $e->modify('+1 day')->format('Y-m-d')]);
+    $nid = (int)$n->fetchColumn();
+    // invoices dated after the cut-off move into the new period
+    $pdo->prepare('UPDATE lc_line_period lp SET period_id = ? FROM invoices i WHERE lp.period_id = ? AND i.id = lp.invoice_id AND i."DateReceived" > ?')->execute([$nid, $p['id'], $end]);
     $pdo->commit();
     echo json_encode(['ok'=>true,'id'=>$p['id']]);
 } catch (Exception $e) {

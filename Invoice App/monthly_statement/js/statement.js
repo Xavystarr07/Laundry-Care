@@ -55,7 +55,7 @@ $('#cal').addEventListener('click', e => {
 
 $('#capGo').onclick = () => {
     if (!sel || !confirm(`Close this period on ${fmt(sel)}? This cannot be undone.`)) return;
-    fetch('php/close_period.php', { method: 'POST', body: new URLSearchParams({ end: sel }) })
+    fetch('php/close_periods.php', { method: 'POST', body: new URLSearchParams({ end: sel }) })
         .then(r => r.json())
         .then(d => d.ok ? (location.href = '?p=' + d.id) : alert(d.msg))
         .catch(() => alert('Could not close the period. Check your connection.'));

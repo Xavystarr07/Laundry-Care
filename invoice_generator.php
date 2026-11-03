@@ -27,6 +27,12 @@ if (isset($_SESSION['popup'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Care Invoice</title>
+    <script>
+    try { if (localStorage.getItem('lcDarkMode') === 'true') {
+        document.write('<style id="dkpre">html,body{background:#0f0f1a !important;color:#e0e0f0}</style>');
+        addEventListener('load', function () { document.getElementById('dkpre')?.remove(); });
+    } } catch (e) {}
+    </script>
 
     <!-- ── CSS files — edit individual files for each concern ── -->
     <link rel="stylesheet" href="html_css/base.css">     <!-- body, fonts             -->

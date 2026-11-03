@@ -81,10 +81,10 @@ include __DIR__ . '/inc/header.php';
 <div class="section-tag" data-fx="up">Trusted By</div>
 <h2 id="clients-heading" class="big-title" data-fx="up" style="--d:.1s">20+ hotels and lodges <em>across Durban</em></h2>
 <p class="lead" data-fx="up" style="--d:.2s;margin-inline:auto">Recent work includes Balito Utopia Holidays and Teremok Lodge. Large bulk loads are what we do best.</p>
-<div class="client-logos" data-stagger="zoom" style="margin-top:3rem">
-<div class="client-chip"><i class="fa-solid fa-building"></i> Balito Utopia Holidays</div>
-<div class="client-chip"><i class="fa-solid fa-building"></i> Teremok Lodge &amp; Spa</div>
-<div class="client-chip"><i class="fa-solid fa-building"></i> Umhlanga Accommodation</div>
+<div class="logo-grid" data-stagger="zoom">
+<div class="logo-card"><img src="pictures/balito%20icon.jpg" alt="Balito Utopia Holidays logo" loading="lazy" /><span>Balito Utopia Holidays</span></div>
+<div class="logo-card"><img src="pictures/teremok%20icon.jpg" alt="Teremok Lodge &amp; Spa logo" loading="lazy" /><span>Teremok Lodge &amp; Spa</span></div>
+<div class="logo-card"><img src="pictures/Umhlangha%20icon_.jpg" alt="Umhlanga Accommodation logo" loading="lazy" /><span>Umhlanga Accommodation</span></div>
 </div>
 </div>
 </section>

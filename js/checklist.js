@@ -478,6 +478,14 @@ body.dark-mode .clsr-edit { background: rgba(59,130,246,0.1); border-color: rgba
 `;
 document.head.appendChild(style);
 
+const animStyle = document.createElement('style');
+animStyle.textContent = `
+  html.theme-anim * { transition: background-color .45s ease, color .45s ease, border-color .45s ease, box-shadow .45s ease !important; }
+  @keyframes themeSpin { 0% { transform: rotate(-200deg) scale(.2); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  #themeIcon.spin { animation: themeSpin .65s cubic-bezier(.22,1,.36,1); }
+`;
+document.head.appendChild(animStyle);
+
 // ── Monthly Statements FAB ────────────────────────────────────────────────────
 document.querySelectorAll('.monthly-statements-btn').forEach(el => el.remove());
 const fab = document.createElement('button');

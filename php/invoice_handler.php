@@ -76,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
 
     // ── Insert ────────────────────────────────────────────────────────────────
     try {
+        $perId = (int)$pdo->query('SELECT id FROM lc_periods WHERE is_closed = FALSE ORDER BY id LIMIT 1')->fetchColumn();
+        if (!$perId) throw new Exception('No open period.');
         $stmt = $pdo->prepare('
             INSERT INTO invoices ("InvoiceNumber", "HotelName", "HotelNumber", "DateReceived", "Total")
             VALUES (:inv, :hotel, :unit, :date, :total)
@@ -88,7 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
             ':date'  => $dateReceived,
             ':total' => $grandTotal,
         ]);
-        $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [(int)$stmt->fetchColumn()], 'time' => time()];
+        $newId = (int)$stmt->fetchColumn();
+        $pdo->prepare('INSERT INTO lc_line_period (invoice_id, period_id) VALUES (?, ?)')->execute([$newId, $perId]);
+        $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [$newId], 'time' => time()];
 
         $_SESSION['popup'] = [
             'type' => 'success',

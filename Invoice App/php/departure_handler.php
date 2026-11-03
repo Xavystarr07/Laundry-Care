@@ -200,6 +200,9 @@ try {
         }
     }
 
+    $perId = (int)$pdo->query('SELECT id FROM lc_periods WHERE is_closed = FALSE ORDER BY id LIMIT 1')->fetchColumn();
+    if (!$perId) throw new Exception('No open period.');
+    $lp = $pdo->prepare('INSERT INTO lc_line_period (invoice_id, period_id) VALUES (?, ?)');
     $ins = $pdo->prepare('
         INSERT INTO invoices
             ("InvoiceNumber", "HotelName", "HotelNumber", "DateReceived", "Total", "BillingType", "DepCode")
@@ -219,7 +222,9 @@ try {
             ':total' => number_format($c['total'], 2, '.', ''),
             ':dep'   => $c['dep'],
         ]);
-        $savedIds[] = (int)$ins->fetchColumn();
+        $newId = (int)$ins->fetchColumn();
+        $savedIds[] = $newId;
+        $lp->execute([$newId, $perId]);
         $ins->closeCursor();
         $sum += $c['total'];
     }

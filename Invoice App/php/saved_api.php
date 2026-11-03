@@ -62,7 +62,10 @@ try {
             $pdo->beginTransaction();
             $pdo->prepare('UPDATE invoices SET "InvoiceNumber" = ?, "HotelName" = ?, "HotelNumber" = ?, "DateReceived" = ?, "Total" = ? WHERE id = ?')->execute([$num, $hotel, $unit, $date, round($total, 2), $id]);
             $pdo->prepare('DELETE FROM lc_invoice_items WHERE invoice_id = ?')->execute([$id]);
-            $ins = $pdo->prepare('INSERT INTO lc_invoice_items (invoice_id, "Code", "Description", "Price", "Quantity", "LineTotal") VALUES (?,?,?,?,?,?)');
+            $perId = (int)$pdo->query('SELECT id FROM lc_periods WHERE is_closed = FALSE ORDER BY id LIMIT 1')->fetchColumn();
+    if (!$perId) throw new Exception('No open period.');
+    $lp = $pdo->prepare('INSERT INTO lc_line_period (invoice_id, period_id) VALUES (?, ?)');
+    $ins = $pdo->prepare('INSERT INTO lc_invoice_items (invoice_id, "Code", "Description", "Price", "Quantity", "LineTotal") VALUES (?,?,?,?,?,?)');
             foreach ($items as $it) $ins->execute([$id, $it['code'], $it['description'], $it['price'], $it['qty'], $it['line']]);
             $pdo->commit();
             echo json_encode(['ok' => true]);
