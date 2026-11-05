@@ -93,6 +93,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
         $newId = (int)$stmt->fetchColumn();
         $pdo->prepare('INSERT INTO lc_line_period (invoice_id, period_id) VALUES (?, ?)')->execute([$newId, $perId]);
         $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [$newId], 'time' => time()];
+$ph = trim($_POST['pred_h'] ?? '');
+if ($ph !== '') { try { $pu = trim($_POST['pred_u'] ?? '');
+    $pdo->prepare('INSERT INTO lc_pred_log (inv,pred_h,pred_u,conf,final_h,final_u,hit) VALUES (?,?,?,?,?,?,?)')
+        ->execute([$invoiceNumber,$ph,$pu,(float)($_POST['pred_c'] ?? 0),$hotelName,$hotelNumber,($ph===$hotelName && $pu===$hotelNumber)?'t':'f']);
+} catch (Exception $e) {} }
 
         $_SESSION['popup'] = [
             'type' => 'success',

@@ -36,6 +36,8 @@ if (isset($_SESSION['popup'])) {
 <script>
 if (localStorage.getItem('lcDarkMode') === 'true') {
     document.documentElement.classList.add('dk', 'dkpre');
+    document.write('<style id="dkhide">body{visibility:hidden}</style>');
+    addEventListener('DOMContentLoaded', function () { requestAnimationFrame(function () { document.getElementById('dkhide')?.remove(); }); });
     addEventListener('load', function () { document.documentElement.classList.remove('dkpre'); });
 }
 </script>
@@ -233,6 +235,7 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/imageInsert.js"></script>     <!-- image insert feature        -->
 <script src="js/themeSearch.js"></script>     <!-- theme/search feature        -->
 <script src="js/checklist.js"></script>
+<script src="js/typeform.js"></script>
 <script src="js/undoSave.js"></script>       <!-- checklist feature           -->
 
 </body>

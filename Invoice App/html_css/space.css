@@ -3,7 +3,7 @@
     html { background: linear-gradient(180deg, #ffffff 0%, #e3f2fd 45%, #bbdefb 100%); background-attachment: fixed; min-height: 100%; }
     html.dk { background: #05060f; }
     html body, html body.dark-mode { background: transparent !important; transition: color 1s ease; }
-    html.dkpre body { visibility: visible; }   /* no light flash on load */
+    html.dkpre, html.dkpre *, html.dkpre body::before, html.dkpre body::after { transition: none !important; }   /* no light flash on load */
 
     /* LIGHT layer: soft drifting clouds */
     body::after {

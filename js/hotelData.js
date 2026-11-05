@@ -22,7 +22,7 @@ function getHotelOptionsHTML(selectedHotel = "") {
         "Malindi", "Marine", "Oyster Rock", "Oceans", "Pearls", "Sea Lodge",
         "Sea Breeze", "Shades", "Terra Mare"
     ];
-    return hotels.map(h =>
+    return (selectedHotel ? '' : '<option value="" selected>-- Hotel --</option>') + hotels.map(h =>
         `<option value="${h}" ${h === selectedHotel ? "selected" : ""}>${h === "Bermudas" ? "Bermudas" : h}</option>`
     ).join('');
 }
@@ -46,7 +46,7 @@ function updateUnitDatalist(hotelSelect) {
 window.addEventListener('load', function () {
     const selectedHotel = localStorage.getItem('selectedHotel');
     const hotelSelect = document.getElementById('hotelSelect');
-    if (selectedHotel && hotelSelect) {
+    if (false && selectedHotel && hotelSelect) {
         hotelSelect.value = selectedHotel;
     }
 });
