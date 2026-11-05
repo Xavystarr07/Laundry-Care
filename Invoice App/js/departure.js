@@ -139,6 +139,26 @@
         });
     });
 
+    // Guess hotel + unit from the nearest saved invoice numbers
+    let guess = { h: '', u: '' }, guessTimer;
+    invInput.addEventListener('input', e => {
+        clearTimeout(guessTimer);
+        const v = invInput.value;
+        if (!e.isTrusted || v.length < 4) return;
+        guessTimer = setTimeout(() => fetch('php/predict.php?inv=' + v).then(r => r.json()).then(d => {
+            if (invInput.value !== v) return;
+            const free = !unitSel.value || (hotelSel.value === guess.h && unitSel.value === guess.u);
+            const c = (d.rows || []).find(x => getDepHotels().includes(x.h) && isValidDepUnit(x.h, x.u));
+            if (!free || !c) return;
+            hotelSel.value = c.h;
+            unitSel.innerHTML = unitOpts(c.h, c.u);
+            const auto = getDepCodeForUnit(c.h, c.u);
+            if (auto) codeSel.value = auto;
+            guess = { h: c.h, u: String(c.u) };
+            updateHint();
+        }).catch(() => {}), 250);
+    });
+
     hotelSel.addEventListener('change', () => {
         unitSel.innerHTML = unitOpts(hotelSel.value, '');
         codeSel.value = '';

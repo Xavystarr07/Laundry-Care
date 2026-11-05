@@ -29,7 +29,7 @@ if (isset($_SESSION['popup'])) {
     <title>Laundry Care Invoice</title>
     <script>
     try { if (localStorage.getItem('lcDarkMode') === 'true') {
-        document.write('<style id="dkpre">html,body{background:#0f0f1a !important;color:#e0e0f0}</style>');
+        document.write('<style id="dkpre">html{background:#05060f}</style>');
         addEventListener('load', function () { document.getElementById('dkpre')?.remove(); });
     } } catch (e) {}
     </script>
@@ -242,6 +242,7 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/printInvoice.js"></script>    <!-- print function              -->
 <script src="js/navigation.js"></script>      <!-- page navigation + guard     -->
 <script src="js/focusFlow.js"></script>       <!-- tab/enter focus flow        -->
+<script src="js/predict.js"></script>
 <script src="js/scrollObserver.js"></script>  <!-- scroll behaviour            -->
 <script src="js/invoiceFormat.js"></script>   <!-- invoice number formatting   -->
 <script src="js/saveInvoice.js"></script>     <!-- save button behaviour       -->

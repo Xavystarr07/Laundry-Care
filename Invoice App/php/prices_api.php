@@ -34,7 +34,7 @@ try {
             echo json_encode(['ok' => true]);
             break;
         case 'history':
-            $s = $pdo->prepare('SELECT old_price, new_price, changed_at FROM lc_price_history WHERE code = ? ORDER BY id DESC');
+            $s = $pdo->prepare('SELECT old_price, new_price, changed_at FROM lc_price_history WHERE code = ? ORDER BY start_date DESC, id DESC');
             $s->execute([$_POST['code'] ?? '']);
             echo json_encode(['ok' => true, 'rows' => $s->fetchAll(PDO::FETCH_ASSOC)]);
             break;

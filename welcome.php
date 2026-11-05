@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Care — Welcome</title>
     <style>
+        @view-transition { navigation: auto; }
         * { box-sizing: border-box; }
 
         body {

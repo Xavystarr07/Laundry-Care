@@ -33,6 +33,7 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     <link rel="stylesheet" href="html_css/departure.css">
 </head>
 <body>
+<script>try{if(localStorage.getItem('lcDarkMode')==='true')document.body.classList.add('dark-mode')}catch(e){}</script>
 
 <?php if ($undo): ?>
 <script>window._undoAvail = <?php echo json_encode($undo); ?>;</script>
