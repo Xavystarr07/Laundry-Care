@@ -75,7 +75,26 @@ document.body.appendChild(overlay);
 const card = overlay.firstElementChild, $ = s => card.querySelector(s);
 
 let locked=false, calY=0, calM=0, step=0, rows=[], cur=null, inv='', date='', hotel='', unit='', pre=false, sug=[], conf=0, editIdx=-1, back7=false, dupe=false, hl=0, matches=[], tm;
-const guess = (i, u) => LCPredict.ask(i, u).then(d => { conf = d.conf || 0; return (d.cands || []).filter(c => okH(c.h)); });
+// Fallback predictor object if LCPredict isn't loaded globally yet
+// Connected LCPredict engine mapping to your php endpoint
+const LCPredict = {
+    ask: (inv, unit) => {
+        return fetch(`php/predict.php?inv=${encodeURIComponent(inv)}&unit=${encodeURIComponent(unit)}`)
+            .then(res => res.json())
+            .catch(() => ({ cands: [], conf: 0, rows: [], hotels: [] }));
+    }
+};
+
+const guess = (i, u) => {
+    try {
+        return LCPredict.ask(i, u).then(d => { 
+            conf = d.conf || 0; 
+            return (d.cands || []).filter(c => okH(c.h)); 
+        }).catch(() => []);
+    } catch (e) {
+        return Promise.resolve([]);
+    }
+};
 const sugHTML = () => sug.slice(0, 3).map((c, i) => `<button type="button" class="tf-sg" data-a="sug" data-i="${i}"><span><b>${esc(c.h)}</b> · Unit ${esc(c.u)}</span><em>${c.p}%</em></button>`).join('');
 const unitChips = () => (hotelUnitMap[hotel] || []).map(u => `<button type="button" class="tf-chip" data-a="u" data-v="${u}">${u}</button>`).join('');
 const w2 = () => { const n = $('#tfNext'); if (n) n.disabled = !(hotel && unit); };
