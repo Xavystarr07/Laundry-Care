@@ -5,7 +5,7 @@ $title = 'About Us | Laundry Care';
 $desc  = 'Laundry Care is a specialist laundry service in Cornubia, Parkgate serving hotels, lodges and private clients across Durban.';
 include __DIR__ . '/inc/header.php';
 ?>
-<main id="main">
+<div class="px px-a" aria-hidden="true"><b></b><b></b><div class="cn"><div class="seal"><i class="fa-solid fa-award"></i></div><div class="hd"><span>We</span> <span>uphold</span> <span>the</span> <span>standard.</span></div><div class="ul"></div></div></div><main id="main">
 
 <section class="page-hero flow-sec big" aria-labelledby="page-heading">
 <div class="container">

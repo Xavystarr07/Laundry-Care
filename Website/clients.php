@@ -25,8 +25,7 @@ $tabs = [
 ];
 include __DIR__ . '/inc/header.php';
 ?>
-<main id="main">
-
+<div class="px px-c" aria-hidden="true"><div class="bgp"></div><div class="cn"><div class="line"><i class="fa-solid fa-shirt"></i><i class="fa-solid fa-socks"></i><i class="fa-solid fa-vest"></i><i class="fa-solid fa-graduation-cap"></i></div><p class="px-tx">Everyday washing, handled</p></div></div>
 <section class="page-hero flow-sec big" aria-labelledby="page-heading">
 <div class="container">
 <div class="section-tag" data-fx="up">Private Clients</div>

@@ -7,8 +7,7 @@ $prices = require __DIR__ . '/inc/prices.php';
 $fmt    = function ($p) { return is_numeric($p) ? 'R ' . number_format($p, 2, '.', ' ') : htmlspecialchars($p, ENT_QUOTES, 'UTF-8'); };
 include __DIR__ . '/inc/header.php';
 ?>
-<main id="main">
-
+<div class="px px-p" aria-hidden="true"><div class="bgp"></div><div class="cn"><div class="coin">R</div><div class="tags"><span>Clear per-item prices</span><span>Stain treatment free</span><span>Re-wash free</span></div></div></div>
 <section class="page-hero" aria-labelledby="page-heading">
 <div class="container">
 <div class="section-tag">Pricing</div>

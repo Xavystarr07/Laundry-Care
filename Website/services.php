@@ -5,7 +5,7 @@ $title = 'Services | Laundry Care';
 $desc  = 'Bed linen, towels, table linen, uniforms, stain removal and pickup & drop-off for hotels, lodges and guest houses in Durban.';
 include __DIR__ . '/inc/header.php';
 ?>
-<main id="main">
+<div class="px px-s" aria-hidden="true"><div class="bars"><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><div class="cn"><div class="stk"><i></i><i></i><i></i><i></i><i></i></div><p class="px-tx">Fresh linen, folded right</p></div></div><main id="main">
 
 <section class="page-hero flow-sec big" aria-labelledby="page-heading">
 <div class="container">
