@@ -24,6 +24,15 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laundry Care Departures</title>
+    <script>try{if(localStorage.getItem('lcDarkMode')==='true')document.documentElement.classList.add('dk')}catch(e){}</script>
+    <style>
+    html.dk,html.dk body{background:#0f0f1a;color:#e0e0f0}
+    html.dk table{background:#1a1a2e;color:#e0e0f0}
+    html.dk th{background:#2d2d5e;color:#c0c0f0}
+    html.dk input,html.dk select{background:#1e1e3a;color:#e0e0f0;border-color:#3a3a6a}
+    html.dk .dep-entry{background:#1a1a2e;border-color:#3a3a6a}
+    html.dk h1,html.dk h2,html.dk h3,html.dk p{color:#e0e0f0}
+    </style>
 
     <link rel="stylesheet" href="html_css/base.css">
     <link rel="stylesheet" href="html_css/header.css">

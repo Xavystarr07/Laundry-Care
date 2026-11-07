@@ -485,9 +485,13 @@ img, video, svg { max-width: 100%; }
 /* page content waits for the intro */
 .page-services .page-hero [data-fx],.page-clients .page-hero [data-fx],.page-about .page-hero [data-fx]{animation-delay:calc(var(--d,0s) + 3s)!important}
 .page-pricing .page-hero .container{animation:px-up 1s cubic-bezier(.22,1,.36,1) 3s backwards}
-.hero-img,.sp-bg,.service-card img,.story-imgs img{object-position:center 30%}
+.hero-img,.sp-bg,.story-imgs img{object-position:center 30%}
+.service-card img{object-position:center center}
 html:has(#preloader), html:has(#preloader) body,
-html:has(.cx), html:has(.cx) body { overflow: hidden !important; }
+html:has(.cx), html:has(.cx) body,
+html:has(.px), html:has(.px) body { overflow: hidden !important; }
 html { background: #08162e; }
 html[data-theme="light"] { background: #F3F6F9; }
 body { min-height: 0; }
+#site-footer { box-shadow: 0 120px 0 #08162e; }
+[data-theme="light"] #site-footer { box-shadow: 0 120px 0 #F3F6F9; }

@@ -58,5 +58,6 @@
     <?php foreach (($js ?? []) as $f): ?>
     <script src="js/<?= $f ?>" defer></script>
     <?php endforeach; ?>
+<script>setTimeout(function(){var p=document.querySelector('.px');p&&p.remove()},4200);</script>
 </body>
 </html>
