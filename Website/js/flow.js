@@ -32,7 +32,7 @@
         es.forEach(function (e) {
             var s = e.target, c = s.querySelectorAll('[data-count]');
             if (e.isIntersecting) { s.classList.add('is-in'); [].forEach.call(c, run); }
-            else { s.classList.remove('is-in'); [].forEach.call(c, reset); }
+            else if (!s.classList.contains('page-hero')) { s.classList.remove('is-in'); [].forEach.call(c, reset); }
         });
     }, { threshold: 0.12, rootMargin: '-6% 0px -6% 0px' });
     secs.forEach(function (s) { io.observe(s); });
@@ -62,3 +62,4 @@
     }, { threshold: 0.5 });
     all.forEach(function (s) { io2.observe(s); });
 })();
+

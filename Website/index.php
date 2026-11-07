@@ -19,7 +19,7 @@ include __DIR__ . '/inc/header.php';
 <p class="hero-subheadline">Industrial-grade linen and garment care for Umhlanga's leading hotels. Collected, treated and delivered on your schedule.</p>
 <div class="hero-actions"><a href="contact.php" class="btn btn-gold">Request a Quote</a><a href="process.php" class="btn btn-ghost">See Our Process</a></div>
 </div>
-<img class="hero-img" src="https://picsum.photos/seed/hotellinen/800/1000" alt="Fresh hotel linen" />
+<img class="hero-img" src="pictures/home/hotel.jpg" alt="Fresh hotel linen" />
 </div>
 <div class="hslide">
 <div>
@@ -28,7 +28,7 @@ include __DIR__ . '/inc/header.php';
 <p class="hero-subheadline">Weekly washing, school uniforms, suits and delicate garments. Pickup and drop-off anywhere in Durban, at the same hotel-grade standard.</p>
 <div class="hero-actions"><a href="contact.php" class="btn btn-gold">Get a Quote</a><a href="clients.php" class="btn btn-ghost">Private Client Info</a></div>
 </div>
-<img class="hero-img" src="https://picsum.photos/seed/familywash/800/1000" alt="Folded clothes" />
+<img class="hero-img" src="pictures/home/private.jpg" alt="Folded clothes" />
 </div>
 </div>
 </div>
@@ -44,11 +44,11 @@ include __DIR__ . '/inc/header.php';
 </div>
 <div class="split-panels">
 <a href="services.php" class="sp-card" data-fx="left" style="--d:.2s">
-<img class="sp-bg" src="https://picsum.photos/seed/hotelservice/900/1100" alt="" loading="lazy" />
+<img class="sp-bg" src="pictures/home/hotel-card.jpg" alt="" loading="lazy" />
 <div class="sp-body"><span class="sp-tag">Hotels &amp; Lodges</span><h3>Linen for hospitality</h3><p>Bed linen, towels, table linen and uniforms in bulk, on a schedule that suits your property.</p><span class="sp-link">Explore services <i class="fa-solid fa-arrow-right"></i></span></div>
 </a>
 <a href="clients.php" class="sp-card" data-fx="right" style="--d:.3s">
-<img class="sp-bg" src="https://picsum.photos/seed/privatewash/900/1100" alt="" loading="lazy" />
+<img class="sp-bg" src="pictures/home/private-card.jpg" alt="" loading="lazy" />
 <div class="sp-body"><span class="sp-tag">Private Clients</span><h3>Everyday clothes, handled</h3><p>General washes, school uniforms, suits and delicates, collected and delivered to your door.</p><span class="sp-link">See how it works <i class="fa-solid fa-arrow-right"></i></span></div>
 </a>
 </div>

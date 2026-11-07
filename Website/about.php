@@ -20,8 +20,8 @@ include __DIR__ . '/inc/header.php';
 <section id="story" class="flow-sec" data-no="01" aria-labelledby="story-heading">
 <div class="container story-grid">
 <div class="story-imgs" data-fx="left">
-<img class="img-a" src="https://picsum.photos/seed/laundryfacility/900/1100" alt="Our facility" loading="lazy" />
-<img class="img-b" src="https://picsum.photos/seed/foldedlinen/600/600" alt="Folded linen" loading="lazy" />
+<img class="img-a" src="pictures/about/facility.jpg" alt="Our facility" loading="lazy" />
+<img class="img-b" src="pictures/about/linen.jpg" alt="Folded linen" loading="lazy" />
 </div>
 <div class="story-copy">
 <div class="section-tag" data-fx="up">Our Story</div>
@@ -61,8 +61,8 @@ include __DIR__ . '/inc/header.php';
 <div class="container">
 <div class="sec-head"><div class="section-tag" data-fx="up">Who We Serve</div><h2 id="serve-heading" class="big-title" data-fx="up" style="--d:.1s">Find the page <em>made for you</em></h2></div>
 <div class="split-panels">
-<a href="services.php" class="sp-card" data-fx="left" style="--d:.2s"><img class="sp-bg" src="https://picsum.photos/seed/hotelservice/900/1100" alt="" loading="lazy" /><div class="sp-body"><span class="sp-tag">Hotels &amp; Lodges</span><h3>Linen for hospitality</h3><p>Bulk linen, towels, table linen and uniforms.</p><span class="sp-link">Explore services <i class="fa-solid fa-arrow-right"></i></span></div></a>
-<a href="clients.php" class="sp-card" data-fx="right" style="--d:.3s"><img class="sp-bg" src="https://picsum.photos/seed/privatewash/900/1100" alt="" loading="lazy" /><div class="sp-body"><span class="sp-tag">Private Clients</span><h3>Everyday clothes, handled</h3><p>Washes, uniforms, suits and delicates.</p><span class="sp-link">See how it works <i class="fa-solid fa-arrow-right"></i></span></div></a>
+<a href="services.php" class="sp-card" data-fx="left" style="--d:.2s"><img class="sp-bg" src="pictures/home/hotel-card.jpg" alt="" loading="lazy" /><div class="sp-body"><span class="sp-tag">Hotels &amp; Lodges</span><h3>Linen for hospitality</h3><p>Bulk linen, towels, table linen and uniforms.</p><span class="sp-link">Explore services <i class="fa-solid fa-arrow-right"></i></span></div></a>
+<a href="clients.php" class="sp-card" data-fx="right" style="--d:.3s"><img class="sp-bg" src="pictures/home/private-card.jpg" alt="" loading="lazy" /><div class="sp-body"><span class="sp-tag">Private Clients</span><h3>Everyday clothes, handled</h3><p>Washes, uniforms, suits and delicates.</p><span class="sp-link">See how it works <i class="fa-solid fa-arrow-right"></i></span></div></a>
 </div>
 </div>
 </section>

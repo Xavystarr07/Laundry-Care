@@ -95,4 +95,5 @@ include __DIR__ . '/inc/header.php';
 </div>
 </section>
 </main>
+<script>setTimeout(function(){var c=document.querySelector('.cx');c&&c.remove()},4400);</script>
 <?php include __DIR__ . '/inc/footer.php'; ?>

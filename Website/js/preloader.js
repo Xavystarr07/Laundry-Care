@@ -12,6 +12,8 @@
 
     const preloader = document.getElementById('preloader');
     if (!preloader) return;
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
 
     /**
      * dismissPreloader
@@ -20,6 +22,8 @@
      */
     function dismissPreloader() {
         preloader.classList.add('hidden');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
 
         // Clean up DOM after transition (600 ms matches CSS transition)
         preloader.addEventListener('transitionend', function onEnd() {
