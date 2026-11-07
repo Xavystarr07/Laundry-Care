@@ -36,8 +36,7 @@ if (isset($_SESSION['popup'])) {
 <script>
 if (localStorage.getItem('lcDarkMode') === 'true') {
     document.documentElement.classList.add('dk', 'dkpre');
-    document.write('<style id="dkhide">body{visibility:hidden}</style>');
-    addEventListener('DOMContentLoaded', function () { requestAnimationFrame(function () { document.getElementById('dkhide')?.remove(); }); });
+
     addEventListener('load', function () { document.documentElement.classList.remove('dkpre'); });
 }
 </script>
@@ -223,7 +222,7 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/fieldGuide.js"></script>      <!-- field highlight guide       -->
 <script src="js/grandTotal.js"></script>      <!-- grand total calculator      -->
 <script src="js/rowManager.js"></script>
-<script src="js/rowRemove.js"></script>      <!-- add/remove table rows       -->
+
 <script src="js/codeSearch.js"></script>      <!-- item code autocomplete      -->
 <script src="js/printInvoice.js"></script>    <!-- print function              -->
 <script src="js/navigation.js"></script>      <!-- page navigation + guard     -->

@@ -93,7 +93,7 @@ $back = $dep ? '../departure_generator.php' : '../invoice_generator.php';
 <?php endif; ?>
 <?php if ($cur): ?>
 <script>window.STMT = <?= json_encode(['start'=>$cur['start_date'],'end'=>$end,'total'=>$total+$fuel,'fuel'=>['days'=>$fd,'rate'=>$fr,'amt'=>$fuel],'rows'=>$det], JSON_HEX_TAG) ?>;</script>
-<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-<script src="js/excel.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script defer src="js/excel.js"></script>
 <?php endif; ?>
 </body></html>

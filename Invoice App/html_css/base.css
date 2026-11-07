@@ -2,8 +2,7 @@
    css/base.css — Body, fonts, reset
    Edit page background, font family here
    ============================================================ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
 @view-transition { navigation: auto; }
 
 body {

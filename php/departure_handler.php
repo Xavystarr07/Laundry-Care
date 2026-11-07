@@ -170,7 +170,7 @@ try {
         "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME,
         DB_USER,
         DB_PASS,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_PERSISTENT => true]
     );
 } catch (Exception $e) {
     error_log('departure_handler connect: ' . $e->getMessage());
