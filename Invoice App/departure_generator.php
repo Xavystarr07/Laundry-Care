@@ -86,6 +86,10 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
             <input type="date" id="depDate">
         </div>
         <div class="dep-actions">
+            <button type="button" class="uv-btn" style="border:2px solid #0ea5e9;color:#0ea5e9;--btn-fill:#0ea5e9" onclick="window.open('hotels.php','_blank')">
+                <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+                <span>Hotels</span>
+            </button>
             <button type="button" class="uv-btn add-item" id="depAddBtn">
                 <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -142,6 +146,7 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 </button>
 
 <script src="js/priceList.php"></script>
+<script src="js/lcData.php"></script>
 <script src="js/depData.js"></script>
 <script src="js/popupNotify.js"></script>
 <script src="js/invoiceFormat.js"></script>

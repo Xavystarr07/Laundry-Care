@@ -162,7 +162,11 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
             <span>Add Combo</span>
         </button>
 
-        <!-- Insert Image — teal + image icon -->
+        <button type="button" class="uv-btn" style="border:2px solid #0ea5e9;color:#0ea5e9;--btn-fill:#0ea5e9" onclick="window.open('hotels.php','_blank')">
+    <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+    <span>Hotels</span>
+</button>
+<!-- Insert Image — teal + image icon -->
         <button type="button" class="uv-btn" id="insertImageBtn">
             <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
@@ -230,6 +234,8 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 
 <!-- ── JS files — edit individual files for each concern ── -->
 <script src="js/priceList.js"></script>       <!-- item price data             -->
+<script src="js/lcData.php"></script>
+<script src="js/lcData.php"></script>
 <script src="js/hotelData.js"></script>       <!-- hotel/unit data             -->
 <script src="js/comboData.js"></script>       <!-- combo preset data           -->
 <script src="js/popupNotify.js"></script>     <!-- success/error popups        -->

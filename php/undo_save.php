@@ -2,7 +2,7 @@
 // Deletes ONLY the rows saved in this session's last save, within 30 seconds.
 session_start();
 header('Content-Type: application/json');
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/db.php';
 
 $ls = $_SESSION['last_save'] ?? null;
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$ls || empty($ls['ids']) || time() - $ls['time'] > 30) {

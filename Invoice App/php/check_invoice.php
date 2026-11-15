@@ -1,7 +1,7 @@
 <?php
 // php/check_invoice.php — Returns JSON: exists true/false for a given invoice number
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/db.php';
 
 header('Content-Type: application/json');
 

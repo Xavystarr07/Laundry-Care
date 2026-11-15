@@ -2,7 +2,7 @@
 session_start();
 
 // ── Load shared DB connection ─────────────────────────────────────────────────
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/db.php';
 
 try {
     $pdo = new PDO(

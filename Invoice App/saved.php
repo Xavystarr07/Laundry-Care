@@ -18,6 +18,8 @@
 </main>
 <div class="modal" id="m" hidden><div class="mcard"><h2 id="mTitle"></h2><div id="mBody"></div><div class="mfoot" id="mFoot"></div></div></div>
 <script src="js/priceList.php"></script>
+<script src="js/lcData.php"></script>
+<script src="js/lcData.php"></script>
 <script src="js/hotelData.js"></script>
 <script src="js/saved.js"></script>
 </body>
