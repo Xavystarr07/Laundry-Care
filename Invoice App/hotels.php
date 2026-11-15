@@ -23,7 +23,7 @@
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=async()=>{
   const box=b.closest('.tools'),d={a:b.dataset.f},m=document.getElementById('msg');
   box.querySelectorAll('[name]').forEach(i=>d[i.name]=i.value.trim());
-  const r=await fetch('php/hotels_api.php',{method:'POST',body:new URLSearchParams(d)}).then(r=>r.json());
+  const r=await fetch('php/hotels_api.php',{method:'POST',body:new URLSearchParams(d)}).then(r=>r.text()).then(t=>{try{return JSON.parse(t)}catch(e){return{ok:false,msg:'Server: '+t.slice(0,200)}}});
   if(r.ok&&d.a==='hotel')return location.reload();
   m.hidden=false;m.textContent=r.ok?'Saved ✓':r.msg;
   if(r.ok)box.querySelectorAll('input').forEach(i=>i.value='');
