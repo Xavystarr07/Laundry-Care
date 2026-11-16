@@ -2,7 +2,7 @@
 <title>Hotels — Laundry Care</title>
 <link rel="stylesheet" href="monthly_statement/css/statement.css"><link rel="stylesheet" href="html_css/manage.css">
 <style>
-.modes{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.modes{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.modes[hidden]{display:none}
 .modes .btn{opacity:.55}.modes .btn.on{opacity:1}
 .btn.green{background:linear-gradient(135deg,#16a34a,#0d9488);box-shadow:0 6px 18px rgba(22,163,74,.35)}
 .btn.sm{padding:8px 14px;font-size:13px;border-radius:10px;box-shadow:none}
@@ -17,11 +17,11 @@
 .mt td .in{min-width:70px}
 @media(max-width:640px){.pick{grid-template-columns:1fr}}
 </style></head>
-<body><main class="wide">
+<body class="dark-mode"><main class="wide">
 <nav class="nav2"><a class="back" href="javascript:window.close()">✕ Close</a></nav>
 <h1>Hotels, units &amp; departure types</h1>
 
-<div class="modes">
+<div class="modes" hidden>
   <button type="button" class="btn" data-m="add">＋ Add</button>
   <button type="button" class="btn" data-m="edit">✎ Edit</button>
   <button type="button" class="btn red" data-m="remove">🗑 Remove</button>
@@ -62,7 +62,7 @@
 <section class="panel"><h2>Remove departure type</h2><table class="mt" id="rDeps"></table></section>
 </div>
 
-<div class="modal" id="chooser" hidden><div class="mcard">
+<div class="modal" id="chooser"><div class="mcard">
 <h2>What would you like to do?</h2><p class="hint">Pick one. You can switch any time with the buttons at the top.</p>
 <div class="pick">
 <button type="button" data-m="add"><span>＋</span><b>Add</b><small>New hotel, unit or type</small></button>
@@ -74,7 +74,7 @@
 <h2 id="aT"></h2><p class="hint" id="aM"></p>
 <div class="mfoot"><button type="button" class="btn ghost" id="aNo">Cancel</button><button type="button" class="btn red" id="aYes">Remove</button></div></div></div>
 </main>
-<script>
+<script src="js/popupNotify.js"></script><script>
 (function(){
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -82,11 +82,11 @@ let D={hotels:[],deps:[]}, mode='';
 
 const api=async d=>{try{const t=await fetch('php/hotels_api.php',{method:'POST',body:new URLSearchParams(d)}).then(r=>r.text());
   try{return JSON.parse(t.slice(t.indexOf('{')))}catch(e){return{ok:false,msg:'Server error: '+t.slice(0,150)}}}catch(e){return{ok:false,msg:'Could not reach the server. Check your connection.'}}};
-function toast(m,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+function toast(m,bad){showPopup(bad?'error':'success',m,'',bad?6000:3000)}
 function ask(title,msg,ok){return new Promise(res=>{$('#aT').textContent=title;$('#aM').textContent=msg;$('#aYes').textContent=ok||'Remove';$('#ask').hidden=false;
   const done=v=>{$('#ask').hidden=true;$('#aYes').onclick=$('#aNo').onclick=null;res(v)};$('#aYes').onclick=()=>done(true);$('#aNo').onclick=()=>done(false)})}
 
-function setMode(m){mode=m;$('#chooser').hidden=true;
+function setMode(m){mode=m;$('#chooser').hidden=true;$('.modes').hidden=false;
   $$('.mode').forEach(x=>x.hidden=x.id!=='m-'+m);$$('.modes .btn').forEach(b=>b.classList.toggle('on',b.dataset.m===m));render()}
 
 const selOpts=(sel,keep)=>{const v=keep??sel.value;sel.innerHTML=D.hotels.length?D.hotels.map(h=>`<option>${esc(h.name)}</option>`).join(''):'<option value="">No hotels yet</option>';
@@ -104,7 +104,7 @@ function render(){
     $('#rUnits').innerHTML=H&&H.units.length?'<thead><tr><th>Unit</th><th>Bedrooms</th><th></th></tr></thead><tbody>'+H.units.map(u=>`<tr><td><b>${u.unit}</b></td><td>${u.beds??'Unknown'}</td><td class="acts"><button type="button" class="btn sm red" data-act="del-unit" data-u="${u.unit}">Remove</button></td></tr>`).join('')+'</tbody>':'<tbody><tr><td class="empty">No units for this hotel</td></tr></tbody>';
     $('#rDeps').innerHTML=D.deps.length?'<thead><tr><th>Code</th><th>Label</th><th>Price</th><th></th></tr></thead><tbody>'+D.deps.map(d=>`<tr><td><b>${esc(d.code)}</b></td><td>${esc(d.label)}</td><td>R ${d.price.toFixed(2)}</td><td class="acts"><button type="button" class="btn sm red" data-act="del-dep" data-c="${esc(d.code)}">Remove</button></td></tr>`).join('')+'</tbody>':'<tbody><tr><td class="empty">No departure types</td></tr></tbody>'}
 }
-async function load(){const r=await api({a:'list'});if(!r.ok){alert('Could not load hotels:\n'+r.msg);return}D=r;render()}
+async function load(){const r=await api({a:'list'});if(!r.ok){toast('Could not load hotels: '+r.msg,true);return}D=r;render()}
 
 // run an action: disables the button, shows result, reloads data
 async function run(btn,data,okMsg,after){
@@ -155,6 +155,6 @@ document.addEventListener('keydown',e=>{
   const btn=e.target.closest('.tools')?.querySelector('[data-act]');if(btn){e.preventDefault();btn.click()}});
 $('#chooser').addEventListener('click',e=>{if(e.target.id==='chooser')setMode('add')});
 
-load().then(()=>{$('#chooser').hidden=false});
+load();
 })();
 </script></body></html>

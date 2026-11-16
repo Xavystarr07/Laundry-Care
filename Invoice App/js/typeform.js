@@ -79,7 +79,7 @@ let locked=false, calY=0, calM=0, step=0, rows=[], cur=null, inv='', date='', ho
 // Connected LCPredict engine mapping to your php endpoint
 const LCPredict = {
     ask: (inv, unit) => {
-        return fetch(`php/predict.php?inv=${encodeURIComponent(inv)}&unit=${encodeURIComponent(unit)}`)
+        return fetch(`php/predict.php?type=regular&inv=${encodeURIComponent(inv)}&unit=${encodeURIComponent(unit)}`)
             .then(res => res.json())
             .catch(() => ({ cands: [], conf: 0, rows: [], hotels: [] }));
     }

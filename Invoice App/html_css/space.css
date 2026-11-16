@@ -85,3 +85,20 @@
     body:not(.dark-mode) #monthlyStatsFab svg,
     body:not(.dark-mode) .monthly-statements-fab svg { fill: currentColor; }
 }
+/* ── Light mode: soft water-jelly floating buttons + Quick Entry ── */
+@keyframes lcJelly { 0%{scale:1} 25%{scale:1.14 .88} 45%{scale:.92 1.1} 65%{scale:1.05 .97} 85%{scale:.99 1.01} 100%{scale:1} }
+@media screen {
+    body:not(.dark-mode) :is(#fgTinker,#switchModeFab,#searchFab,#themeBtn,#hotelsFab,#tfFab,#monthlyStatsFab,.monthly-statements-fab) {
+        background: radial-gradient(ellipse 70% 42% at 30% 18%, rgba(255,255,255,.95), rgba(255,255,255,0) 72%),
+                    linear-gradient(160deg, rgba(232,244,253,.9), rgba(144,202,249,.55)) !important;
+        -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+        box-shadow: inset 0 -8px 14px rgba(33,150,243,.16), inset 0 5px 10px rgba(255,255,255,.95), 0 8px 22px rgba(33,150,243,.25) !important;
+    }
+    body:not(.dark-mode) :is(#fgTinker,#switchModeFab,#searchFab,#themeBtn,#hotelsFab,#tfFab,#monthlyStatsFab,.monthly-statements-fab):hover {
+        animation: lcJelly .75s cubic-bezier(.36,.07,.19,.97);
+        box-shadow: inset 0 -8px 14px rgba(33,150,243,.22), inset 0 5px 12px #fff, 0 12px 30px rgba(33,150,243,.38) !important;
+    }
+    body:not(.dark-mode) #tfFab { color: #0d47a1 !important; border: 1.5px solid #64b5f6; }
+    body:not(.dark-mode) #tfFab svg { stroke: #0d47a1; }
+}
+@media (prefers-reduced-motion: reduce) { body:not(.dark-mode) :is(#fgTinker,#switchModeFab,#searchFab,#themeBtn,#hotelsFab,#tfFab,#monthlyStatsFab,.monthly-statements-fab):hover { animation: none; } }

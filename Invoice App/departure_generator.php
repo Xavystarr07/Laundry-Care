@@ -39,7 +39,7 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     <link rel="stylesheet" href="html_css/table.css">
     <link rel="stylesheet" href="html_css/inputs.css">
     <link rel="stylesheet" href="html_css/buttons.css">
-    <link rel="stylesheet" href="html_css/departure.css">
+    <link rel="stylesheet" href="html_css/departure.css"><link rel="stylesheet" href="html_css/space.css">
 </head>
 <body>
 <script>try{if(localStorage.getItem('lcDarkMode')==='true')document.body.classList.add('dark-mode')}catch(e){}</script>

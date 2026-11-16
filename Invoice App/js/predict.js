@@ -45,11 +45,11 @@
         if (!v) { manual = false; return; }
         if (manual) return;
         t1 = setTimeout(async () => {
-            const d = await get('php/predict.php?unit=' + encodeURIComponent(v));
+            const d = await get('php/predict.php?type=regular&unit=' + encodeURIComponent(v));
             if (t.value.trim() !== v || manual) return;
             const h = q('.hotel');
             const name = h && (d.hotels || []).find(n => inList(h, n));
-            if (name && setHotel(name)) t.dispatchEvent(new Event('input', { bubbles: true }));
+            if (name && (d.conf || 0) >= .5 && setHotel(name)) t.dispatchEvent(new Event('input', { bubbles: true }));
         }, 250);
     });
 
@@ -61,20 +61,25 @@
         const v = t.value.replace(/\D/g, '');
         if (v.length < 4) return;
         t2 = setTimeout(async () => {
-            const d = await get('php/predict.php?inv=' + v);
+            const d = await get('php/predict.php?type=regular&inv=' + v);
             if (t.value.replace(/\D/g, '') !== v) return;
             const u = q('.unit-number'), h = q('.hotel');
             if (!u || !h || u.readOnly) return;
             if (u.value && !(u.value === last.u && h.value === last.h)) return;   // don't overwrite what you typed
-            const c = (d.rows || []).find(x => inList(h, x.h));
+            const c = (d.cands || []).find(x => inList(h, x.h));
             if (!c) return;
+            const pct = Math.round((d.conf || 0) * 100);
+            if (c !== d.cands[0] || (d.conf || 0) < .7) {
+                if (typeof showPopup === 'function') showPopup('info', 'Best guess: ' + c.h + ', unit ' + c.u + ' (' + pct + '%).', 'Not sure. Please check.', 3500);
+                return;
+            }
             setHotel(c.h);
             u.value = c.u;
             last = { h: c.h, u: String(c.u) };
             manual = false;
             u.dispatchEvent(new Event('input', { bubbles: true }));
             if (typeof showPopup === 'function')
-                showPopup('info', 'Guessed ' + c.h + ', unit ' + c.u + ' (from invoice #' + c.n + ').', 'Change it if it is wrong.', 3500);
+                showPopup('info', 'Guessed ' + c.h + ', unit ' + c.u + ' (' + pct + '%).', 'Change it if it is wrong.', 3500);
         }, 250);
     });
 })();

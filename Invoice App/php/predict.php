@@ -2,7 +2,7 @@
 require_once __DIR__.'/db.php';
 header('Content-Type: application/json'); header('Cache-Control: no-store');
 try {
-    $inv=preg_replace('/\D/','',$_GET['inv']??''); $unit=trim($_GET['unit']??''); $n=strlen($inv); $now=time();
+    $inv=preg_replace('/\D/','',$_GET['inv']??''); $unit=trim($_GET['unit']??''); $n=strlen($inv); $now=time(); $T=(($_GET['type']??'')==='regular')?" AND COALESCE(\"BillingType\",'regular')<>'departure'":'';
     $names=$pdo->query('SELECT DISTINCT "HotelName" FROM invoices')->fetchAll(PDO::FETCH_COLUMN);
     $alias=[]; foreach($names as $s) foreach($names as $l) if(strlen($l)>strlen($s)&&stripos($l,$s)===0){$alias[$s]=$l;break;}
     $A=fn($h)=>$alias[$h]??$h;
@@ -10,7 +10,7 @@ try {
     $I=[];$U=[];
     if($n>=4&&$n<=5){
         if($n==5){$t=(int)$inv;$lo=$t-40;$hi=$t+40;}else{$lo=(int)$inv*10;$hi=$lo+9;$t=$lo+5;}
-        $s=$pdo->prepare('SELECT "HotelName" h,"HotelNumber" u,"InvoiceNumber" n,"DateReceived" d FROM invoices WHERE "InvoiceNumber" BETWEEN :lo AND :hi');
+        $s=$pdo->prepare('SELECT "HotelName" h,"HotelNumber" u,"InvoiceNumber" n,"DateReceived" d FROM invoices WHERE "InvoiceNumber" BETWEEN :lo AND :hi'.$T);
         $s->execute([':lo'=>$lo,':hi'=>$hi]);
         foreach($s->fetchAll(PDO::FETCH_ASSOC) as $r){
             if($unit!==''&&$r['u']!==$unit)continue;
@@ -19,7 +19,7 @@ try {
         }
     }
     if($unit!==''){
-        $s=$pdo->prepare('SELECT "HotelName" h,COUNT(*) c,MAX("DateReceived") d FROM invoices WHERE "HotelNumber"=:u GROUP BY 1');
+        $s=$pdo->prepare('SELECT "HotelName" h,COUNT(*) c,MAX("DateReceived") d FROM invoices WHERE "HotelNumber"=:u'.$T.' GROUP BY 1');
         $s->execute([':u'=>$unit]);
         foreach($s->fetchAll(PDO::FETCH_ASSOC) as $r){$k=$A($r['h']).'|'.$unit;$U[$k]=($U[$k]??0)+$r['c']*($age($r['d'])<=45?1.5:1);}
     }

@@ -358,6 +358,13 @@ wrap.innerHTML = `
   </button>
 `;
 document.body.appendChild(wrap);
+if (document.getElementById('depBody')) {
+    const hb = document.createElement('button');
+    hb.className = 'theme-fab'; hb.id = 'hotelsFab'; hb.type = 'button'; hb.setAttribute('data-tip', 'Hotels');
+    hb.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>';
+    hb.addEventListener('click', () => window.open('hotels.php', '_blank'));
+    wrap.insertBefore(hb, wrap.firstChild);
+}
 
 // Search panel
 const panel = document.createElement('div');

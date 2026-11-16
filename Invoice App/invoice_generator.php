@@ -222,7 +222,6 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <!-- ── JS files — edit individual files for each concern ── -->
 <script src="js/priceList.php"></script>       <!-- item price data             -->
 <script src="js/lcData.php"></script>
-<script src="js/lcData.php"></script>
 <script src="js/hotelData.js"></script>       <!-- hotel/unit data             -->
 <script src="js/popupNotify.js"></script>     <!-- success/error popups        -->
 <script src="js/fieldGuide.js"></script>      <!-- field highlight guide       -->

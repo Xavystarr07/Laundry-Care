@@ -1,6 +1,0 @@
-<select class="hotel" name="hotel" id="hotelSelect" onchange="updateUnitDatalist(this)">
-    <option value="" selected>-- Hotel --</option>
-<?php require_once __DIR__.'/../php/db.php'; foreach($pdo->query('SELECT name FROM lc_hotels ORDER BY name')->fetchAll(PDO::FETCH_COLUMN) as $h): ?>
-    <option value="<?= htmlspecialchars($h) ?>"><?= htmlspecialchars($h) ?></option>
-<?php endforeach; ?>
-</select>

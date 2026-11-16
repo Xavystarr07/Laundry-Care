@@ -175,3 +175,11 @@ body.dark-mode .mode-badge {
 .dep-actions .uv-btn:hover span,
 .dep-actions .uv-btn:focus-visible span { margin: 0 6px 0 8px; }
 body { overflow-x: hidden; }
+/* Hotels button goes last, with a gap, so it isn't hit by mistake */
+@media (min-width: 1001px) {
+    .dep-actions > .uv-btn:first-child { order: 3; margin-top: 18px; }
+}
+/* Floating Hotels button (sits above Switch mode) */
+#hotelsFab { background: linear-gradient(135deg, #021a2e, #0c4a6e); color: #38bdf8; border: 1.5px solid #0ea5e9; box-shadow: 0 0 10px rgba(14,165,233,.5), inset 0 0 8px rgba(14,165,233,.15); }
+#hotelsFab:hover { box-shadow: 0 0 18px rgba(14,165,233,.9), inset 0 0 10px rgba(14,165,233,.25); }
+body:not(.dark-mode) #hotelsFab { color: #0369a1; border-color: #7dd3fc; }
