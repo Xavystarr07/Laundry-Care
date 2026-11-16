@@ -16,6 +16,11 @@ require_once __DIR__ . '/db.php';
 
 
 
+$_p=[];foreach($pdo->query('SELECT code,price FROM lc_dep_types') as $r)$_p[$r['code']]=(float)$r['price'];
+$_u=[];foreach($pdo->query('SELECT name FROM lc_hotels') as $r)$_u[$r['name']]=[];
+foreach($pdo->query('SELECT hotel,unit,beds FROM lc_units') as $r)$_u[$r['hotel']][(int)$r['unit']]=$r['beds'];
+define('DEP_PRICES',$_p);define('DEP_UNITS',$_u);
+
 const MAX_ROWS = 200;
 
 // ── Helper: go back to the departure page with a popup ───────────────────────
