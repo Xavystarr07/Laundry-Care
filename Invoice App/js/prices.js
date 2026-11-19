@@ -1,94 +1,70 @@
-// predict.js — Unit before Hotel + self-learning guesses (window.LCPredict)
 (function () {
-    const tb = document.getElementById('invoiceTable');
-    if (!tb) return;
-    function swap() {
-        tb.querySelectorAll('tr').forEach(r => {
-            const a = r.children[0], b = r.children[1];
-            if (a && b && a.querySelector('.hotel') && b.querySelector('.unit-number')) r.insertBefore(b, a);
-        });
+const $ = s => document.querySelector(s);
+const api = (a, d = {}) => fetch('php/prices_api.php', { method: 'POST', body: new URLSearchParams({ a, ...d }) }).then(r => r.json());
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const on = v => v === true || v === 't' || v === 'true' || v === 1 || v === '1';
+let rows = [];
+
+function toast(m, bad) {
+    const t = document.createElement('div');
+    t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = m;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
+}
+
+function draw() {
+    const q = $('#q').value.trim().toLowerCase();
+    const list = rows.filter(r => !q || r.code.toLowerCase().includes(q) || r.description.toLowerCase().includes(q));
+    $('#tb').innerHTML = list.length
+        ? '<thead><tr><th>Code</th><th>Description</th><th>Price (R)</th><th></th></tr></thead><tbody>' +
+          list.map(r => `<tr data-c="${esc(r.code)}" class="${on(r.active) ? '' : 'off'}"><td><b>${esc(r.code)}</b></td>
+            <td><input class="in" data-f="description" value="${esc(r.description)}"></td>
+            <td><input class="in" data-f="price" type="number" step="0.01" min="0" value="${Number(r.price).toFixed(2)}"></td>
+            <td class="acts"><button type="button" class="ib" data-a="save" title="Save">✓</button><button type="button" class="ib" data-a="toggle" title="${on(r.active) ? 'Disable' : 'Enable'}">⏻</button><button type="button" class="ib" data-a="hist" title="Price history">🕘</button></td></tr>`).join('') + '</tbody>'
+        : '<tbody><tr><td class="empty">No items found</td></tr></tbody>';
+}
+
+async function load() {
+    try {
+        const r = await api('list');
+        if (!r.ok) return toast(r.msg, true);
+        rows = r.rows; draw();
+    } catch (e) { toast('Could not load prices.', true); }
+}
+
+$('#q').addEventListener('input', draw);
+$('#tb').addEventListener('input', e => e.target.closest('tr')?.classList.add('dirty'));
+$('#tb').addEventListener('click', async e => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    const tr = b.closest('tr'), code = tr.dataset.c;
+    if (b.dataset.a === 'save') {
+        const r = await api('save', { code, description: tr.querySelector('[data-f=description]').value, price: tr.querySelector('[data-f=price]').value });
+        if (!r.ok) return toast(r.msg, true);
+        toast('Saved'); load();
+    } else if (b.dataset.a === 'toggle') {
+        const r = await api('toggle', { code });
+        if (!r.ok) return toast(r.msg, true);
+        load();
+    } else {
+        const r = await api('history', { code });
+        if (!r.ok) return toast(r.msg, true);
+        $('#hTitle').textContent = 'Price history: ' + code;
+        $('#hBody').innerHTML = r.rows.length
+            ? '<table class="mt"><thead><tr><th>Date</th><th class="n">Old</th><th class="n">New</th></tr></thead><tbody>' +
+              r.rows.map(x => `<tr><td>${esc(String(x.changed_at).slice(0, 16))}</td><td class="n">${x.old_price == null ? '—' : Number(x.old_price).toFixed(2)}</td><td class="n">${Number(x.new_price).toFixed(2)}</td></tr>`).join('') + '</tbody></table>'
+            : '<p class="note">No changes recorded yet.</p>';
+        $('#hm').hidden = false;
     }
-    const hr = document.querySelector('#invoiceForm thead tr');
-    if (hr && /hotel/i.test(hr.children[0].textContent)) hr.insertBefore(hr.children[1], hr.children[0]);
-    new MutationObserver(swap).observe(tb, { childList: true, subtree: true });
-    swap();
+});
 
-    const q = c => tb.rows[0]?.querySelector(c);
-    const inList = (h, n) => Array.from(h.options).some(o => o.value === n);
-    const get = url => fetch(url).then(r => r.json()).catch(() => ({ cands: [], conf: 0 }));
-    const invVal = () => (document.getElementById('invoice_number')?.value || '').replace(/\D/g, '');
-    const L = window.LCPredict = {
-        last: null,
-        ask(inv, unit) {
-            return get('php/predict.php?inv=' + (inv || '') + (unit ? '&unit=' + encodeURIComponent(unit) : '')).then(d => {
-                const c = d.cands && d.cands[0];
-                if (c && inv) L.last = { inv: String(inv), h: c.h, u: String(c.u), c: d.conf || 0 };
-                return d;
-            });
-        }
-    };
-    let manual = false, last = { h: '', u: '' }, t1, t2;
-
-    function setHotel(name) {
-        const h = q('.hotel');
-        if (!h || h.disabled || !inList(h, name)) return false;
-        if (h.value !== name) {
-            h.value = name;
-            if (typeof updateUnitDatalist === 'function') updateUnitDatalist(h);
-            if (typeof flashGreen === 'function') flashGreen(h);
-        }
-        return true;
-    }
-    document.addEventListener('change', e => {
-        if (e.isTrusted && e.target.classList?.contains('hotel') && e.target.closest('tr') === tb.rows[0]) manual = true;
-    });
-
-    // unit typed -> guess hotel
-    document.addEventListener('input', e => {
-        const t = e.target;
-        if (!e.isTrusted || !t.classList?.contains('unit-number') || t.closest('tr') !== tb.rows[0]) return;
-        clearTimeout(t1);
-        const v = t.value.trim();
-        if (!v) { manual = false; return; }
-        if (manual) return;
-        t1 = setTimeout(async () => {
-            const iv = invVal(), d = await L.ask(iv.length >= 4 ? iv : '', v);
-            if (t.value.trim() !== v || manual) return;
-            const h = q('.hotel'), c = h && (d.cands || []).find(x => inList(h, x.h));
-            if (c && d.conf >= .5) setHotel(c.h);
-        }, 250);
-    });
-
-    // invoice number typed -> guess hotel + unit
-    document.addEventListener('input', e => {
-        const t = e.target;
-        if (!e.isTrusted || t.id !== 'invoice_number') return;
-        clearTimeout(t2);
-        const v = invVal();
-        if (v.length < 4) return;
-        t2 = setTimeout(async () => {
-            const d = await L.ask(v);
-            if (invVal() !== v) return;
-            const u = q('.unit-number'), h = q('.hotel');
-            if (!u || !h || u.readOnly) return;
-            const c = (d.cands || []).find(x => inList(h, x.h));
-            if (!c) return;
-            const pct = Math.round((d.conf || 0) * 100);
-            if (d.conf < .7) { if (typeof showPopup === 'function') showPopup('info', 'Best guess: ' + c.h + ', unit ' + c.u + ' (' + pct + '%).', 'Not sure. Please check.', 3500); return; }
-            if (u.value && !(u.value === last.u && h.value === last.h)) return;
-            setHotel(c.h); u.value = c.u; last = { h: c.h, u: String(c.u) }; manual = false;
-            if (typeof showPopup === 'function') showPopup('info', 'Guessed ' + c.h + ', unit ' + c.u + ' (' + pct + '%).', 'Change it if it is wrong.', 3500);
-        }, 250);
-    });
-
-    // send the guess with the save so the server can learn from hits/misses
-    const f = document.getElementById('invoiceForm');
-    f?.addEventListener('submit', () => {
-        const l = L.last, v = invVal();
-        [['pred_h', 'h'], ['pred_u', 'u'], ['pred_c', 'c']].forEach(([n, k]) => {
-            let i = f.querySelector('[name=' + n + ']');
-            if (!i) { i = document.createElement('input'); i.type = 'hidden'; i.name = n; f.appendChild(i); }
-            i.value = l && l.inv === v ? l[k] : '';
-        });
-    }, true);
+$('#addBtn').addEventListener('click', () => { $('#addBox').hidden = !$('#addBox').hidden; });
+$('#aGo').addEventListener('click', async () => {
+    const r = await api('add', { code: $('#aCode').value, description: $('#aDesc').value, price: $('#aPrice').value });
+    if (!r.ok) return toast(r.msg, true);
+    ['#aCode', '#aDesc', '#aPrice'].forEach(s => $(s).value = '');
+    toast('Item added'); load();
+});
+$('#hClose').addEventListener('click', () => { $('#hm').hidden = true; });
+$('#hm').addEventListener('click', e => { if (e.target.id === 'hm') $('#hm').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#hm').hidden = true; });
+load();
 })();

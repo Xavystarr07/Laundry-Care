@@ -1,4 +1,6 @@
 // undoSave.js — the ✕ on the "saved" popup becomes an animated Undo button
+// (first line loads the animated sky/space background)
+document.head.appendChild(Object.assign(document.createElement('script'), { src: 'js/sky.js' }));
 (function () {
     if (!window._undoAvail) return;
 

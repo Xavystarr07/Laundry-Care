@@ -1,20 +1,133 @@
 <!-- ============================================================
-     partials/header.html — Business name, address, contact
-     Edit your business details here ONLY
+     partials/header.html — LC monogram (top middle) + page look
+     Business details removed from the screen (printed invoices keep them).
      ============================================================ -->
 
-<div class="header">
-    <div class="left">
-        <h1>LAUNDRY CARE</h1>
-        <p>2 Tottenham Road</p>
-        <p>Parkgate</p>
-        <p>Cornubia</p>
-    </div>
-    <div class="right">
-        <p>www.laundrycare.co.za</p>
-        <p>Email: donovanmark14@gmail.com</p>
-        <p>Email: laundry_care@outlook.com</p>
-        <p>Cell: 062 283 9374</p>
-        <p>Cell: 069 780 0340</p>
-    </div>
-</div>
+<style>
+/* header block is empty now (logo removed) */
+.header { display: none !important; }
+#monthlyStatsFab, .monthly-statements-fab, #statementsFab, #hotelsFab { display: none !important; }   /* moved into the top-right nav */
+html body .dep-actions > .uv-btn:first-child { order: 0; margin-top: 0; }
+
+/* ── Top-right nav (built by js/layout.js) ── */
+.lc-nav { position: absolute; top: 14px; right: 20px; z-index: 50; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.lc-nav button {
+    display: inline-flex; align-items: center; gap: 7px; height: 38px; margin: 0; padding: 0 15px; border-radius: 999px;
+    font: 700 13px 'Segoe UI', Arial, sans-serif; cursor: pointer; color: #1e3a8a;
+    background: rgba(255,255,255,.6); border: 1px solid rgba(33,150,243,.28);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 4px 14px rgba(33,150,243,.15);
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.lc-nav button svg { color: var(--ac); }
+.lc-nav button:hover { transform: translateY(-2px); border-color: var(--ac); box-shadow: 0 6px 18px rgba(33,150,243,.28); }
+body.dark-mode .lc-nav button { color: #e0dcff; background: rgba(20,14,50,.6); border-color: rgba(167,139,250,.35); box-shadow: 0 0 14px rgba(124,58,237,.25); }
+body.dark-mode .lc-nav button svg { color: var(--acd); }
+body.dark-mode .lc-nav button:hover { border-color: var(--acd); box-shadow: 0 0 20px rgba(167,139,250,.55); }
+@media (max-width: 1000px) { .lc-nav { position: static; justify-content: center; margin: 10px 12px 0; } }
+@media print { .lc-nav { display: none !important; } }
+
+/* ── Action buttons: glass, with proper dark-mode neon ── */
+html body .btn-row .uv-btn, html body .save-row .uv-btn, html body .dep-actions .uv-btn { background: rgba(255,255,255,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+html body.dark-mode .btn-row .uv-btn, html body.dark-mode .save-row .uv-btn, html body.dark-mode .dep-actions .uv-btn { background: rgba(18,14,48,.65); opacity: 1; }
+html body.dark-mode button.add-item    { border-color: #4ade80; color: #4ade80; --btn-fill: #16a34a; box-shadow: 0 0 14px rgba(74,222,128,.35), inset 0 0 8px rgba(74,222,128,.12); }
+html body.dark-mode button.print-btn   { border-color: #38bdf8; color: #38bdf8; --btn-fill: #0284c7; box-shadow: 0 0 14px rgba(56,189,248,.35), inset 0 0 8px rgba(56,189,248,.12); }
+html body.dark-mode button.custom-item { border-color: #fbbf24; color: #fbbf24; --btn-fill: #d97706; box-shadow: 0 0 14px rgba(251,191,36,.35), inset 0 0 8px rgba(251,191,36,.12); }
+html body.dark-mode #insertImageBtn    { border-color: #22d3ee; color: #22d3ee; --btn-fill: #0891b2; box-shadow: 0 0 14px rgba(34,211,238,.35), inset 0 0 8px rgba(34,211,238,.12); }
+html body.dark-mode #checklistBtn      { border-color: #818cf8; color: #a5b4fc; --btn-fill: #4f46e5; box-shadow: 0 0 14px rgba(129,140,248,.4), inset 0 0 8px rgba(129,140,248,.12); }
+html body.dark-mode #saveInvoiceBtn, html body.dark-mode #depCompleteBtn { border-color: #c4b5fd; color: #ddd6fe; --btn-fill: #7c3aed; box-shadow: 0 0 18px rgba(167,139,250,.45), inset 0 0 10px rgba(167,139,250,.15); }
+
+/* ── Invoice number pill ── */
+.center { margin: 6px 0 16px !important; }
+html body .center h2 {
+    display: inline-flex; align-items: center; gap: 14px; margin: 0 !important;
+    padding: 7px 24px 7px 22px; border-radius: 999px;
+    font-size: 12px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; text-shadow: none !important;
+    color: #1e3a8a !important;
+    background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.8);
+    box-shadow: 0 8px 28px rgba(33,150,243,.2); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    transition: box-shadow .25s;
+}
+html body.dark-mode .center h2 {
+    color: #c4b5fd !important; background: rgba(30,22,70,.45); border-color: rgba(167,139,250,.35);
+    box-shadow: 0 0 30px rgba(124,58,237,.3);
+}
+html body .center h2:focus-within { box-shadow: 0 0 0 3px rgba(33,150,243,.35), 0 8px 28px rgba(33,150,243,.25); }
+html body.dark-mode .center h2:focus-within { box-shadow: 0 0 0 3px rgba(167,139,250,.4), 0 0 30px rgba(124,58,237,.4); }
+html body .center h2 input#invoice_number.invoice-input {
+    width: 150px !important; margin: 0 !important; padding: 0 !important; border: none !important; border-radius: 0;
+    font-size: 28px !important; font-weight: 800; letter-spacing: 7px; text-align: center; color: #0d2a4d !important; -webkit-text-fill-color: #0d2a4d;
+}
+html body.dark-mode .center h2 input#invoice_number.invoice-input { color: #fff !important; -webkit-text-fill-color: #fff; }
+
+/* ── Invoice table: glass card ── */
+html body :is(#invoiceForm, #departureForm) table {
+    width: min(1180px, 92%); border-collapse: separate; border-spacing: 0; overflow: hidden; border-radius: 18px;
+    background: rgba(255,255,255,.55) !important; border: 1px solid rgba(255,255,255,.8);
+    box-shadow: 0 18px 50px rgba(33,150,243,.2); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+html body.dark-mode :is(#invoiceForm, #departureForm) table {
+    background: rgba(20,16,52,.55) !important; border-color: rgba(167,139,250,.3); box-shadow: 0 0 44px rgba(124,58,237,.28);
+}
+html body :is(#invoiceForm, #departureForm) th {
+    background: linear-gradient(135deg, #2f80ed, #56b4f5) !important; color: #fff !important;
+    border: none; padding: 13px 14px; font-size: 11.5px; letter-spacing: 1.3px; text-transform: uppercase; font-weight: 700;
+}
+html body.dark-mode :is(#invoiceForm, #departureForm) th { background: linear-gradient(135deg, #2d2565, #4b2f94) !important; color: #ddd6fe !important; }
+html body :is(#invoiceForm, #departureForm) td { border: none; border-bottom: 1px solid rgba(33,150,243,.12); padding: 6px 7px; }
+html body.dark-mode :is(#invoiceForm, #departureForm) td { border-bottom-color: rgba(167,139,250,.14) !important; }
+html body :is(#invoiceForm, #departureForm) tbody tr:last-child td { border-bottom: none; }
+html body :is(#invoiceForm, #departureForm) tr:hover { background: transparent !important; }
+html body :is(#invoiceForm, #departureForm) td input, html body :is(#invoiceForm, #departureForm) td select {
+    margin: 0 !important; height: 40px; border-radius: 10px; border: 1px solid rgba(33,150,243,.22) !important;
+    background: rgba(255,255,255,.8) !important; color: #0d2a4d !important;
+}
+html body.dark-mode :is(#invoiceForm, #departureForm) td input, html body.dark-mode :is(#invoiceForm, #departureForm) td select {
+    background: rgba(14,10,38,.6) !important; border-color: rgba(167,139,250,.25) !important; color: #e8e8ff !important;
+}
+html body :is(#invoiceForm, #departureForm) td input:focus, html body :is(#invoiceForm, #departureForm) td select:focus { outline: none; border-color: #2196F3 !important; box-shadow: 0 0 0 3px rgba(33,150,243,.2); }
+html body.dark-mode :is(#invoiceForm, #departureForm) td input:focus, html body.dark-mode :is(#invoiceForm, #departureForm) td select:focus { border-color: #a78bfa !important; box-shadow: 0 0 0 3px rgba(167,139,250,.28); }
+html body :is(#invoiceForm, #departureForm) td .invalid { border-color: #e74c3c !important; }
+html body :is(#invoiceForm, #departureForm) td .field-ok { border-color: #2ecc71 !important; }
+
+/* ── Quick Entry lives in the action row now ── */
+#tfFab { display: none !important; }
+#tfBtn { border: 2px solid #8b5cf6; color: #8b5cf6; --btn-fill: #8b5cf6; }
+html body.dark-mode #tfBtn { border-color: #a78bfa; color: #c4b5fd; --btn-fill: #7c3aed; box-shadow: 0 0 14px rgba(167,139,250,.4), inset 0 0 8px rgba(167,139,250,.12); }
+
+/* ── Left floating buttons: same glass + coloured-ring look as the action row ── */
+html body:not(.zz) :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn) {
+    background: rgba(255,255,255,.55) !important; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    border: 2px solid var(--fc) !important; color: var(--fc) !important; box-shadow: none !important;
+    filter: drop-shadow(0 4px 8px rgba(33,150,243,.18)); transition: background .25s, color .25s, max-width .35s ease, filter .3s !important;
+}
+html body.dark-mode :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn) {
+    background: rgba(18,14,48,.65) !important; filter: drop-shadow(0 0 7px var(--fg));
+}
+html body:not(.zz) :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn):hover {
+    background: var(--fc) !important; color: #fff !important; animation: none !important; transform: none;
+}
+html body:not(.zz) #fgTinker       { --fc: #0ea5e9; --fg: rgba(14,165,233,.5); }
+html body:not(.zz) #switchModeFab  { --fc: #10b981; --fg: rgba(16,185,129,.5); }
+html body:not(.zz) #searchFab      { --fc: #a855f7; --fg: rgba(168,85,247,.5); }
+html body:not(.zz) #themeBtn       { --fc: #f59e0b; --fg: rgba(245,158,11,.5); }
+html body.dark-mode #fgTinker      { --fc: #38bdf8; --fg: rgba(56,189,248,.6); }
+html body.dark-mode #switchModeFab { --fc: #34d399; --fg: rgba(52,211,153,.6); }
+html body.dark-mode #searchFab     { --fc: #c084fc; --fg: rgba(192,132,252,.6); }
+html body.dark-mode #themeBtn      { --fc: #fbbf24; --fg: rgba(251,191,36,.6); }
+html body :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn) { padding: 0 0 0 10px !important; }   /* 44 - 2×2 border - 20 icon = 20 → 10 each side */
+@keyframes lcPulse { 50% { filter: drop-shadow(0 0 14px var(--fg)); } }
+html body #fgTinker.has-errors { animation: lcPulse 2s ease-in-out infinite; }
+
+/* ── Departure page ── */
+.dep-hint, .dep-note { display: none !important; }
+#departureForm { padding-top: 54px; }   /* clears the top-right nav */
+html body #departureForm #depTable { width: 80%; }
+html body .dep-entry { background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.8); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 18px 50px rgba(33,150,243,.2); }
+html body.dark-mode .dep-entry { background: rgba(20,16,52,.55); border-color: rgba(167,139,250,.3); box-shadow: 0 0 44px rgba(124,58,237,.28); }
+html body .dep-field :is(input, select) { border-radius: 10px; border: 1px solid rgba(33,150,243,.22) !important; background: rgba(255,255,255,.8) !important; color: #0d2a4d !important; }
+html body.dark-mode .dep-field :is(input, select) { background: rgba(14,10,38,.6) !important; border-color: rgba(167,139,250,.25) !important; color: #e8e8ff !important; }
+html body .dep-field :is(input, select):focus { outline: none; border-color: #2196F3 !important; box-shadow: 0 0 0 3px rgba(33,150,243,.2); }
+html body.dark-mode .dep-field :is(input, select):focus { border-color: #a78bfa !important; box-shadow: 0 0 0 3px rgba(167,139,250,.28); }
+html body .dep-field .invalid { border-color: #e74c3c !important; }
+</style>
+

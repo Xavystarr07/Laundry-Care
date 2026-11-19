@@ -1,103 +1,69 @@
-// priceList.js - Full product price list
+FILE: js/prices.js  (REPLACE WHOLE FILE)
+(function () {
+const $ = s => document.querySelector(s);
+const api = (a, d = {}) => fetch('php/prices_api.php', { method: 'POST', body: new URLSearchParams({ a, ...d }) }).then(r => r.json());
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const on = v => v === true || v === 't' || v === 'true' || v === 1 || v === '1';
+let rows = [];
 
-// Updated array using the inclusive pricing values from the document
-const priceList = [
-    { code: "BATHMATREC", description: "Rectangular Bathmat", price: 18.34 },
-    { code: "MATTOI", description: "Toilet Mat", price: 21.00 },
-    { code: "MATTSC", description: "Toilet Seat Cover", price: 21.00 },
-    { code: "BASE", description: "Base cover", price: 16.00 },
-    { code: "TWLHAND", description: "Hand Towel", price: 5.24 }, // Updated from 15.70 to 5.24[cite: 1]
-    { code: "BATHTWL", description: "Bath Towel", price: 6.92 }, // Updated from 19.00 to 6.92[cite: 1]
-    { code: "BATHSH", description: "Bath Sheet", price: 16.50 }, // Updated from 22.00 to 8.67[cite: 1]
-    { code: "BATHMA", description: "Bath Math", price: 19.84 },
-    { code: "BLANKK", description: "King Blanket", price: 122.26 },
-    { code: "BLANKQ", description: "Queen Blanket", price: 122.26 },
-    { code: "BLANKDBL", description: "Double Blanket", price: 66.54 },
-    { code: "COMFKS", description: "King Comforter", price: 115.34 },
-    { code: "COMFQUE", description: "Queen Comforter", price: 115.34 },
-    { code: "COMFDBL", description: "Double Comforter", price: 115.34 },
-    { code: "COMFSI", description: "Single Comforter", price: 57.34 },
-    { code: "CURTDRP", description: "Curtains (Per Drop)", price: 104.90 },
-    { code: "DISCLT", description: "Dish Cloth", price: 6.00 },
-    { code: "PILLCASE", description: "Pillowcase", price: 9.50 },
-    { code: "LFRAGS", description: "Large Floor Rags", price: 65.00 },
-    { code: "MFRAGS", description: "Medium Floor Rags", price: 60.00 },
-    { code: "SFRAGS", description: "Small Floor Rags", price: 55.00 },
-    { code: "BDFR", description: "Bed Frill", price: 31.52 },
-    { code: "BEATWL", description: "Beach Towel", price: 10.42 }, // Updated from 11.42 to 10.42[cite: 1]
-    { code: "CARSML", description: "Small Carpet", price: 55.00 },
-    { code: "CARMED", description: "Medium Carpet", price: 60.00 },
-    { code: "CARLRG", description: "Large Carpet", price: 65.00 },
-    { code: "BEDMAT", description: "Bedside Mat", price: 70.30 },
-    { code: "BLANKS", description: "Single Blanket", price: 65.00 },
-    { code: "BSQ", description: "Bed Spread-Quilt", price: 122.26 },
-    { code: "SWBS", description: "Swabs", price: 5.00 },
-    { code: "CCOVLRG", description: "Cushion Covers/Large", price: 44.29 },
-    { code: "LACECURT", description: "Small Lace Cutain", price: 61.00 },
-    { code: "CCOVSML", description: "Cushion Cover-Small", price: 39.10 },
-    { code: "CONTPCASE", description: "Continental Pillowcase", price: 11.00 },
-    { code: "CONTPLW", description: "Continental Pillow", price: 87.58 },
-    { code: "COUSCOVLRG", description: "Large Cushion Cover", price: 44.29 },
-    { code: "COUSCOVMED", description: "Medium Cushion Cover", price: 27.01 },
-    { code: "COUSCOVS", description: "Small Cushion Covers", price: 21.84 },
-    { code: "DBLDUVFEA", description: "Duvet Double Feather", price: 113.59 },
-    { code: "DBLTHW", description: "Double Throw", price: 95.25 }, // Updated from 96.25 to 95.25[cite: 1]
-    { code: "DELCOL", description: "Delivery/Collection Fee", price: 0.00 },
-    { code: "DUVCOVKS", description: "King-size Duvet Cover", price: 24.21 },
-    { code: "DUVCOVQU", description: "Queen Duvet Cover", price: 17.42 },
-    { code: "DUVCOVDO", description: "Double Duvet Cover", price: 16.00 },
-    { code: "DUVCOV3/4", description: "3/4 Duvet Cover", price: 17.42 },
-    { code: "DUVCOVSI", description: "Single Duvet Cover", price: 14.50 },
-    { code: "DUVDBLINN", description: "Double Duvet Inner", price: 104.90 },
-    { code: "FACCLTH", description: "Face Cloth", price: 3.82 },
-    { code: "FREJAC", description: "Freezer Jackets", price: 84.80 },
-    { code: "GLASCLO", description: "Glass Cloth", price: 7.12 },
-    { code: "GOWN/W/B", description: "Gowns with Belt", price: 29.90 },
-    { code: "KSDUVINN/F", description: "King Duvet Inner-Feather", price: 130.86 },
-    { code: "KSDUVINN/N", description: "King Duvet Inner-Normal", price: 96.25 },
-    { code: "KSFITSHT", description: "King Fitted Sheet", price: 15.59 }, // Updated from 21.64 to 15.59[cite: 1]
-    { code: "KSFLATSHT", description: "King Flat Sheet", price: 15.59 }, // Updated from 21.64 to 15.59[cite: 1]
-    { code: "KSMATPRO", description: "King Mattress Protector", price: 61.63 },
-    { code: "KSQUIL", description: "King Quilt", price: 148.21 },
-    { code: "POOLCUS", description: "Pool Cushion Cover", price: 41.00 },
-    { code: "MATCOV", description: "Mattress Cover", price: 23.38 },
-    { code: "MATLRG", description: "Large Rectangular Mat", price: 35.68 },
-    { code: "MATPRO/K/Q", description: "Mattress Protector (K/Q)", price: 61.63 },
-    { code: "MATPRODO", description: "Double Mattress Protector", price: 52.96 },
-    { code: "MATPRO3/4", description: "Mattress Protector (3/4)", price: 21.00 },
-    { code: "MATPROS", description: "Mattress Protector (Single)", price: 44.29 },
-    { code: "MATREC", description: "Rectangular Mats", price: 18.34 },
-    { code: "MATUSHP", description: "U Shaped Toilet Mat", price: 7.92 },
-    { code: "NAPCLOTH", description: "Napkin Cloth", price: 3.62 },
-    { code: "NGTFRILKS", description: "Night Frill King", price: 66.00 },
-    { code: "NGTFRILQS", description: "Night Frill Queen", price: 61.00 },
-    { code: "NGTFRILDO", description: "Night Frill Double", price: 22.49 },
-    { code: "NGTFRIL3/4", description: "Night Frill 3/4", price: 20.49 },
-    { code: "NGTFRILSI", description: "Night Frill Single", price: 20.49 },
-    { code: "OVENGLO", description: "Oven Gloves", price: 18.34 },
-    { code: "PILLPRO", description: "Continental Pillow Protector", price: 27.01 },
-    { code: "PILLPROSTD", description: "Standard Pillow Protector", price: 9.67 },
-    { code: "PILLSTD", description: "Standard Pillow", price: 82.94 },
-    { code: "PLCEMAT", description: "Place Mats", price: 6.78 },
-    { code: "PLWCASLRG", description: "Large Pillowcases", price: 12.29 },
-    { code: "QSFITSHT", description: "Queen Fitted Sheet", price: 9.14 }, // Updated from 18.09 to 9.14[cite: 1]
-    { code: "DOFITSHT", description: "Double Fitted Sheet", price: 16.00 },
-    { code: "DOFLASHT", description: "Double Flat Sheet", price: 16.00 },
-    { code: "SIFITSHT", description: "Single Fitted Sheet", price: 15.50 },
-    { code: "3/4FITSHT", description: "3/4 Fitted Sheet", price: 12.50 },
-    { code: "SIFLASHT", description: "Single Flat Sheet", price: 15.50 },
-    { code: "QSFLATSHT", description: "Queen Flat Sheet", price: 15.59 }, // Updated from 18.09 to 15.59[cite: 1]
-    { code: "RWASH", description: "Re-Wash", price: 0.00 },
-    { code: "RUGLRG", description: "Large size rug", price: 61.00 },
-    { code: "RUGSML", description: "Small size rug", price: 31.00 },
-    { code: "RUGSTD", description: "Standard size rug", price: 41.00 },
-    { code: "SHOWCURT", description: "Shower Curtain", price: 39.10 },
-    { code: "SINGDUVINN", description: "Single Duvet Inner", price: 86.77 },
-    { code: "SINGLETHRW", description: "Single Throw", price: 57.13 }, // Updated from 58.13 to 57.13[cite: 1]
-    { code: "STAINTRT", description: "Stain Treatment", price: 0.00 },
-    { code: "TBLCLOTH", description: "Tablecloth", price: 18.34 },
-    { code: "TBLRUN", description: "Table Runner", price: 18.34 },
-    { code: "THROW/A/S", description: "Throws-All Sizes", price: 86.58 }, // Updated from 87.58 to 86.58[cite: 1]
-    { code: "TURNMAT", description: "Turndown Mats", price: 5.71 },
-    { code: "TWLTEA", description: "Tea Towel", price: 5.77 }
-];
+function toast(m, bad) {
+    const t = document.createElement('div');
+    t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = m;
+    document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
+}
+
+function draw() {
+    const q = $('#q').value.trim().toLowerCase();
+    const list = rows.filter(r => !q || r.code.toLowerCase().includes(q) || r.description.toLowerCase().includes(q));
+    $('#tb').innerHTML = list.length
+        ? '<thead><tr><th>Code</th><th>Description</th><th>Price (R)</th><th></th></tr></thead><tbody>' +
+          list.map(r => `<tr data-c="${esc(r.code)}" class="${on(r.active) ? '' : 'off'}"><td><b>${esc(r.code)}</b></td>
+            <td><input class="in" data-f="description" value="${esc(r.description)}"></td>
+            <td><input class="in" data-f="price" type="number" step="0.01" min="0" value="${Number(r.price).toFixed(2)}"></td>
+            <td class="acts"><button type="button" class="ib" data-a="save" title="Save">✓</button><button type="button" class="ib" data-a="toggle" title="${on(r.active) ? 'Disable' : 'Enable'}">⏻</button><button type="button" class="ib" data-a="hist" title="Price history">🕘</button></td></tr>`).join('') + '</tbody>'
+        : '<tbody><tr><td class="empty">No items found</td></tr></tbody>';
+}
+
+async function load() {
+    const r = await api('list');
+    if (!r.ok) return toast(r.msg, true);
+    rows = r.rows; draw();
+}
+
+$('#q').addEventListener('input', draw);
+$('#tb').addEventListener('input', e => e.target.closest('tr')?.classList.add('dirty'));
+$('#tb').addEventListener('click', async e => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    const tr = b.closest('tr'), code = tr.dataset.c;
+    if (b.dataset.a === 'save') {
+        const r = await api('save', { code, description: tr.querySelector('[data-f=description]').value, price: tr.querySelector('[data-f=price]').value });
+        if (!r.ok) return toast(r.msg, true);
+        toast('Saved'); load();
+    } else if (b.dataset.a === 'toggle') {
+        const r = await api('toggle', { code });
+        if (!r.ok) return toast(r.msg, true);
+        load();
+    } else {
+        const r = await api('history', { code });
+        if (!r.ok) return toast(r.msg, true);
+        $('#hTitle').textContent = 'Price history: ' + code;
+        $('#hBody').innerHTML = r.rows.length
+            ? '<table class="mt"><thead><tr><th>Date</th><th class="n">Old</th><th class="n">New</th></tr></thead><tbody>' +
+              r.rows.map(x => `<tr><td>${esc(String(x.changed_at).slice(0, 16))}</td><td class="n">${x.old_price == null ? '—' : Number(x.old_price).toFixed(2)}</td><td class="n">${Number(x.new_price).toFixed(2)}</td></tr>`).join('') + '</tbody></table>'
+            : '<p class="note">No changes recorded yet.</p>';
+        $('#hm').hidden = false;
+    }
+});
+
+$('#addBtn').addEventListener('click', () => { $('#addBox').hidden = !$('#addBox').hidden; });
+$('#aGo').addEventListener('click', async () => {
+    const r = await api('add', { code: $('#aCode').value, description: $('#aDesc').value, price: $('#aPrice').value });
+    if (!r.ok) return toast(r.msg, true);
+    ['#aCode', '#aDesc', '#aPrice'].forEach(s => $(s).value = '');
+    toast('Item added'); load();
+});
+$('#hClose').addEventListener('click', () => { $('#hm').hidden = true; });
+$('#hm').addEventListener('click', e => { if (e.target.id === 'hm') $('#hm').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#hm').hidden = true; });
+load();
+})();
