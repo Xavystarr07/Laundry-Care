@@ -186,6 +186,11 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 
 
 
+        <button type="button" class="uv-btn" id="testModeBtn" style="border:2px solid #f97316;color:#f97316;--btn-fill:#f97316">
+            <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/></svg>
+            <span>Test mode</span>
+        </button>
+
         <!-- Checklist -->
         <button type="button" class="uv-btn" id="checklistBtn">
             <svg class="uv-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">

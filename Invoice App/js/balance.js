@@ -16,11 +16,13 @@
     b.id = 'balPeek'; b.type = 'button'; b.title = 'Open statement balance';
     b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg><span>Balance …</span>';
     document.body.appendChild(b);
-    bal = d.total.toFixed(2); lab.textContent = 'Balance R ' + d.total.toFixed(2)
+    let bal = null;
+    const lab = b.querySelector('span');
 
     function load() {
         fetch('php/balance.php').then(r => r.json()).then(d => {
             if (!d.ok) { lab.textContent = 'Balance unavailable'; return; }
+            bal = d.total.toFixed(2);
             lab.textContent = 'Balance R ' + d.total.toFixed(2) + ' · ' + d.count + ' invoice' + (d.count === 1 ? '' : 's');
         }).catch(() => { lab.textContent = 'Balance unavailable'; });
     }
@@ -53,7 +55,7 @@
         document.body.appendChild(o);
     }
     const inv = document.getElementById('invoiceForm');
-    if (inv) inv.addEventListener('submit', e => { if (!e.defaultPrevented) saving(); });
+    if (inv) inv.addEventListener('submit', e => { setTimeout(() => { if (!e.defaultPrevented) saving(); }, 0); });
     const dep = document.getElementById('departureForm');
     if (dep) { const raw = dep.submit.bind(dep); dep.submit = () => { saving(); setTimeout(raw, 700); }; }
 })();

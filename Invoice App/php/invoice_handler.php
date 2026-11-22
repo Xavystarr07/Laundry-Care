@@ -76,6 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
 
     // ── Insert ────────────────────────────────────────────────────────────────
     try {
+        $test = !empty($_POST['test_mode']);
+        $pdo->beginTransaction();
         $perId = (int)$pdo->query('SELECT id FROM lc_periods WHERE is_closed = FALSE ORDER BY id LIMIT 1')->fetchColumn();
         if (!$perId) throw new Exception('No open period.');
         $stmt = $pdo->prepare('
@@ -91,9 +93,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_invoice'])) {
             ':total' => $grandTotal,
         ]);
         $newId = (int)$stmt->fetchColumn();
+        $pdo->prepare('INSERT INTO lc_line_period (invoice_id, period_id) VALUES (?, ?)')->execute([$newId, $perId]);
+
 $items = json_decode($_POST['items'] ?? '[]', true) ?: [];
 $ins = $pdo->prepare('INSERT INTO lc_invoice_items (invoice_id,"Code","Description","Price","Quantity","LineTotal") VALUES (?,?,?,?,?,?)');
 foreach ($items as $it) $ins->execute([$newId, $it['code'], $it['description'], floatval($it['price']), intval($it['quantity']), floatval($it['total'])]);
+if ($test) {
+    $pdo->rollBack();
+    $_SESSION['popup'] = ['type' => 'info', 'msg' => "TEST OK: invoice #$invoiceNumber would save with " . count($items) . ' item(s), total R' . number_format($grandTotal, 2) . '. Nothing was saved.', 'tip' => 'Turn Test mode off to save for real.'];
+    header('Location: ../invoice_generator.php');
+    exit;
+}
+$pdo->commit();
 $_SESSION['last_save'] = ['type' => 'regular', 'ids' => [$newId], 'time' => time()];
 $ph = trim($_POST['pred_h'] ?? '');
 if ($ph !== '') { try { $pu = trim($_POST['pred_u'] ?? '');
