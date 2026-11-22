@@ -114,14 +114,60 @@
             : `⚠️ Bedroom count unknown for ${hotel} ${unit} — please pick DEP1–DEP4 yourself.`;
     }
 
-    // Invoice number typed in the entry bar
-    invInput.addEventListener('input', () => {
+    // ── Calendar popup (opens at 5th digit) ───────────────────────────────────
+    let calEl = null, calY = 0, calM = 0;
+    const MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const st = document.createElement('style');
+    st.textContent = `
+    #depCal{position:fixed;inset:0;z-index:99990;display:flex;align-items:center;justify-content:center;background:rgba(8,10,25,.45)}
+    #depCal .box{--bg:#fff;--tx:#1e1b4b;--mu:#6b7280;--so:#f5f3ff;--ac:#2196F3;--ac2:#7c3aed;width:340px;max-width:92vw;padding:20px;border-radius:24px;background:var(--bg);color:var(--tx);box-shadow:0 30px 80px rgba(0,0,0,.45);font-family:'Segoe UI',Arial,sans-serif;animation:dcPop .3s cubic-bezier(.34,1.56,.64,1)}
+    body.dark-mode #depCal .box{--bg:#14122b;--tx:#f1f0ff;--mu:#a5a3c9;--so:#1d1a3d;--ac:#a78bfa;--ac2:#22d3ee}
+    @keyframes dcPop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:none}}
+    #depCal .ttl{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;text-align:center}
+    #depCal .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:17px;font-weight:800}
+    #depCal button{margin:0!important;border:none;font-family:inherit;cursor:pointer}
+    #depCal .nv{width:34px;height:34px;border-radius:50%;background:var(--so);color:var(--ac);font-size:18px;font-weight:800;padding:0}
+    #depCal .nv:disabled{opacity:.25;cursor:default}
+    #depCal .wd,#depCal .dy{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+    #depCal .wd span{font-size:11px;font-weight:700;color:var(--mu);padding:4px 0}
+    #depCal .d{height:40px;border-radius:12px;background:transparent;color:var(--tx);font-weight:700;font-size:14px;padding:0}
+    #depCal .d:hover:not(:disabled){background:var(--ac);color:#fff}
+    #depCal .d.now{box-shadow:inset 0 0 0 2px var(--ac2)}
+    #depCal .d.sel{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff}
+    #depCal .d:disabled{opacity:.25;cursor:default}
+    #depCal .ft{display:flex;gap:8px;margin-top:12px}
+    #depCal .ft button{flex:1;padding:10px;border-radius:12px;background:var(--so);color:var(--tx);font-weight:700;font-size:13px}`;
+    document.head.appendChild(st);
+
+    function calDraw() {
+        const L = dateLimits(), idx = calY * 12 + calM;
+        const mn = new Date(L.min + 'T00:00'), mx = new Date(L.max + 'T00:00');
+        const off = (new Date(calY, calM, 1).getDay() + 6) % 7, days = new Date(calY, calM + 1, 0).getDate();
+        let cells = '<span></span>'.repeat(off);
+        for (let d = 1; d <= days; d++) {
+            const iso = `${calY}-${String(calM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            cells += `<button type="button" class="d${iso === dateInp.value ? ' sel' : ''}${iso === L.today ? ' now' : ''}" data-d="${iso}" ${iso < L.min || iso > L.max ? 'disabled' : ''}>${d}</button>`;
+        }
+        calEl.querySelector('.box').innerHTML = `<div class="ttl">Date received</div>
+            <div class="hd"><button type="button" class="nv" data-n="-1" ${idx <= mn.getFullYear() * 12 + mn.getMonth() ? 'disabled' : ''}>‹</button><span>${MN[calM]} ${calY}</span><button type="button" class="nv" data-n="1" ${idx >= mx.getFullYear() * 12 + mx.getMonth() ? 'disabled' : ''}>›</button></div>
+            <div class="wd">${['Mo','Tu','We','Th','Fr','Sa','Su'].map(x => `<span>${x}</span>`).join('')}</div><div class="dy">${cells}</div>
+            <div class="ft"><button type="button" data-d="${L.today}">Today</button><button type="button" data-c="1">Close</button></div>`;
+    }
+    function closeCal() { if (calEl) { calEl.remove(); calEl = null; } }
+    function openCal() {
+        if (calEl) return;
+        const dd = new Date((dateInp.value || dateLimits().today) + 'T00:00');
+        calY = dd.getFullYear(); calM = dd.getMonth();
+        calEl = document.createElement('div'); calEl.id = 'depCal';
+        calEl.innerHTML =
         formatInvoiceNumber(invInput);
         invInput.classList.remove('invalid');
         const v = invInput.value;
-        if (v.length !== 5) return;
+        if (v.length !== 5) { closeCal(); return; }
+        openCal();
 
         if (rows.some(x => digits(x.inv) === v)) {
+            closeCal();
             invInput.classList.add('invalid');
             showPopup('warning', `Invoice #${v} is already on the list.`,
                 '💡 Every departure needs its own invoice number.', 0, whenInvChanges());
@@ -130,11 +176,12 @@
         checkTaken(v, taken => {
             if (invInput.value !== v) return;            // typed something else meanwhile
             if (taken) {
+                closeCal();
                 invInput.classList.add('invalid');
                 showPopup('dupe', `Beep boop! Invoice #${v} already exists in the database 🤖`,
                     '💡 Try a different invoice number before adding.', 0, whenInvChanges());
             } else {
-                hotelSel.focus();
+                openDate();
             }
         });
     });
@@ -171,6 +218,11 @@
         if (auto) codeSel.value = auto;
         updateHint();
         if (unitSel.value) codeSel.focus();
+    });
+
+    function openDate() { dateInp.focus(); try { dateInp.showPicker(); } catch (e) {} }
+    dateInp.addEventListener('change', () => {
+        if (invInput.value.length === 5) (hotelSel.value ? unitSel : hotelSel).focus();
     });
 
     // Enter in the entry bar = Add More
