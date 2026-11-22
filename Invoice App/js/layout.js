@@ -32,6 +32,7 @@ function build() {
         b.innerHTML = ic + '<span>' + t + '</span>'; b.addEventListener('click', fn); nav.appendChild(b);
     });
     document.body.appendChild(nav);
+    document.documentElement.classList.add('lc-ready');
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build); else build();
 })();

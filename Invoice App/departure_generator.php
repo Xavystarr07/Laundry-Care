@@ -155,6 +155,7 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 <script src="js/navigation.js"></script>
 <script src="js/departure.js"></script>
 <script src="js/undoSave.js"></script>
+<script src="js/balance.js"></script>
 <script src="js/themeSearch.js"></script>
 
 </body>

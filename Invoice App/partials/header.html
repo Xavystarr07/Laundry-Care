@@ -6,6 +6,7 @@
 <style>
 /* header block is empty now (logo removed) */
 .header { display: none !important; }
+html:not(.lc-ready) body { visibility: hidden; }
 #monthlyStatsFab, .monthly-statements-fab, #statementsFab, #hotelsFab { display: none !important; }   /* moved into the top-right nav */
 html body .dep-actions > .uv-btn:first-child { order: 0; margin-top: 0; }
 
@@ -91,6 +92,9 @@ html body :is(#invoiceForm, #departureForm) td .field-ok { border-color: #2ecc71
 
 /* ── Quick Entry lives in the action row now ── */
 #tfFab { display: none !important; }
+html body #invoiceForm td:nth-child(2) { min-width: 190px; }
+html body #invoiceForm td select.hotel { padding: 0 8px !important; font-size: 13px; font-weight: 600; text-overflow: clip; }
+html body #invoiceForm td select.hotel:disabled { background-image: none !important; }
 #tfBtn { border: 2px solid #8b5cf6; color: #8b5cf6; --btn-fill: #8b5cf6; }
 html body.dark-mode #tfBtn { border-color: #a78bfa; color: #c4b5fd; --btn-fill: #7c3aed; box-shadow: 0 0 14px rgba(167,139,250,.4), inset 0 0 8px rgba(167,139,250,.12); }
 
@@ -114,6 +118,7 @@ html body.dark-mode #fgTinker      { --fc: #38bdf8; --fg: rgba(56,189,248,.6); }
 html body.dark-mode #switchModeFab { --fc: #34d399; --fg: rgba(52,211,153,.6); }
 html body.dark-mode #searchFab     { --fc: #c084fc; --fg: rgba(192,132,252,.6); }
 html body.dark-mode #themeBtn      { --fc: #fbbf24; --fg: rgba(251,191,36,.6); }
+html body :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn, #hotelsFab):hover { padding-right: 18px !important; }
 html body :is(#fgTinker, #switchModeFab, #searchFab, #themeBtn) { padding: 0 0 0 10px !important; }   /* 44 - 2×2 border - 20 icon = 20 → 10 each side */
 @keyframes lcPulse { 50% { filter: drop-shadow(0 0 14px var(--fg)); } }
 html body #fgTinker.has-errors { animation: lcPulse 2s ease-in-out infinite; }
@@ -130,4 +135,5 @@ html body .dep-field :is(input, select):focus { outline: none; border-color: #21
 html body.dark-mode .dep-field :is(input, select):focus { border-color: #a78bfa !important; box-shadow: 0 0 0 3px rgba(167,139,250,.28); }
 html body .dep-field .invalid { border-color: #e74c3c !important; }
 </style>
+<script>setTimeout(function () { document.documentElement.classList.add('lc-ready'); }, 1500);</script>
 

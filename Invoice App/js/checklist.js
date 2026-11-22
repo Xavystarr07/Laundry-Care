@@ -475,6 +475,15 @@ body.dark-mode .clsr-edit { background: rgba(59,130,246,0.1); border-color: rgba
 #clDoneBtn { width: 100%; padding: 15px; background: linear-gradient(120deg, #16a34a, #15803d); color: #fff; border: none; font-size: 14px; font-weight: 800; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-family: 'Space Grotesk', 'Segoe UI', Arial, sans-serif; transition: filter 0.18s, box-shadow 0.18s; position: relative; overflow: hidden; }
 #clDoneBtn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
 #clDoneBtn:hover { filter: brightness(1.1); box-shadow: 0 6px 24px rgba(22,163,74,0.4); }
+#clModal{max-width:940px;max-height:94vh}
+.cl-item-text{font-size:16px}
+.cl-section-title{font-size:14px}
+.cl-box{width:22px;height:22px}
+.cl-box-tick{font-size:13px}
+.cl-item{padding:8px 10px;gap:12px}
+#clHeaderTitle{font-size:19px}
+#clSubHeader,#clCount{font-size:14px}
+#clConfirmBtn{font-size:15px;padding:12px 26px}
 `;
 document.head.appendChild(style);
 
@@ -507,6 +516,7 @@ clOverlayEl.innerHTML = `
                 <div id="clHeaderTitle">LAUNDRY CARE — Checklist</div>
                 <div id="clHeaderSub">Tick items then enter quantities</div>
             </div>
+            <button id="clFormBtn" type="button" style="margin:0 8px 0 0!important;padding:6px 12px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);color:#fff;border-radius:16px;font-weight:700;font-size:12px;cursor:pointer;position:relative;z-index:1;box-shadow:none!important">← Form</button>
             <button id="clCloseBtn" type="button">✕</button>
         </div>
         <div id="clSubHeader">
@@ -517,8 +527,11 @@ clOverlayEl.innerHTML = `
         <div id="clBody">
             <div id="clColumns"></div>
             <div class="cl-other-section">
-                <div class="cl-section-title">OTHER ITEMS:</div>
-                <div class="cl-other-line"></div>
+                <div class="cl-section-title">MISCELLANEOUS</div>
+                <div id="clMiscList" style="display:grid;grid-template-columns:1fr 1fr;gap:0 28px"></div>
+                <div class="cl-section-title" style="margin-top:14px">CUSTOM ITEMS</div>
+                <div id="clMisc"></div>
+                <button type="button" id="clMiscAdd" style="margin:6px 0 0!important;padding:8px 16px;border:1.5px dashed #1d4ed8;background:none;color:#1d4ed8;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer">＋ Add custom item</button>
             </div>
         </div>
         <div id="clFooter">
@@ -595,8 +608,66 @@ function toggleItem(row) {
     updateCount();
 }
 
+let miscItems = [], carpetSel = null;
+
+function miniAsk(html, bind) {
+    const o = document.createElement('div');
+    o.style.cssText = 'position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:12px';
+    o.innerHTML = `<div style="background:#fff;color:#111;border-radius:18px;padding:22px;width:100%;max-width:380px;font-family:'Segoe UI',Arial,sans-serif;color-scheme:light">${html}</div>`;
+    document.body.appendChild(o);
+    bind(o, () => o.remove());
+}
+
+function renderMisc() {
+    document.getElementById('clMisc').innerHTML = miscItems.map((m, i) =>
+        `<div class="cl-item cl-selected"><div class="cl-box"><span class="cl-box-tick">✓</span></div><span class="cl-item-text">${m.name} — R${m.price.toFixed(2)}</span><button type="button" data-mx="${i}" style="margin:0 0 0 auto!important;border:none;background:none;color:#ef4444;cursor:pointer;font-size:15px">✕</button></div>`).join('');
+    updateCount();
+}
+document.getElementById('clMisc').addEventListener('click', e => {
+    const b = e.target.closest('[data-mx]'); if (!b) return;
+    miscItems.splice(+b.dataset.mx, 1); renderMisc();
+});
+
+document.getElementById('clMiscAdd').addEventListener('click', () => {
+    const chip = 'margin:0;padding:6px 12px;border:1.5px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:999px;font-weight:700;cursor:pointer';
+    miniAsk(`<div style="font-size:17px;font-weight:800;margin-bottom:10px">➕ Misc item</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <input id="mxName" placeholder="Item name" autocomplete="off" style="width:100%;margin:0 0 8px;padding:12px;font-size:15px">
+        <input id="mxPrice" type="number" step="0.01" min="0" placeholder="Price (R)" style="width:100%;margin:0 0 14px;padding:12px;font-size:15px">
+        <div style="display:flex;gap:8px"><button type="button" id="mxNo" style="flex:1;margin:0;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#444;font-weight:700;cursor:pointer">Cancel</button><button type="button" id="mxOk" style="flex:1;margin:0;padding:11px;border:none;border-radius:12px;background:#1d4ed8;color:#fff;font-weight:700;cursor:pointer">Add</button></div>`,
+    (o, done) => {
+        const nm = o.querySelector('#mxName'), pr = o.querySelector('#mxPrice');
+        setTimeout(() => nm.focus(), 50);
+        const ok = () => {
+            const name = nm.value.replace(/[&<>"]/g, '').trim(), price = parseFloat(pr.value);
+            if (!name || isNaN(price) || price < 0) { (!name ? nm : pr).focus(); return; }
+            miscItems.push({ name, price: Math.round(price * 100) / 100 }); done(); renderMisc();
+        };
+        o.addEventListener('click', e => {
+            const c = e.target.closest('[data-n]'); if (c) { nm.value = c.dataset.n; pr.focus(); }
+            if (e.target.id === 'mxNo') done();
+            if (e.target.id === 'mxOk') ok();
+        });
+        o.addEventListener('keydown', e => { if (e.key === 'Enter') ok(); if (e.key === 'Escape') done(); });
+    });
+});
+
+function resolveCarpets(next) {
+    carpetSel = null;
+    const has = [...selectedKeys].some(k => k.endsWith('::CARMED'));
+    const opts = typeof priceList !== 'undefined' ? priceList.filter(p => /^CAR/i.test(p.code)) : [];
+    if (!has || opts.length < 2) return next();
+    miniAsk(`<div style="font-size:17px;font-weight:800;margin-bottom:12px">🧺 Carpet size?</div>` +
+        opts.map((p, i) => `<button type="button" data-i="${i}" style="display:flex;justify-content:space-between;width:100%;margin:0 0 8px;padding:12px 14px;border:1.5px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:12px;font-weight:700;cursor:pointer"><span>${p.description}</span><span>R${p.price.toFixed(2)}</span></button>`).join(''),
+    (o, done) => o.addEventListener('click', e => {
+        const b = e.target.closest('[data-i]'); if (!b) return;
+        const p = opts[+b.dataset.i]; carpetSel = { code: p.code, label: p.description };
+        done(); next();
+    }));
+}
+
 function updateCount() {
-    const n = selectedKeys.size;
+    const n = selectedKeys.size + miscItems.length;
     document.getElementById('clCount').textContent = `${n} item${n !== 1 ? 's' : ''} selected`;
     document.getElementById('clConfirmBtn').disabled = n === 0;
 }
@@ -637,29 +708,51 @@ function openChecklist() {
     selectedKeys.clear();
     clOverlayEl.querySelectorAll('.cl-item').forEach(r => r.classList.remove('cl-selected'));
     updateCount();
+    miscItems = []; renderMisc();
+    buildMiscList();
     clOverlayEl.classList.add('cl-active');
 }
 
 function closeChecklist() { clOverlayEl.classList.remove('cl-active'); }
 
+function buildMiscList() {
+    const L = document.getElementById('clMiscList'); L.innerHTML = '';
+    (typeof priceList !== 'undefined' ? priceList : [])
+        .filter(p => /dish|swab|cloth|tea ?towel/i.test(p.description))
+        .forEach(p => {
+            const row = document.createElement('div');
+            row.className = 'cl-item';
+            row.dataset.key = `MISCELLANEOUS::${p.description}::${p.code}`;
+            row.innerHTML = '<div class="cl-box"><span class="cl-box-tick">✓</span></div><span class="cl-item-text"></span>';
+            row.querySelector('.cl-item-text').textContent = p.description;
+            row.addEventListener('click', () => toggleItem(row));
+            L.appendChild(row);
+        });
+    if (!L.children.length) L.innerHTML = '<div style="font-size:12px;color:#888">No matching items in the price list.</div>';
+}
+
 document.getElementById('clCloseBtn').addEventListener('click', closeChecklist);
+document.getElementById('clFormBtn').addEventListener('click', () => { closeChecklist(); window.lcQuick?.('cl'); });
 clOverlayEl.addEventListener('click', e => { if (e.target === clOverlayEl) closeChecklist(); });
 document.getElementById('clClearBtn').addEventListener('click', () => {
-    selectedKeys.clear();
+    selectedKeys.clear(); miscItems = []; renderMisc();
     clOverlayEl.querySelectorAll('.cl-item').forEach(r => r.classList.remove('cl-selected'));
     updateCount();
 });
 document.getElementById('clConfirmBtn').addEventListener('click', () => {
     closeChecklist();
-    startNumpad();
+    resolveCarpets(startNumpad);
 });
 
 // ── Numpad flow ───────────────────────────────────────────────────────────────
 function startNumpad() {
     const items = Array.from(selectedKeys).map(key => {
         const parts = key.split('::');
-        return { section: parts[0], label: parts[1], code: parts[2], qty: null };
+        const e = { section: parts[0], label: parts[1], code: parts[2], qty: null };
+        if (carpetSel && e.code === 'CARMED') { e.code = carpetSel.code; e.label = carpetSel.label; }
+        return e;
     });
+    miscItems.forEach(m => items.push({ section: 'MISC', label: m.name, code: 'MISC', price: m.price, misc: true, qty: null }));
 
     document.getElementById('clSumWrap').classList.remove('clsum-on');
     document.getElementById('clSumList').innerHTML = '';
@@ -685,17 +778,29 @@ function startNumpad() {
         items[idx].qty = val;
         const d = document.getElementById('clNpDisplay');
         d.textContent = val; d.style.color = '#1d4ed8';
-        setTimeout(() => { idx++; showItem(idx); }, 280);
+        idx++; showItem(idx);
     };
 
+    let buf = '', bt;
     function onKey(e) {
         if (!npOverlayEl.classList.contains('clnp-on')) return;
+        if (/^[0-9]$/.test(e.key) && idx < items.length) {
+            e.stopImmediatePropagation();
+            buf += e.key; clearTimeout(bt);
+            const v = parseInt(buf, 10);
+            if (true) {
+                const q = Math.min(20, Math.max(1, v)); buf = '';
+                items[idx].qty = q; idx++; showItem(idx);
+            } else {
+                document.getElementById('clNpDisplay').textContent = buf;
+                bt = setTimeout(() => { const q = Math.max(1, parseInt(buf, 10) || 1); buf = ''; items[idx].qty = q; idx++; showItem(idx); }, 600);
+            }
+            return;
+        }
         const n = parseInt(e.key);
-        if (!isNaN(n) && n >= 1 && n <= 9) {
+        if (!isNaN(n) && n >= 1 && n <= 9 && idx < items.length) {
             items[idx].qty = n;
-            const d = document.getElementById('clNpDisplay');
-            d.textContent = n; d.style.color = '#be185d';
-            setTimeout(() => { idx++; showItem(idx); }, 280);
+            idx++; showItem(idx);
         }
         if (e.key === 'Enter') document.getElementById('clDoneBtn').click();
     }
@@ -781,7 +886,7 @@ function fillInvoice(items) {
         const priceItem = (typeof priceList !== 'undefined')
             ? priceList.find(p => p.code === entry.code) : null;
         const desc  = priceItem?.description || entry.label;
-        const price = priceItem?.price ?? 0;
+        const price = entry.misc ? entry.price : (priceItem?.price ?? 0);
         const qty   = entry.qty || 1;
         const total = (price * qty).toFixed(2);
 
@@ -813,6 +918,7 @@ function fillInvoice(items) {
             <td><input type="date" class="date-received" name="date_received" value="${date}" readonly></td>
         `;
 
+        if (entry.misc) row.querySelectorAll('.description,.price').forEach(x => x.removeAttribute('readonly'));
         const qtyInp = row.querySelector('.quantity');
         if (qtyInp && typeof calculateTotal === 'function') {
             qtyInp.addEventListener('input', () => calculateTotal(qtyInp));
@@ -833,8 +939,14 @@ function fillInvoice(items) {
 
 // ── Wire button ───────────────────────────────────────────────────────────────
 function wireButton() {
-    document.getElementById('checklistBtn')?.addEventListener('click', openChecklist);
+    document.getElementById('checklistBtn')?.addEventListener('click', () => {
+        const r = document.querySelector('#invoiceTable tr');
+        const ok = (document.getElementById('invoice_number')?.value || '').replace(/\D/g, '').length === 5
+            && r?.querySelector('.hotel')?.value && r?.querySelector('.unit-number')?.value?.trim() && r?.querySelector('.date-received')?.value;
+        if (ok || !window.lcQuick) openChecklist(); else window.lcQuick('cl');
+    });
 }
+window.lcOpenChecklist = openChecklist;
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireButton);
 else wireButton();
 

@@ -159,7 +159,20 @@
         const dd = new Date((dateInp.value || dateLimits().today) + 'T00:00');
         calY = dd.getFullYear(); calM = dd.getMonth();
         calEl = document.createElement('div'); calEl.id = 'depCal';
-        calEl.innerHTML =
+        calEl.innerHTML = '<div class="box"></div>';
+        calEl.addEventListener('click', e => {
+            if (e.target === calEl || e.target.dataset.c) return closeCal();
+            const n = e.target.dataset.n, d = e.target.dataset.d;
+            if (n) { calM += +n; if (calM < 0) { calM = 11; calY--; } if (calM > 11) { calM = 0; calY++; } calDraw(); }
+            if (d) { dateInp.value = d; dateInp.dispatchEvent(new Event('change')); closeCal(); }
+        });
+        document.body.appendChild(calEl); calDraw();
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCal(); });
+    dateInp.addEventListener('mousedown', e => { e.preventDefault(); openCal(); });
+
+    // Invoice number typed in the entry bar
+    invInput.addEventListener('input', () => {
         formatInvoiceNumber(invInput);
         invInput.classList.remove('invalid');
         const v = invInput.value;
@@ -180,8 +193,6 @@
                 invInput.classList.add('invalid');
                 showPopup('dupe', `Beep boop! Invoice #${v} already exists in the database 🤖`,
                     '💡 Try a different invoice number before adding.', 0, whenInvChanges());
-            } else {
-                openDate();
             }
         });
     });

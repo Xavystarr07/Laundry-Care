@@ -240,7 +240,8 @@ window._pendingPopup = <?php echo json_encode($popup); ?>;
 <script src="js/themeSearch.js"></script>     <!-- theme/search feature        -->
 <script src="js/checklist.js"></script>
 <script src="js/typeform.js"></script>
-<script src="js/undoSave.js"></script>       <!-- checklist feature           -->
+<script src="js/undoSave.js"></script>
+<script src="js/balance.js"></script>       <!-- checklist feature           -->
 
 </body>
 </html>

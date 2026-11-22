@@ -74,7 +74,7 @@ overlay.innerHTML = `<div id="tfCard"><div id="tfBar"><i></i></div><div id="tfTo
 document.body.appendChild(overlay);
 const card = overlay.firstElementChild, $ = s => card.querySelector(s);
 
-let locked=false, calY=0, calM=0, step=0, rows=[], cur=null, inv='', date='', hotel='', unit='', pre=false, sug=[], conf=0, editIdx=-1, back7=false, dupe=false, hl=0, matches=[], tm;
+let cl=false, locked=false, calY=0, calM=0, step=0, rows=[], cur=null, inv='', date='', hotel='', unit='', pre=false, sug=[], conf=0, editIdx=-1, back7=false, dupe=false, hl=0, matches=[], tm;
 // Fallback predictor object if LCPredict isn't loaded globally yet
 // Connected LCPredict engine mapping to your php endpoint
 const LCPredict = {
@@ -110,7 +110,14 @@ function calHTML() {
     <div class="tf-wd">${['Mo','Tu','We','Th','Fr','Sa','Su'].map(x=>`<span>${x}</span>`).join('')}</div><div class="tf-days">${cells}</div></div>`;
 }
 
-function go(n) { step = n; if (n === 6) back7 = false; render(); }
+function go(n) {
+    step = n; if (n === 6) back7 = false; render();
+    if (n === 2 && !sug.length && inv.length >= 4) guess(inv, '').then(c => {
+        sug = c;
+        if (c[0] && !hotel && conf >= .5) { hotel = c[0].h; unit = String(c[0].u); pre = true; }
+        if (step === 2) render(true);
+    });
+}
 
 function render(noAnim) {
     $('#tfBar i').style.width = PCT[step] + '%';
@@ -168,7 +175,7 @@ function chk(auto) {
     st.className = 'tf-st'; st.textContent = ''; nx.disabled = true; if (inv.length < 5) return;
     const n = parseInt(inv, 10); if (n < 1 || n > 50000) { st.className = 'tf-st bad'; st.textContent = 'Must be between 00001 and 50000'; return; }
     st.textContent = 'Checking…';
-    guess(inv, '').then(c => { sug = c; if (c[0] && (!hotel || pre) && conf >= .75) { hotel = c[0].h; unit = String(c[0].u); pre = true; }
+    guess(inv, '').then(c => { sug = c; if (c[0] && (!hotel || pre) && conf >= .5) { hotel = c[0].h; unit = String(c[0].u); pre = true; }
         if (step === 2 && !unit) render(true); });
     fetch('php/check_invoice.php?invoice_number=' + inv).then(r => r.json()).then(d => {
         if (my !== inv || step !== 0) return;
@@ -199,12 +206,12 @@ function act(a, d = {}) {
         case 'next':
             if (step === 0) { if (!(inv.length === 5 && !dupe)) return; go(back7 ? 6 : 1); }
             else if (step === 1) go(back7 ? 6 : 2);
-            else if (step === 2) { if (hotel && unit) go(back7 ? 6 : 3); }
+            else if (step === 2) { if (hotel && unit) { if (cl) { applyHead(); close(); window.lcOpenChecklist(); } else go(back7 ? 6 : 3); } }
             break;
         case 'd0': case 'd1': { const dt = new Date(); if (a === 'd1') dt.setDate(dt.getDate() - 1); date = dt.toISOString().split('T')[0]; calY = dt.getFullYear(); calM = dt.getMonth(); $('#tfCal').innerHTML = calHTML(); break; }
         case 'day': date = d.v; $('#tfCal').innerHTML = calHTML(); setTimeout(() => { if (step === 1 && date === d.v) act('next'); }, 350); break;
         case 'pm': case 'nm': calM += a === 'nm' ? 1 : -1; if (calM < 0) { calM = 11; calY--; } if (calM > 11) { calM = 0; calY++; } $('#tfCal').innerHTML = calHTML(); break;
-        case 'sug': { const c = sug[+d.i]; hotel = c.h; unit = String(c.u); pre = false; go(back7 ? 6 : 3); break; }
+        case 'sug': { const c = sug[+d.i]; hotel = c.h; unit = String(c.u); pre = false; act('next'); break; }
         case 'u': unit = d.v; pre = false; $('#tfUnit').value = unit; w2(); if (hotel) act('next'); break;
         case 'pick': pick(d.c); break;
         case 'pickhl': { const q = ($('#tfCode').value || '').trim().toLowerCase(); const m = matches.find(x => x.code.toLowerCase() === q) || matches[hl]; if (m) pick(m.code); break; }
@@ -285,8 +292,14 @@ function fill() {
     showPopup('success', `${n} line${n > 1 ? 's' : ''} added to invoice #${inv}.`, 'Check the table, then press Save Invoice.', 5000);
 }
 
-function close() { overlay.classList.remove('on'); back7 = false; editIdx = -1; }
-function open() {
+function applyHead() {
+    const row1 = document.getElementById('invoiceTable').rows[0], invEl = document.getElementById('invoice_number');
+    invEl.value = inv; invEl.classList.remove('invalid');
+    const h = row1.querySelector('.hotel'); h.value = hotel; updateUnitDatalist(h);
+    row1.querySelector('.unit-number').value = unit; row1.querySelector('.date-received').value = date;
+}
+function close() { overlay.classList.remove('on'); cl = false; back7 = false; editIdx = -1; }
+function open(m) {
     const t = document.getElementById('invoiceTable'), r1 = t.rows[0];
     const has = [...t.rows].some(r => r.querySelector('.code')?.value.trim() || r.querySelector('.quantity')?.value.trim());
     inv = (document.getElementById('invoice_number')?.value || '').replace(/\D/g, '');
@@ -294,8 +307,9 @@ function open() {
     locked = has && inv.length === 5;
     hotel = locked ? (r1.querySelector('.hotel')?.value || '') : ''; unit = locked ? (r1.querySelector('.unit-number')?.value || '') : '';
     rows = []; cur = null; sug = []; pre = false; editIdx = -1; back7 = false; dupe = false;
+    cl = m === 'cl'; if (cl) locked = false;
     overlay.classList.add('on'); go(locked ? 3 : 0);
 }
 fab.addEventListener('click', open);
-setTimeout(open, 300);
+window.lcQuick = open;
 })();
