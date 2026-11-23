@@ -138,9 +138,8 @@ document.getElementById('itemsJson').value = JSON.stringify(items);
                 const fd = new FormData(form);
                 fd.append('save_invoice', '1');
                 fd.append('test_mode', '1');
-                fetch(form.action, { method: 'POST', body: fd }).then(r => r.text()).then(t => {
-                    const m = t.match(/window\._pendingPopup = (\{.*?\});/);
-                    const p = m ? JSON.parse(m[1]) : { type: 'warning', msg: 'Test finished but gave no message.', tip: '' };
+                fetch(form.action, { method: 'POST', body: fd }).then(r => r.json()).then(p => {
+                    p = p || { type: 'warning', msg: 'Test finished but gave no message.', tip: '' };
                     showPopup(p.type, 'TEST: ' + p.msg.replace(/^TEST OK: /, ''), p.tip || '', 0);
                 }).catch(() => showPopup('error', 'Test could not reach the server.', '', 5000));
             }

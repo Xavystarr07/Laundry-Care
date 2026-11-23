@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!empty($_POST['test_mode'])) register_shutdown_function(function () {
+    header_remove('Location'); http_response_code(200); header('Content-Type: application/json');
+    echo json_encode($_SESSION['popup'] ?? null); unset($_SESSION['popup']);
+});
 
 // ── Load shared DB connection ─────────────────────────────────────────────────
 require_once __DIR__ . '/db.php';
@@ -100,7 +104,7 @@ $ins = $pdo->prepare('INSERT INTO lc_invoice_items (invoice_id,"Code","Descripti
 foreach ($items as $it) $ins->execute([$newId, $it['code'], $it['description'], floatval($it['price']), intval($it['quantity']), floatval($it['total'])]);
 if ($test) {
     $pdo->rollBack();
-    $_SESSION['popup'] = ['type' => 'info', 'msg' => "TEST OK: invoice #$invoiceNumber would save with " . count($items) . ' item(s), total R' . number_format($grandTotal, 2) . '. Nothing was saved.', 'tip' => 'Turn Test mode off to save for real.'];
+    $_SESSION['popup'] = ['type' => 'info', 'msg' => "TEST OK: invoice #$invoiceNumber would save with " . count($items) . ' item(s), total R' . number_format($grandTotal, 2) . '. Nothing was saved.', 'tip' => 'Print the invoice first, then turn Test mode off and save.'];
     header('Location: ../invoice_generator.php');
     exit;
 }
