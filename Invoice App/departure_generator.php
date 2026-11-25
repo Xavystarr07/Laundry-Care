@@ -147,6 +147,7 @@ $flags   = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     Monthly Statements
 </button>
 
+<script src="js/layout.js"></script>
 <script src="js/priceList.php"></script>
 <script src="js/lcData.php"></script>
 <script src="js/depData.js"></script>

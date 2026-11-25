@@ -17,6 +17,7 @@
     <div class="panel"><table class="mt" id="tb"></table></div>
 </main>
 <div class="modal" id="m" hidden><div class="mcard"><h2 id="mTitle"></h2><div id="mBody"></div><div class="mfoot" id="mFoot"></div></div></div>
+<script src="js/layout.js"></script>
 <script src="js/priceList.php"></script>
 <script src="js/lcData.php"></script>
 <script src="js/hotelData.js"></script>
